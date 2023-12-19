@@ -1,2 +1,13 @@
-# solvd_laba_2023-02_second_project
-SOLVD laba 2023-02 second project
+### Second project
+
+---
+
+***[Solvd.Laba](https://laba.solvd.com/)***
+
+**Course:** *2023-02*
+
+**Student:** *Aleksey Bobrikov*
+
+---
+
+***© 2023***
