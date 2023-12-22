@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.AdminActions;
+import com.solvd.delivery_service.util.console_menu.menu_enums.AdminDepartmentMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.AdminEmployeeMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.AdminMainMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.AdminPackageMenu;
 
@@ -16,13 +18,15 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminMainMenu();
             }
             case (2) -> {
-                PRINT2LN.info("RUN ADMIN EMPLOYEE MENU");
-                return runAdminMainMenu();
+                return runAdminDepartmentMenu();
             }
             case (3) -> {
-                return runAdminPackageMenu();
+                return runAdminEmployeeMenu();
             }
             case (4) -> {
+                return runAdminPackageMenu();
+            }
+            case (5) -> {
                 return (ConsoleMenuAdmin) runDeliveryServiceMenu();
             }
             default -> {
@@ -39,6 +43,46 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminPackageMenu();
             }
             case (2) -> {
+                return runAdminMainMenu();
+            }
+            default -> {
+                return (ConsoleMenuAdmin) tearDown();
+            }
+        }
+    }
+
+    private ConsoleMenuAdmin runAdminEmployeeMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("ADMIN EMPLOYEE MENU", AdminEmployeeMenu.values());
+        switch (answer) {
+            case (1) -> {
+                AdminActions.showEmployees();
+                return runAdminEmployeeMenu();
+            }
+            case (2) -> {
+                AdminActions.registerEmployee();
+                return runAdminEmployeeMenu();
+            }
+            case (3) -> {
+                return runAdminMainMenu();
+            }
+            default -> {
+                return (ConsoleMenuAdmin) tearDown();
+            }
+        }
+    }
+
+    private ConsoleMenuAdmin runAdminDepartmentMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("ADMIN DEPARTMENT MENU", AdminDepartmentMenu.values());
+        switch (answer) {
+            case (1) -> {
+                AdminActions.showDepartments();
+                return runAdminDepartmentMenu();
+            }
+            case (2) -> {
+                AdminActions.registerDepartment();
+                return runAdminDepartmentMenu();
+            }
+            case (3) -> {
                 return runAdminMainMenu();
             }
             default -> {

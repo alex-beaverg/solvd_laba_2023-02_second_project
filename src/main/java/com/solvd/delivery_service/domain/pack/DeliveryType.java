@@ -1,9 +1,9 @@
 package com.solvd.delivery_service.domain.pack;
 
 public enum DeliveryType {
-    REGULAR("Regular delivery", 3, 1.5),
-    EXPRESS("Express delivery", 2, 4.5),
-    VIP("VIP delivery", 1, 13.5);
+    REGULAR("Regular", 3, 1.5),
+    EXPRESS("Express", 2, 4.5),
+    VIP("VIP", 1, 13.5);
 
     private final String title;
     private final Integer daysCountPerZone;

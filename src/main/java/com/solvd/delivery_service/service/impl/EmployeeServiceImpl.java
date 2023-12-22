@@ -38,6 +38,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Employee createWithExistDepartment(Employee employee) {
+        employee.setId(null);
+        if (employee.getPersonInfo() != null) {
+            PersonInfo personInfo = personInfoService.create(employee.getPersonInfo());
+            employee.setPersonInfo(personInfo);
+        }
+        employeeRepository.create(employee);
+        return employee;
+    }
+
+    @Override
     public List<Employee> retrieveAll() {
         return employeeRepository.findAll();
     }

@@ -30,8 +30,8 @@ public class RequestMethods {
         if (answer.isEmpty()) {
             throw new EmptyInputException("[EmptyInputException]: Entered data can not be empty!");
         }
-        if (!answer.matches("^[a-zA-Zа-яёА-ЯЁ0-9]+[\\s-]?[a-zA-Zа-яёА-ЯЁ0-9]+$")) {
-            throw new StringFormatException("[StringFormatException]: Entered data is not a letter or number character!");
+        if (!answer.matches("^[a-zA-Zа-яёА-ЯЁ0-9. ]+$")) {
+            throw new StringFormatException("[StringFormatException]: Entered data is not a correct string!");
         }
         return answer;
     }

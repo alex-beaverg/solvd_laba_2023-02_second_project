@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface EmployeeService {
     Employee create(Employee employee);
+    Employee createWithExistDepartment(Employee employee);
     List<Employee> retrieveAll();
     Long retrieveNumberOfEntries();
 }
