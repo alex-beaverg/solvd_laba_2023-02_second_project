@@ -1,21 +1,59 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.GeneralActions;
-
-import static com.solvd.delivery_service.util.Printers.*;
-
+import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryServiceMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.MainMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.PackageMenu;
 import com.solvd.delivery_service.util.custom_exceptions.EmptyInputException;
 import com.solvd.delivery_service.util.custom_exceptions.MenuItemOutOfBoundsException;
+import com.solvd.delivery_service.util.custom_exceptions.StringFormatException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ConsoleMenu {
-    private final static Logger LOGGER = LogManager.getLogger(ConsoleMenu.class);
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
-    private int drawAnyMenuAndChooseMenuItem(String title, IMenu[] menuItems) {
+import static com.solvd.delivery_service.util.Printers.*;
+
+public class ConsoleMenu {
+    protected final static Logger LOGGER = LogManager.getLogger(ConsoleMenu.class);
+
+    public ConsoleMenu runDeliveryServiceMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("DELIVERY SERVICE MENU:", DeliveryServiceMenu.values());
+        switch (answer) {
+            case (1) -> {
+                return new ConsoleMenuUser().runUserMainMenu();
+            }
+            case (2) -> {
+                String password;
+                PRINT2LN.info("AUTHENTICATION");
+                do {
+                    try {
+                        password = RequestMethods.requestingInfoString("Enter admin password: ");
+                        break;
+                    } catch (EmptyInputException | StringFormatException e) {
+                        LOGGER.error(e.getMessage());
+                    }
+                } while (true);
+                Properties property = new Properties();
+                try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
+                    property.load(fis);
+                    if (password.equals(property.getProperty("admin.password"))) {
+                        PRINTLN.info("[Info]: Password is correct!");
+                        return new ConsoleMenuAdmin().runAdminMainMenu();
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("You have been problem with reading from property file!", e);
+                }
+                PRINTLN.info("[Info]: Password is incorrect!");
+                return runDeliveryServiceMenu();
+            }
+            default -> {
+                return tearDown();
+            }
+        }
+    }
+
+    protected int drawAnyMenuAndChooseMenuItem(String title, IMenu[] menuItems) {
         int index = 1;
         PRINT2LN.info(title);
         for (IMenu item : menuItems) {
@@ -36,41 +74,9 @@ public class ConsoleMenu {
         return answer;
     }
 
-    private ConsoleMenu tearDown() {
+    protected ConsoleMenu tearDown() {
         RequestMethods.closeScanner();
-        PRINTLN.info("Good bye!");
+        PRINTLN.info("GOOD BYE!");
         return null;
-    }
-
-    public ConsoleMenu runMainMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("MAIN MENU:", MainMenu.values());
-        switch (answer) {
-            case (1) -> {
-                return runPackageMenu();
-            }
-            default -> {
-                return tearDown();
-            }
-        }
-    }
-
-    public ConsoleMenu runPackageMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("PACKAGE MENU:", PackageMenu.values());
-        switch (answer) {
-            case (1) -> {
-                GeneralActions.showPackages();
-                return runPackageMenu();
-            }
-            case (2) -> {
-                GeneralActions.createPackage();
-                return runPackageMenu();
-            }
-            case (3) -> {
-                return runMainMenu();
-            }
-            default -> {
-                return tearDown();
-            }
-        }
     }
 }

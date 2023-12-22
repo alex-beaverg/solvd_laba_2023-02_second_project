@@ -7,4 +7,5 @@ import java.util.List;
 public interface PersonInfoService {
     PersonInfo create(PersonInfo personInfo);
     List<PersonInfo> retrieveAll();
+    Long retrieveNumberOfEntries();
 }

@@ -11,4 +11,5 @@ public interface AddressRepository {
     List<Address> findAll();
     void update(Address address, String field);
     void deleteById(Long id);
+    Long countOfEntries();
 }

@@ -41,4 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> retrieveAll() {
         return employeeRepository.findAll();
     }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return employeeRepository.countOfEntries();
+    }
 }

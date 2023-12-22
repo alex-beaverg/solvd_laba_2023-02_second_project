@@ -25,4 +25,9 @@ public class PassportServiceImpl implements PassportService {
     public List<Passport> retrieveAll() {
         return passportRepository.findAll();
     }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return passportRepository.countOfEntries();
+    }
 }

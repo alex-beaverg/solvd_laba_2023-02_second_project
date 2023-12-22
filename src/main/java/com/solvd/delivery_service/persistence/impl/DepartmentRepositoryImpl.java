@@ -16,6 +16,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     private static final String UPDATE_DEPARTMENT_QUERY = "UPDATE departments SET title = ? WHERE id = ?;";
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM departments ORDER BY id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS departments_count FROM departments;";
 
     @Override
     public void create(Department department) {
@@ -91,6 +92,22 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of departments!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 
     private static List<Department> mapDepartments(ResultSet resultSet) {

@@ -11,30 +11,78 @@ import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.service.EmployeeService;
 import com.solvd.delivery_service.service.PackageService;
-import com.solvd.delivery_service.service.impl.*;
+import com.solvd.delivery_service.service.impl.CustomerServiceImpl;
+import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
+import com.solvd.delivery_service.service.impl.PackageServiceImpl;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 import com.solvd.delivery_service.util.custom_exceptions.*;
 import com.solvd.delivery_service.util.functional_interfaces.IPrintAsMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
-public class GeneralActions {
-    private static final Logger LOGGER = LogManager.getLogger(GeneralActions.class);
+public class UserActions {
+    private static final Logger LOGGER = LogManager.getLogger(UserActions.class);
     private static final IPrintAsMenu<Integer, String> printAsMenu = (index, line) -> PRINTLN.info("[" + index + "] - " + line);
 
-    public static void createPackage() {
+    public static void createPackageWithCreatingCustomer() {
         PRINT2LN.info("REGISTRATION OF A CUSTOMER");
-        Passport passport = registerPassport();
+        Passport customerPassport = registerPassport();
         Address customerAddress = registerAddress();
-        PersonInfo customerPersonInfo = registerPersonInfo(passport, customerAddress);
+        PersonInfo customerPersonInfo = registerPersonInfo(customerPassport, customerAddress);
         Customer customer = registerCustomer(customerPersonInfo);
         Employee employee = setRandomEmployee();
         PRINT2LN.info("REGISTRATION OF A PACKAGE");
         registerPackage(customer, employee);
+    }
+
+    public static void createPackageWithExistCustomer() {
+        PRINT2LN.info("CUSTOMER SEARCH");
+        Customer customer = getCustomerByLastName();
+        Employee employee = setRandomEmployee();
+        PRINT2LN.info("REGISTRATION OF A PACKAGE");
+        registerPackage(customer, employee);
+    }
+
+    private static Customer getCustomerByLastName() {
+        List<Customer> customers;
+        String customerLastName;
+        do {
+            do {
+                try {
+                    customerLastName = RequestMethods.requestingInfoString("Enter customer last name: ");
+                    break;
+                } catch (EmptyInputException | StringFormatException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            } while (true);
+            customers = new CustomerServiceImpl().retrieveEntriesByLastName(customerLastName);
+            if (customers.size() == 0) {
+                PRINTLN.info("[Info]: Customer with last name " + customerLastName + " doesn't exist!");
+            }
+        } while (customers.size() == 0);
+        int index = 1;
+        PRINTLN.info("Choose the customer:");
+        for (Customer item : customers) {
+            printAsMenu.print(index, item.getPersonInfo().getFirstName() + " " + item.getPersonInfo().getLastName());
+            index++;
+        }
+        int answer;
+        do {
+            try {
+                answer = RequestMethods.requestingInfoWithChoice("Enter number of customer: ", index - 1);
+                break;
+            } catch (EmptyInputException | MenuItemOutOfBoundsException e) {
+                LOGGER.error(e.getMessage());
+            } catch (NumberFormatException e) {
+                LOGGER.error("[NumberFormatException]: Entered data is not a number!");
+            }
+        } while (true);
+        return customers.get(answer - 1);
     }
 
     private static Passport registerPassport() {
@@ -219,7 +267,11 @@ public class GeneralActions {
         int zones = Accounting.calculateZones(pack.getCustomer().getPersonInfo().getAddress(), addressTo);
         pack.setStatus(setRandomStatus(pack.getDeliveryType(), zones));
         pack.setCondition(setRandomCondition(pack.getStatus(), pack.getDeliveryType(), zones));
-        packageService.create(pack);
+        if (customer.getId() != null) {
+            packageService.createWithExistCustomer(pack);
+        } else {
+            packageService.create(pack);
+        }
         PRINT2LN.info("PACKAGE WAS CREATED");
         PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
     }
@@ -279,17 +331,5 @@ public class GeneralActions {
             }
         }
         return condition;
-    }
-
-    public static void showPackages() {
-        PRINT2LN.info("ALL PACKAGES:");
-        for (Package pack : new PackageServiceImpl().retrieveAll()) {
-            PRINTLN.info("id:[" + pack.getId() + "], N:[" + pack.getNumber() + "], PackageType:[" + pack.getPackageType().getTitle() +
-                    "], DeliveryType:[" + pack.getDeliveryType().getTitle() + "], Status:[" + pack.getStatus().getTitle() + "], Condition:[" +
-                    pack.getCondition().getTitle() + "], Customer:[" + pack.getCustomer().getPersonInfo().getFirstName() + " " +
-                    pack.getCustomer().getPersonInfo().getLastName() + "], From:[" + pack.getAddressFrom().getCountry().getTitle() + " - " +
-                    pack.getAddressFrom().getCity() + "], To:[" + pack.getAddressTo().getCountry().getTitle() + " - " +
-                    pack.getAddressTo().getCity() + "], Cost:[" + Accounting.calculatePackageCost(pack) + " BYN]");
-        }
     }
 }

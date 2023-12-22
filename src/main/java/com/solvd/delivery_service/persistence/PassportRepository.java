@@ -11,4 +11,5 @@ public interface PassportRepository {
     List<Passport> findAll();
     void update(Passport passport);
     void deleteById(Long id);
+    Long countOfEntries();
 }

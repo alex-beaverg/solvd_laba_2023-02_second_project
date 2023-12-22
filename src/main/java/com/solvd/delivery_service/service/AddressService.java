@@ -7,4 +7,5 @@ import java.util.List;
 public interface AddressService {
     Address create(Address address);
     List<Address> retrieveAll();
+    Long retrieveNumberOfEntries();
 }

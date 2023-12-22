@@ -66,6 +66,7 @@ public class PackageRepositoryImpl implements PackageRepository {
             "JOIN addresses a4 ON pg.address_to_id = a4.id " +
             "ORDER BY pg.id;";
     private static final String FIND_MAX_PACKAGE_NUMBER = "SELECT MAX(number) FROM packages;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS packages_count FROM packages;";
 
     @Override
     public void create(Package pack) {
@@ -301,5 +302,21 @@ public class PackageRepositoryImpl implements PackageRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         return number;
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of packages!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 }

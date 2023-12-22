@@ -25,4 +25,9 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> retrieveAll() {
         return addressRepository.findAll();
     }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return addressRepository.countOfEntries();
+    }
 }

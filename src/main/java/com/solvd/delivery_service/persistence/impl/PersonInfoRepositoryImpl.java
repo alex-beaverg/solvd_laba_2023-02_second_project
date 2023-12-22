@@ -30,6 +30,7 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
             "JOIN passports ps ON p.passport_id = ps.id " +
             "JOIN addresses a ON p.address_id = a.id " +
             "ORDER BY p.id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS persons_count FROM persons;";
 
     @Override
     public void create(PersonInfo personInfo) {
@@ -148,6 +149,22 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of persons!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 
     private static List<PersonInfo> mapPersons(ResultSet resultSet) {

@@ -1,12 +1,13 @@
 package com.solvd.delivery_service.util.console_menu.menu_enums;
 
-public enum MainMenu implements IMenu {
-    PACKAGE_MENU("Go to the Package menu"),
+public enum UserPackageMenu implements IMenu {
+    CREATE_PACKAGE("Create package"),
+    USER_MAIN_MENU("Return to the USER MAIN MENU"),
     EXIT("Exit");
 
     private final String title;
 
-    MainMenu(String title) {
+    UserPackageMenu(String title) {
         this.title = title;
     }
 

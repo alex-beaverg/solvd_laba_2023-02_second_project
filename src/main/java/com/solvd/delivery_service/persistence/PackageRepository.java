@@ -12,4 +12,5 @@ public interface PackageRepository {
     void update(Package pack, String field);
     void deleteById(Long id);
     Long findMaxPackageNumber();
+    Long countOfEntries();
 }

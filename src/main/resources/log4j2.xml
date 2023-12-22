@@ -39,11 +39,23 @@
         <Logger name="ln_InsteadOfSOUT_ln" level="info" additivity="false">
             <AppenderRef ref="ln_InsteadOfSOUT_ln"/>
         </Logger>
+        <Logger name="com.solvd.delivery_service.util.console_menu.ConsoleMenuUser" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
+        <Logger name="com.solvd.delivery_service.util.console_menu.ConsoleMenuAdmin" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
         <Logger name="com.solvd.delivery_service.util.console_menu.ConsoleMenu" level="error" additivity="false">
             <AppenderRef ref="rollingFile"/>
             <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
         </Logger>
-        <Logger name="com.solvd.delivery_service.domain.actions.GeneralActions" level="error" additivity="false">
+        <Logger name="com.solvd.delivery_service.domain.actions.AdminActions" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
+        <Logger name="com.solvd.delivery_service.domain.actions.UserActions" level="error" additivity="false">
             <AppenderRef ref="rollingFile"/>
             <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
         </Logger>

@@ -38,6 +38,17 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
+    public Package createWithExistCustomer(Package pack) {
+        pack.setId(null);
+        if (pack.getAddressTo() != null) {
+            Address addressTo = addressService.create(pack.getAddressTo());
+            pack.setAddressTo(addressTo);
+        }
+        packageRepository.create(pack);
+        return pack;
+    }
+
+    @Override
     public List<Package> retrieveAll() {
         return packageRepository.findAll();
     }
@@ -45,5 +56,10 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public Long retrieveMaxPackageNumber() {
         return packageRepository.findMaxPackageNumber();
+    }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return packageRepository.countOfEntries();
     }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface DepartmentService {
     Department create(Department department);
     List<Department> retrieveAll();
+    Long retrieveNumberOfEntries();
 }

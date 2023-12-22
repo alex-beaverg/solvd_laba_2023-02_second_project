@@ -26,6 +26,7 @@ public class AddressRepositoryImpl implements AddressRepository {
             "SELECT a.id AS address_id, a.city, a.street, a.house, a.flat, a.zip_code, a.country " +
             "FROM addresses a " +
             "ORDER BY a.id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS addresses_count FROM addresses;";
 
     @Override
     public void create(Address address) {
@@ -149,6 +150,22 @@ public class AddressRepositoryImpl implements AddressRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of addresses!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 
     private static List<Address> mapAddresses(ResultSet resultSet) {

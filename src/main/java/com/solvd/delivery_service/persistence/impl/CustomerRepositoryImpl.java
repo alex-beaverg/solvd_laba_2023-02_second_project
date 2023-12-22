@@ -28,6 +28,15 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             "JOIN passports ps ON p.passport_id = ps.id " +
             "JOIN addresses a ON p.address_id = a.id " +
             "ORDER BY cu.id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS customers_count FROM customers;";
+    private static final String FIND_CUSTOMERS_BY_LAST_NAME_QUERY =
+            "SELECT c.id AS customer_id, p.id AS person_id, p.first_name, p.last_name, p.age, ps.id AS passport_id, " +
+                    "a.id AS address_id, ps.number AS passport, a.city, a.street, a.house, a.flat, a.zip_code, a.country " +
+            "FROM customers c " +
+            "JOIN persons p ON c.person_id = p.id " +
+            "JOIN addresses a ON p.address_id = a.id " +
+            "JOIN passports ps ON p.passport_id = ps.id " +
+            "WHERE p.last_name = ?;";
 
     @Override
     public void create(Customer customer) {
@@ -105,6 +114,38 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of customers!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
+    }
+
+    @Override
+    public List<Customer> findByLastName(String lastName) {
+        List<Customer> customers;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_CUSTOMERS_BY_LAST_NAME_QUERY)) {
+            preparedStatement.setString(1, lastName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            customers = mapCustomers(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find customers by last name!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return customers;
     }
 
     private static List<Customer> mapCustomers(ResultSet resultSet) {

@@ -11,4 +11,5 @@ public interface DepartmentRepository {
     List<Department> findAll();
     void update(Department department);
     void deleteById(Long id);
+    Long countOfEntries();
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface PassportService {
     Passport create(Passport passport);
     List<Passport> retrieveAll();
+    Long retrieveNumberOfEntries();
 }

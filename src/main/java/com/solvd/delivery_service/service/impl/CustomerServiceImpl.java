@@ -33,4 +33,19 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> retrieveAll() {
         return customerRepository.findAll();
     }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return customerRepository.countOfEntries();
+    }
+
+    @Override
+    public List<Customer> retrieveEntriesByLastName(String lastName) {
+        return customerRepository.findByLastName(lastName);
+    }
+
+    @Override
+    public Customer retrieveById(Long id) {
+        return customerRepository.findById(id).get();
+    }
 }

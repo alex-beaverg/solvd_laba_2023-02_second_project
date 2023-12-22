@@ -7,4 +7,7 @@ import java.util.List;
 public interface CustomerService {
     Customer create(Customer customer);
     List<Customer> retrieveAll();
+    Long retrieveNumberOfEntries();
+    List<Customer> retrieveEntriesByLastName(String lastName);
+    Customer retrieveById(Long id);
 }

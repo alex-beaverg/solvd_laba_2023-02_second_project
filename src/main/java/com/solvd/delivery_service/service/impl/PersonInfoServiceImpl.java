@@ -41,4 +41,9 @@ public class PersonInfoServiceImpl implements PersonInfoService {
     public List<PersonInfo> retrieveAll() {
         return personInfoRepository.findAll();
     }
+
+    @Override
+    public Long retrieveNumberOfEntries() {
+        return personInfoRepository.countOfEntries();
+    }
 }

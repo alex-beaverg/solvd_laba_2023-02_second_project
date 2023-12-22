@@ -16,6 +16,7 @@ public class PassportRepositoryImpl implements PassportRepository {
     private static final String UPDATE_PASSPORT_QUERY = "UPDATE passports SET number = ? WHERE id = ?;";
     private static final String DELETE_PASSPORT_QUERY = "DELETE FROM passports WHERE id = ?;";
     private static final String FIND_ALL_QUERY = "SELECT * FROM passports ORDER BY id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS passports_count FROM passports;";
 
     @Override
     public void create(Passport passport) {
@@ -91,6 +92,22 @@ public class PassportRepositoryImpl implements PassportRepository {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of passports!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 
     private static List<Passport> mapPassports(ResultSet resultSet) {

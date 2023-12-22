@@ -11,4 +11,5 @@ public interface PersonInfoRepository {
     List<PersonInfo> findAll();
     void update(PersonInfo personInfo, String field);
     void deleteById(Long id);
+    Long countOfEntries();
 }

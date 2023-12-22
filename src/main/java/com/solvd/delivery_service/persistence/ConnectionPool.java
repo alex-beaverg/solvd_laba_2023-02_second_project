@@ -19,8 +19,8 @@ public class ConnectionPool {
         Properties property = new Properties();
         for (int i = 0; i < this.poolSize; i++) {
             Connection connection;
-            try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.properties")) {
-                property.load(fileInputStream);
+            try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
+                property.load(fis);
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 connection = DriverManager.getConnection(
                         property.getProperty("db.url"),

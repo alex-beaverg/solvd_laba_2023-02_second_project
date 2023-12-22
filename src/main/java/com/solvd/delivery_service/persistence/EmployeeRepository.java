@@ -11,4 +11,5 @@ public interface EmployeeRepository {
     List<Employee> findAll();
     void update(Employee employee, String field);
     void deleteById(Long id);
+    Long countOfEntries();
 }
