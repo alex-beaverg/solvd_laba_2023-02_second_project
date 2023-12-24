@@ -8,4 +8,5 @@ public interface PassportService {
     Passport create(Passport passport);
     List<Passport> retrieveAll();
     Long retrieveNumberOfEntries();
+    void updateField(Passport passport);
 }

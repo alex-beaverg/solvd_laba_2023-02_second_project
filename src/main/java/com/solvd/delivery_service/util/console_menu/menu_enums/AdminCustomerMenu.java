@@ -1,15 +1,15 @@
 package com.solvd.delivery_service.util.console_menu.menu_enums;
 
-public enum AdminPackageMenu implements IMenu {
-    SHOW_PACKAGES("Show all packages"),
-    UPDATE_PACKAGE_FIELD("Update existing package field"),
-    REMOVE_PACKAGE("Remove existing package"),
+public enum AdminCustomerMenu implements IMenu {
+    SHOW_CUSTOMERS("Show all customers"),
+    UPDATE_CUSTOMER_FIELD("Update existing customer field"),
+    REMOVE_CUSTOMER("Remove existing customer"),
     ADMIN_MAIN_MENU("Return to the ADMIN MAIN MENU"),
     EXIT("Exit");
 
     private final String title;
 
-    AdminPackageMenu(String title) {
+    AdminCustomerMenu(String title) {
         this.title = title;
     }
 

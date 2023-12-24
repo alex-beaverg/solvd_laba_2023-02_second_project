@@ -2,16 +2,16 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.persistence.PassportRepository;
-import com.solvd.delivery_service.persistence.impl.PassportRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.PassportRepositoryDaoImpl;
 import com.solvd.delivery_service.service.PassportService;
 
 import java.util.List;
 
-public class PassportServiceImpl implements PassportService {
+public class PassportServiceDaoImpl implements PassportService {
     private final PassportRepository passportRepository;
 
-    public PassportServiceImpl() {
-        this.passportRepository = new PassportRepositoryImpl();
+    public PassportServiceDaoImpl() {
+        this.passportRepository = new PassportRepositoryDaoImpl();
     }
 
     @Override
@@ -29,5 +29,10 @@ public class PassportServiceImpl implements PassportService {
     @Override
     public Long retrieveNumberOfEntries() {
         return passportRepository.countOfEntries();
+    }
+
+    @Override
+    public void updateField(Passport passport) {
+        passportRepository.update(passport);
     }
 }

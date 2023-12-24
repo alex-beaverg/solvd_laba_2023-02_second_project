@@ -3,6 +3,8 @@ package com.solvd.delivery_service.util.console_menu.menu_enums;
 public enum AdminEmployeeMenu implements IMenu {
     SHOW_EMPLOYEES("Show all employees"),
     REGISTER_EMPLOYEE("Register new employee"),
+    UPDATE_EMPLOYEE_FIELD("Update existing employee field"),
+    REMOVE_EMPLOYEE("Remove existing employee"),
     ADMIN_MAIN_MENU("Return to the ADMIN MAIN MENU"),
     EXIT("Exit");
 

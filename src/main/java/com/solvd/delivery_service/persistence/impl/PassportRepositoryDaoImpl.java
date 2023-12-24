@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PassportRepositoryImpl implements PassportRepository {
+public class PassportRepositoryDaoImpl implements PassportRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PASSPORT_QUERY = "INSERT INTO passports(number) values(?);";
     private static final String FIND_PASSPORT_QUERY = "SELECT * FROM passports WHERE id = ?;";

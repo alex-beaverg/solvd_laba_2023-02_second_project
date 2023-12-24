@@ -3,9 +3,6 @@ package com.solvd.delivery_service.util.console_menu;
 import com.solvd.delivery_service.domain.actions.UserActions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserGetCustomerMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserMainMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.UserPackageMenu;
-
-import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenuUser extends ConsoleMenu {
 
@@ -13,9 +10,13 @@ public class ConsoleMenuUser extends ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("USER MAIN MENU:", UserMainMenu.values());
         switch (answer) {
             case (1) -> {
-                return runUserPackageMenu();
+                return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
+                UserActions.showCustomerPackages();
+                return runUserMainMenu();
+            }
+            case (3) -> {
                 return (ConsoleMenuUser) runDeliveryServiceMenu();
             }
             default -> {
@@ -24,34 +25,19 @@ public class ConsoleMenuUser extends ConsoleMenu {
         }
     }
 
-    public ConsoleMenuUser runUserPackageMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("USER PACKAGE MENU:", UserPackageMenu.values());
+    public ConsoleMenuUser runPackageGetCustomerSubMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("USER PACKAGE (GET CUSTOMER) SUB-MENU:", UserGetCustomerMenu.values());
         switch (answer) {
             case (1) -> {
-                return runGetCustomerMenu();
-            }
-            case (2) -> {
+                UserActions.createPackageWithExistingCustomer();
                 return runUserMainMenu();
             }
-            default -> {
-                return (ConsoleMenuUser) tearDown();
-            }
-        }
-    }
-
-    public ConsoleMenuUser runGetCustomerMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("USER GET CUSTOMER MENU:", UserGetCustomerMenu.values());
-        switch (answer) {
-            case (1) -> {
-                UserActions.createPackageWithExistCustomer();
-                return runUserPackageMenu();
-            }
             case (2) -> {
-                UserActions.createPackageWithCreatingCustomer();
-                return runUserPackageMenu();
+                UserActions.createPackageWithRegistrationNewCustomer();
+                return runUserMainMenu();
             }
             case (3) -> {
-                return runUserPackageMenu();
+                return runUserMainMenu();
             }
             default -> {
                 return (ConsoleMenuUser) tearDown();

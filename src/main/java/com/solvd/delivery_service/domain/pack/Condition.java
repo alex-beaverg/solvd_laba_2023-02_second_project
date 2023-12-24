@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.domain.pack;
 
-public enum Condition {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum Condition implements IMenu {
     DAMAGED("Damaged"),
     NOT_DAMAGED("Not damaged"),
     UNKNOWN("Unknown");

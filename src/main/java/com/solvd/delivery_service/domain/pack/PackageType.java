@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.domain.pack;
 
-public enum PackageType {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum PackageType implements IMenu {
     EXTRA_SMALL("X-Small", 0.0, 0.2, 19.5),
     SMALL("Small", 0.2, 0.5, 21.5),
     MEDIUM("Medium", 0.5, 0.9, 23.5),

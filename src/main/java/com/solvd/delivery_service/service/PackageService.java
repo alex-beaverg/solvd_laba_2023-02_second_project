@@ -10,4 +10,6 @@ public interface PackageService {
     List<Package> retrieveAll();
     Long retrieveMaxPackageNumber();
     Long retrieveNumberOfEntries();
+    void removeById(Long id);
+    void updateField(Package pack, String field);
 }

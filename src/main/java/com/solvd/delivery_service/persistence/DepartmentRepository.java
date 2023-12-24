@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.persistence;
 
+import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface DepartmentRepository {
     void update(Department department);
     void deleteById(Long id);
     Long countOfEntries();
+    List<Employee> findDepartmentEmployees(Department department);
 }

@@ -3,6 +3,8 @@ package com.solvd.delivery_service.util.console_menu.menu_enums;
 public enum AdminDepartmentMenu implements IMenu {
     SHOW_DEPARTMENTS("Show all departments"),
     REGISTER_DEPARTMENT("Register new department"),
+    RENAME_DEPARTMENT("Rename existing department"),
+    REMOVE_DEPARTMENT("Remove existing department"),
     ADMIN_MAIN_MENU("Return to the ADMIN MAIN MENU"),
     EXIT("Exit");
 

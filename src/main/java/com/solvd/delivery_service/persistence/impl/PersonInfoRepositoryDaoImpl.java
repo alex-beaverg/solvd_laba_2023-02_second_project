@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PersonInfoRepositoryImpl implements PersonInfoRepository {
+public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PERSON_QUERY =
             "INSERT INTO persons(first_name, last_name, age, passport_id, address_id) values(?, ?, ?, ?, ?);";
@@ -20,8 +20,6 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
     private static final String UPDATE_PERSON_FIRST_NAME_QUERY = "UPDATE persons SET first_name = ? WHERE id = ?;";
     private static final String UPDATE_PERSON_LAST_NAME_QUERY = "UPDATE persons SET last_name = ? WHERE id = ?;";
     private static final String UPDATE_PERSON_AGE_QUERY = "UPDATE persons SET age = ? WHERE id = ?;";
-    private static final String UPDATE_PERSON_PASSPORT_ID_QUERY = "UPDATE persons SET passport_id = ? WHERE id = ?;";
-    private static final String UPDATE_PERSON_ADDRESS_ID_QUERY = "UPDATE persons SET address_id = ? WHERE id = ?;";
     private static final String DELETE_PERSON_QUERY = "DELETE FROM persons WHERE id = ?;";
     private static final String FIND_ALL_QUERY =
             "SELECT p.id AS person_id, p.first_name, p.last_name, p.age, ps.id AS passport_id, a.id AS address_id, " +
@@ -65,8 +63,8 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
                     new PersonInfo(resultSet.getString(1),
                             resultSet.getString(2),
                             resultSet.getInt(3),
-                            new PassportRepositoryImpl().findById(resultSet.getLong(4)).get(),
-                            new AddressRepositoryImpl().findById(resultSet.getLong(5)).get()));
+                            new PassportRepositoryDaoImpl().findById(resultSet.getLong(4)).get(),
+                            new AddressRepositoryDaoImpl().findById(resultSet.getLong(5)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find person!", e);
         } finally {
@@ -97,11 +95,11 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
         String value = null;
         Class<?> clazz = String.class;
         switch (field) {
-            case ("first_name") -> {
+            case ("firstName") -> {
                 query = UPDATE_PERSON_FIRST_NAME_QUERY;
                 value = personInfo.getFirstName();
             }
-            case ("last_name") -> {
+            case ("lastName") -> {
                 query = UPDATE_PERSON_LAST_NAME_QUERY;
                 value = personInfo.getLastName();
             }
@@ -110,24 +108,12 @@ public class PersonInfoRepositoryImpl implements PersonInfoRepository {
                 clazz = Integer.class;
                 value = String.valueOf(personInfo.getAge());
             }
-            case ("passport_id") -> {
-                query = UPDATE_PERSON_PASSPORT_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(personInfo.getPassport().getId());
-            }
-            case ("address_id") -> {
-                query = UPDATE_PERSON_ADDRESS_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(personInfo.getAddress().getId());
-            }
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             if (clazz.getSimpleName().equals(String.class.getSimpleName())) {
                 preparedStatement.setString(1, value);
-            } else if (clazz.getSimpleName().equals(Integer.class.getSimpleName())) {
-                preparedStatement.setInt(1, Integer.parseInt(value));
             } else {
-                preparedStatement.setLong(1, Long.parseLong(value));
+                preparedStatement.setInt(1, Integer.parseInt(value));
             }
             preparedStatement.setLong(2, personInfo.getId());
             preparedStatement.executeUpdate();

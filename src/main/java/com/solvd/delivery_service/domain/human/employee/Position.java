@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.domain.human.employee;
 
-public enum Position {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum Position implements IMenu {
     MANAGER_2CAT("Manager 2 category", 1495.2),
     MANAGER_1CAT("Manager 1 category", 1753.4),
     ENGINEER_2CAT("Engineer 2 category", 1615.3),

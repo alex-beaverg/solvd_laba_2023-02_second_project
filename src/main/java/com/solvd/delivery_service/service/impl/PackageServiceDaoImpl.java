@@ -4,22 +4,22 @@ import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.persistence.PackageRepository;
-import com.solvd.delivery_service.persistence.impl.PackageRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.PackageRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
 import com.solvd.delivery_service.service.CustomerService;
 import com.solvd.delivery_service.service.PackageService;
 
 import java.util.List;
 
-public class PackageServiceImpl implements PackageService {
+public class PackageServiceDaoImpl implements PackageService {
     private final PackageRepository packageRepository;
     private final AddressService addressService;
     private final CustomerService customerService;
 
-    public PackageServiceImpl() {
-        this.packageRepository = new PackageRepositoryImpl();
-        this.addressService = new AddressServiceImpl();
-        this.customerService = new CustomerServiceImpl();
+    public PackageServiceDaoImpl() {
+        this.packageRepository = new PackageRepositoryDaoImpl();
+        this.addressService = new AddressServiceDaoImpl();
+        this.customerService = new CustomerServiceDaoImpl();
     }
 
     @Override
@@ -61,5 +61,15 @@ public class PackageServiceImpl implements PackageService {
     @Override
     public Long retrieveNumberOfEntries() {
         return packageRepository.countOfEntries();
+    }
+
+    @Override
+    public void removeById(Long id) {
+        packageRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateField(Package pack, String field) {
+        packageRepository.update(pack, field);
     }
 }

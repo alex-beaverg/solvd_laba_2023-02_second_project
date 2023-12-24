@@ -47,6 +47,10 @@
             <AppenderRef ref="rollingFile"/>
             <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
         </Logger>
+        <Logger name="com.solvd.delivery_service.util.console_menu.RequestMethods" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>

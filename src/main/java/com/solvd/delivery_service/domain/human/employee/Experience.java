@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.domain.human.employee;
 
-public enum Experience {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum Experience implements IMenu {
     JUNIOR("Junior", 0.0, 1.0, 1.1),
     JUNIOR_PLUS("Junior+", 1.0, 1.5, 1.5),
     MIDDLE("Middle", 1.5, 2.0, 1.9),

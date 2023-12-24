@@ -1,6 +1,8 @@
 package com.solvd.delivery_service.domain.pack;
 
-public enum Status {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum Status implements IMenu {
     DELIVERED("Delivered"),
     LOST("Lost");
 

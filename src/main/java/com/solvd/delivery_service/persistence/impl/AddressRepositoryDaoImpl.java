@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AddressRepositoryImpl implements AddressRepository {
+public class AddressRepositoryDaoImpl implements AddressRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_ADDRESS_QUERY =
             "INSERT INTO addresses(city, street, house, flat, zip_code, country) values(?, ?, ?, ?, ?, ?);";
@@ -27,6 +27,7 @@ public class AddressRepositoryImpl implements AddressRepository {
             "FROM addresses a " +
             "ORDER BY a.id;";
     private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS addresses_count FROM addresses;";
+    private static final String FIND_MAX_ID = "SELECT MAX(id) FROM addresses;";
 
     @Override
     public void create(Address address) {
@@ -114,7 +115,7 @@ public class AddressRepositoryImpl implements AddressRepository {
                 clazz = Integer.class;
                 value = String.valueOf(address.getFlat());
             }
-            case ("zip_code") -> {
+            case ("zipCode") -> {
                 query = UPDATE_ADDRESS_ZIP_CODE_QUERY;
                 clazz = Integer.class;
                 value = String.valueOf(address.getZipCode());
@@ -166,6 +167,22 @@ public class AddressRepositoryImpl implements AddressRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         return count;
+    }
+
+    @Override
+    public Long findMaxId() {
+        Long id;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_MAX_ID)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            id = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find max package number!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return id;
     }
 
     private static List<Address> mapAddresses(ResultSet resultSet) {

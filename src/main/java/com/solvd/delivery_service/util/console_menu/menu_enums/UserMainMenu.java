@@ -1,7 +1,8 @@
 package com.solvd.delivery_service.util.console_menu.menu_enums;
 
 public enum UserMainMenu implements IMenu {
-    USER_PACKAGE_MENU("Go to the USER PACKAGE MENU"),
+    CREATE_PACKAGE("Create package"),
+    SHOW_CUSTOMER_PACKAGES("Show customer packages"),
     DELIVERY_SERVICE_MENU("Return to the DELIVERY SERVICE MENU"),
     EXIT("Exit");
 

@@ -4,6 +4,7 @@ public enum AdminMainMenu implements IMenu {
     SHOW_NUMBER_OF_ENTRIES_IN_DB("Show number of entries in database"),
     ADMIN_DEPARTMENT_MENU("Go to the ADMIN DEPARTMENT MENU"),
     ADMIN_EMPLOYEE_MENU("Go to the ADMIN EMPLOYEE MENU"),
+    ADMIN_CUSTOMER_MENU("Go to the ADMIN CUSTOMER MENU"),
     ADMIN_PACKAGE_MENU("Go to the ADMIN PACKAGE MENU"),
     DELIVERY_SERVICE_MENU("Return to the DELIVERY SERVICE MENU"),
     EXIT("Exit");

@@ -9,4 +9,6 @@ public interface EmployeeService {
     Employee createWithExistDepartment(Employee employee);
     List<Employee> retrieveAll();
     Long retrieveNumberOfEntries();
+    void updateField(Employee employee, String field);
+    void removeById(Long id);
 }

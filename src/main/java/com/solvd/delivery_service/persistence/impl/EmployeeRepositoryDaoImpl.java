@@ -12,30 +12,34 @@ import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.PackageRepository;
+import com.solvd.delivery_service.persistence.EmployeeRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PackageRepositoryImpl implements PackageRepository {
+public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_PACKAGE_QUERY =
-            "INSERT INTO packages(number, package_type, delivery_type, status, package_condition, address_from_id, " +
-                    "address_to_id, customer_id, employee_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String FIND_PACKAGE_QUERY = "SELECT * FROM packages WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_NUMBER_QUERY = "UPDATE packages SET number = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_TYPE_QUERY = "UPDATE packages SET package_type = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_DELIVERY_TYPE_QUERY = "UPDATE packages SET delivery_type = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_STATUS_QUERY = "UPDATE packages SET status = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_CONDITION_QUERY = "UPDATE packages SET package_condition = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_ADDRESS_FROM_ID_QUERY = "UPDATE packages SET address_from_id = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_ADDRESS_TO_ID_QUERY = "UPDATE packages SET address_to_id = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_CUSTOMER_ID_QUERY = "UPDATE packages SET customer_id = ? WHERE id = ?;";
-    private static final String UPDATE_PACKAGE_EMPLOYEE_ID_QUERY = "UPDATE packages SET employee_id = ? WHERE id = ?;";
-    private static final String DELETE_PACKAGE_QUERY = "DELETE FROM packages WHERE id = ?;";
+    private static final String INSERT_EMPLOYEE_QUERY =
+            "INSERT INTO employees(position, experience, department_id, person_id) values(?, ?, ?, ?);";
+    private static final String FIND_EMPLOYEE_QUERY = "SELECT * FROM employees WHERE id = ?;";
+    private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ?;";
+    private static final String UPDATE_EMPLOYEE_EXPERIENCE_QUERY = "UPDATE employees SET experience = ? WHERE id = ?;";
+    private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ?;";
     private static final String FIND_ALL_QUERY =
+            "SELECT e.id AS employee_id, e.position, e.experience, d.id AS department_id, p.id AS person_id, " +
+                    "d.title AS department, p.first_name, p.last_name, p.age, ps.id AS passport_id, " +
+                    "a.id AS address_id, ps.number AS passport, a.city, a.street, a.house, a.flat, " +
+                    "a.zip_code, a.country " +
+            "FROM employees e " +
+            "JOIN persons p ON e.person_id = p.id " +
+            "JOIN departments d ON e.department_id = d.id " +
+            "JOIN passports ps ON p.passport_id = ps.id " +
+            "JOIN addresses a ON p.address_id = a.id " +
+            "ORDER BY e.id;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS employees_count FROM employees;";
+    private static final String FIND_EMPLOYEE_PACKAGES_QUERY =
             "SELECT pg.id AS package_id, pg.number, pg.package_type, pg.delivery_type, pg.status, pg.package_condition, " +
                     "a3.id AS address_from_id, a3.city AS city_from, a3.street AS street_from, a3.house AS house_from, " +
                     "a3.flat AS flat_from, a3.zip_code AS zip_code_from, a3.country AS country_from, a4.id AS address_to_id, " +
@@ -52,148 +56,115 @@ public class PackageRepositoryImpl implements PackageRepository {
                     "a1.city AS employee_city, a1.street AS employee_street, a1.house AS employee_house, " +
                     "a1.flat AS employee_flat, a1.zip_code AS employee_zip_code, a1.country AS employee_country, " +
                     "d.id AS employee_department_id, d.title AS employee_department " +
-            "FROM packages pg " +
-            "JOIN employees e ON pg.employee_id = e.id " +
-            "JOIN persons p1 ON e.person_id = p1.id " +
-            "JOIN departments d ON e.department_id = d.id " +
-            "JOIN passports ps1 ON p1.passport_id = ps1.id " +
-            "JOIN addresses a1 ON p1.address_id = a1.id " +
-            "JOIN customers cu ON pg.customer_id = cu.id " +
-            "JOIN persons p2 ON cu.person_id = p2.id " +
-            "JOIN passports ps2 ON p2.passport_id = ps2.id " +
-            "JOIN addresses a2 ON p2.address_id = a2.id " +
-            "JOIN addresses a3 ON pg.address_from_id = a3.id " +
-            "JOIN addresses a4 ON pg.address_to_id = a4.id " +
-            "ORDER BY pg.id;";
-    private static final String FIND_MAX_PACKAGE_NUMBER = "SELECT MAX(number) FROM packages;";
-    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS packages_count FROM packages;";
+                    "FROM packages pg " +
+                    "JOIN employees e ON pg.employee_id = e.id " +
+                    "JOIN persons p1 ON e.person_id = p1.id " +
+                    "JOIN departments d ON e.department_id = d.id " +
+                    "JOIN passports ps1 ON p1.passport_id = ps1.id " +
+                    "JOIN addresses a1 ON p1.address_id = a1.id " +
+                    "JOIN customers cu ON pg.customer_id = cu.id " +
+                    "JOIN persons p2 ON cu.person_id = p2.id " +
+                    "JOIN passports ps2 ON p2.passport_id = ps2.id " +
+                    "JOIN addresses a2 ON p2.address_id = a2.id " +
+                    "JOIN addresses a3 ON pg.address_from_id = a3.id " +
+                    "JOIN addresses a4 ON pg.address_to_id = a4.id " +
+                    "WHERE employee_id = ? " +
+                    "ORDER BY pg.id;";
 
     @Override
-    public void create(Package pack) {
+    public void create(Employee employee) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PACKAGE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, pack.getNumber());
-            preparedStatement.setString(2, pack.getPackageType().name());
-            preparedStatement.setString(3, pack.getDeliveryType().name());
-            preparedStatement.setString(4, pack.getStatus().name());
-            preparedStatement.setString(5, pack.getCondition().name());
-            preparedStatement.setLong(6, pack.getAddressFrom().getId());
-            preparedStatement.setLong(7, pack.getAddressTo().getId());
-            preparedStatement.setLong(8, pack.getCustomer().getId());
-            preparedStatement.setLong(9, pack.getEmployee().getId());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_EMPLOYEE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, employee.getPosition().name());
+            preparedStatement.setString(2, employee.getExperience().name());
+            preparedStatement.setLong(3, employee.getDepartment().getId());
+            preparedStatement.setLong(4, employee.getPersonInfo().getId());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
-                pack.setId(resultSet.getLong(1));
+                employee.setId(resultSet.getLong(1));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to create package!", e);
+            throw new RuntimeException("Unable to create employee!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
     }
 
     @Override
-    public Optional<Package> findById(Long id) {
+    public Optional<Employee> findById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        Optional<Package> packageOptional;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_PACKAGE_QUERY)) {
+        Optional<Employee> employeeOptional;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_EMPLOYEE_QUERY)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            packageOptional = Optional.of(
-                    new Package(
-                            resultSet.getLong(1),
-                            PackageType.valueOf(resultSet.getString(2)),
-                            DeliveryType.valueOf(resultSet.getString(3)),
-                            Status.valueOf(resultSet.getString(4)),
-                            Condition.valueOf(resultSet.getString(5)),
-                            new AddressRepositoryImpl().findById(resultSet.getLong(6)).get(),
-                            new AddressRepositoryImpl().findById(resultSet.getLong(7)).get(),
-                            new CustomerRepositoryImpl().findById(resultSet.getLong(8)).get(),
-                            new EmployeeRepositoryImpl().findById(resultSet.getLong(9)).get()));
+            employeeOptional = Optional.of(
+                    new Employee(
+                            Position.valueOf(resultSet.getString(1)),
+                            Experience.valueOf(resultSet.getString(2)),
+                            new DepartmentRepositoryDaoImpl().findById(resultSet.getLong(3)).get(),
+                            new PersonInfoRepositoryDaoImpl().findById(resultSet.getLong(4)).get()));
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find package!", e);
+            throw new RuntimeException("Unable to find employee!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-        return packageOptional;
+        return employeeOptional;
     }
 
     @Override
-    public List<Package> findAll() {
-        List<Package> packages;
+    public List<Employee> findAll() {
+        List<Employee> employees;
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            packages = mapPackages(resultSet);
+            employees = mapEmployees(resultSet);
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find all packages!", e);
+            throw new RuntimeException("Unable to find all employees!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-        return packages;
+        List<Package> packages;
+        connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_EMPLOYEE_PACKAGES_QUERY)) {
+            int index = 1;
+            for (Employee employee : employees) {
+                preparedStatement.setLong(1, index);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                packages = mapPackages(resultSet);
+                employee.setPackages(packages);
+                index++;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find customers by last name!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return employees;
     }
 
     @Override
-    public void update(Package pack, String field) {
+    public void update(Employee employee, String field) {
         Connection connection = CONNECTION_POOL.getConnection();
         String query = null;
         String value = null;
-        Class<?> clazz = String.class;
         switch (field) {
-            case ("number") -> {
-                query = UPDATE_PACKAGE_NUMBER_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(pack.getNumber());
+            case ("position") -> {
+                query = UPDATE_EMPLOYEE_POSITION_QUERY;
+                value = employee.getPosition().name();
             }
-            case ("package_type") -> {
-                query = UPDATE_PACKAGE_TYPE_QUERY;
-                value = pack.getPackageType().name();
-            }
-            case ("delivery_type") -> {
-                query = UPDATE_PACKAGE_DELIVERY_TYPE_QUERY;
-                value = pack.getDeliveryType().name();
-            }
-            case ("status") -> {
-                query = UPDATE_PACKAGE_STATUS_QUERY;
-                value = pack.getStatus().name();
-            }
-            case ("package_condition") -> {
-                query = UPDATE_PACKAGE_CONDITION_QUERY;
-                value = pack.getCondition().name();
-            }
-            case ("address_from_id") -> {
-                query = UPDATE_PACKAGE_ADDRESS_FROM_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(pack.getAddressFrom().getId());
-            }
-            case ("address_to_id") -> {
-                query = UPDATE_PACKAGE_ADDRESS_TO_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(pack.getAddressTo().getId());
-            }
-            case ("customer_id") -> {
-                query = UPDATE_PACKAGE_CUSTOMER_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(pack.getCustomer().getId());
-            }
-            case ("employee_id") -> {
-                query = UPDATE_PACKAGE_EMPLOYEE_ID_QUERY;
-                clazz = Long.class;
-                value = String.valueOf(pack.getEmployee().getId());
+            case ("experience") -> {
+                query = UPDATE_EMPLOYEE_EXPERIENCE_QUERY;
+                value = employee.getExperience().name();
             }
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            if (clazz.getSimpleName().equals(String.class.getSimpleName())) {
-                preparedStatement.setString(1, value);
-            } else {
-                preparedStatement.setLong(1, Long.parseLong(value));
-            }
-            preparedStatement.setLong(2, pack.getId());
+            preparedStatement.setString(1, value);
+            preparedStatement.setLong(2, employee.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update package!", e);
+            throw new RuntimeException("Unable to update employee!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -202,14 +173,67 @@ public class PackageRepositoryImpl implements PackageRepository {
     @Override
     public void deleteById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PACKAGE_QUERY)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_EMPLOYEE_QUERY)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to delete package!", e);
+            throw new RuntimeException("Unable to delete employee!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long countOfEntries() {
+        Long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get count of employees!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
+    }
+
+    private static List<Employee> mapEmployees(ResultSet resultSet) {
+        List<Employee> employees = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.setId(resultSet.getLong(1));
+                employee.setPosition(Position.valueOf(resultSet.getString(2)));
+                employee.setExperience(Experience.valueOf(resultSet.getString(3)));
+                employee.setDepartment(
+                        new Department(
+                            resultSet.getLong(4),
+                            resultSet.getString(6)));
+                employee.setPersonInfo(
+                        new PersonInfo(
+                            resultSet.getLong(5),
+                            resultSet.getString(7),
+                            resultSet.getString(8),
+                            resultSet.getInt(9),
+                            new Passport(
+                                    resultSet.getLong(10),
+                                    resultSet.getString(12)),
+                            new Address(
+                                    resultSet.getLong(11),
+                                    resultSet.getString(13),
+                                    resultSet.getString(14),
+                                    resultSet.getInt(15),
+                                    resultSet.getInt(16),
+                                    resultSet.getInt(17),
+                                    Country.valueOf(resultSet.getString(18)))));
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to map employees!", e);
+        }
+        return employees;
     }
 
     private static List<Package> mapPackages(ResultSet resultSet) {
@@ -286,37 +310,5 @@ public class PackageRepositoryImpl implements PackageRepository {
             throw new RuntimeException("Unable to map packages!", e);
         }
         return packages;
-    }
-
-    @Override
-    public Long findMaxPackageNumber() {
-        Long number;
-        Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_MAX_PACKAGE_NUMBER)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            number = resultSet.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to find max package number!", e);
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-        return number;
-    }
-
-    @Override
-    public Long countOfEntries() {
-        Long count = 0L;
-        Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            count = resultSet.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to get count of packages!", e);
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-        return count;
     }
 }

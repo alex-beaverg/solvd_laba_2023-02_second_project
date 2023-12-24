@@ -12,4 +12,5 @@ public interface AddressRepository {
     void update(Address address, String field);
     void deleteById(Long id);
     Long countOfEntries();
+    Long findMaxId();
 }

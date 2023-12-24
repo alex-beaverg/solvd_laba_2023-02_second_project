@@ -4,22 +4,22 @@ import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
-import com.solvd.delivery_service.persistence.impl.PersonInfoRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.PersonInfoRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
 import com.solvd.delivery_service.service.PassportService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
-public class PersonInfoServiceImpl implements PersonInfoService {
+public class PersonInfoServiceDaoImpl implements PersonInfoService {
     private final PersonInfoRepository personInfoRepository;
     private final PassportService passportService;
     private final AddressService addressService;
 
-    public PersonInfoServiceImpl() {
-        this.personInfoRepository = new PersonInfoRepositoryImpl();
-        this.passportService = new PassportServiceImpl();
-        this.addressService = new AddressServiceImpl();
+    public PersonInfoServiceDaoImpl() {
+        this.personInfoRepository = new PersonInfoRepositoryDaoImpl();
+        this.passportService = new PassportServiceDaoImpl();
+        this.addressService = new AddressServiceDaoImpl();
     }
 
     @Override
@@ -45,5 +45,10 @@ public class PersonInfoServiceImpl implements PersonInfoService {
     @Override
     public Long retrieveNumberOfEntries() {
         return personInfoRepository.countOfEntries();
+    }
+
+    @Override
+    public void updateField(PersonInfo personInfo, String field) {
+        personInfoRepository.update(personInfo, field);
     }
 }

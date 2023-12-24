@@ -8,4 +8,5 @@ public interface PersonInfoService {
     PersonInfo create(PersonInfo personInfo);
     List<PersonInfo> retrieveAll();
     Long retrieveNumberOfEntries();
+    void updateField(PersonInfo personInfo, String field);
 }

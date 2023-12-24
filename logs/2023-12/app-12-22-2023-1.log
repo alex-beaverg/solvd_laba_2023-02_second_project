@@ -1,0 +1,14 @@
+2023-12-22 00:43:12,303 ERROR c.s.d.u.c.ConsoleMenu [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 00:43:17,163 ERROR c.s.d.u.c.ConsoleMenu [main] [StringFormatException]: Entered data is not a letter or number character!
+2023-12-22 13:05:53,510 ERROR c.s.d.u.c.ConsoleMenu [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 14:08:36,382 ERROR c.s.d.d.a.UserActions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 14:09:29,678 ERROR c.s.d.d.a.UserActions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 14:25:41,451 ERROR c.s.d.d.a.UserActions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 14:26:01,782 ERROR c.s.d.u.c.ConsoleMenu [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 16:49:36,350 ERROR c.s.d.u.c.ConsoleMenu [main] [MenuItemNumberOutOfBoundsException]: Entered data must be equal to some menu item!
+2023-12-22 16:49:39,701 ERROR c.s.d.u.c.ConsoleMenu [main] [MenuItemNumberOutOfBoundsException]: Entered data must be equal to some menu item!
+2023-12-22 16:54:52,438 ERROR c.s.d.d.a.Actions [main] [StringFormatException]: Entered data is not a letter or number character!
+2023-12-22 17:15:30,397 ERROR c.s.d.d.a.Actions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 17:15:58,687 ERROR c.s.d.d.a.Actions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 17:16:16,995 ERROR c.s.d.d.a.Actions [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-22 17:17:00,026 ERROR c.s.d.u.c.ConsoleMenu [main] [EmptyInputException]: Entered data can not be empty!

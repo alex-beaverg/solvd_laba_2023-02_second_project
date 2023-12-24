@@ -1,10 +1,14 @@
 package com.solvd.delivery_service.domain.structure;
 
+import com.solvd.delivery_service.domain.human.employee.Employee;
+
+import java.util.List;
 import java.util.Objects;
 
 public class Department {
     private Long id;
     private String title;
+    private List<Employee> employees;
 
     public Department() {}
 
@@ -31,6 +35,14 @@ public class Department {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override

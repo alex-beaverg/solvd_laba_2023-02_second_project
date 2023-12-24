@@ -1,8 +1,10 @@
 package com.solvd.delivery_service.domain.human.employee;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
+import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Employee {
@@ -11,6 +13,7 @@ public class Employee {
     private Experience experience;
     private Department department;
     private PersonInfo personInfo;
+    private List<Package> packages;
 
     public Employee() {}
 
@@ -67,6 +70,14 @@ public class Employee {
 
     public void setPersonInfo(PersonInfo personInfo) {
         this.personInfo = personInfo;
+    }
+
+    public List<Package> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(List<Package> packages) {
+        this.packages = packages;
     }
 
     @Override

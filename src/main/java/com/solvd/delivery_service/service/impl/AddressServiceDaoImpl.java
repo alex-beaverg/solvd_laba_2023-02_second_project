@@ -2,16 +2,16 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;
-import com.solvd.delivery_service.persistence.impl.AddressRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.AddressRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
 
 import java.util.List;
 
-public class AddressServiceImpl implements AddressService {
+public class AddressServiceDaoImpl implements AddressService {
     private final AddressRepository addressRepository;
 
-    public AddressServiceImpl() {
-        this.addressRepository = new AddressRepositoryImpl();
+    public AddressServiceDaoImpl() {
+        this.addressRepository = new AddressRepositoryDaoImpl();
     }
 
     @Override
@@ -29,5 +29,15 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Long retrieveNumberOfEntries() {
         return addressRepository.countOfEntries();
+    }
+
+    @Override
+    public Long retrieveMaxId() {
+        return addressRepository.findMaxId();
+    }
+
+    @Override
+    public void updateField(Address address, String field) {
+        addressRepository.update(address, field);
     }
 }

@@ -9,6 +9,9 @@ public class Accounting {
     public static int calculateZones(Address addressFrom, Address addressTo) {
         int x = Math.abs(addressFrom.getCountry().getZone().getIndexX() - addressTo.getCountry().getZone().getIndexX());
         int y = Math.abs(addressFrom.getCountry().getZone().getIndexY() - addressTo.getCountry().getZone().getIndexY());
+        if (x + y == 0) {
+            return 1;
+        }
         return x + y;
     }
 

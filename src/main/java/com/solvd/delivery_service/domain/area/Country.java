@@ -1,9 +1,15 @@
 package com.solvd.delivery_service.domain.area;
 
-public enum Country {
+import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+
+public enum Country implements IMenu {
     BELARUS("Belarus", Zone.ZONE_A),
     POLAND("Poland", Zone.ZONE_B),
     LITHUANIA("Lithuania", Zone.ZONE_D),
+    LATVIA("Latvia", Zone.ZONE_D),
+    ESTONIA("Estonia", Zone.ZONE_G),
+    FINLAND("Finland", Zone.ZONE_H),
+    SWEDEN("Sweden", Zone.ZONE_I),
     GERMANY("Germany", Zone.ZONE_C);
 
     private final String title;

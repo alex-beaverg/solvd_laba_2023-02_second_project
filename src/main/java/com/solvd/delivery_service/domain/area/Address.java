@@ -1,5 +1,4 @@
 package com.solvd.delivery_service.domain.area;
-
 import java.util.Objects;
 
 public class Address {

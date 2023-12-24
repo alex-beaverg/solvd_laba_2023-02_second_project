@@ -4,22 +4,22 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.persistence.impl.EmployeeRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.EmployeeRepositoryDaoImpl;
 import com.solvd.delivery_service.service.DepartmentService;
 import com.solvd.delivery_service.service.EmployeeService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceDaoImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PersonInfoService personInfoService;
     private final DepartmentService departmentService;
 
-    public EmployeeServiceImpl() {
-        this.employeeRepository = new EmployeeRepositoryImpl();
-        this.personInfoService = new PersonInfoServiceImpl();
-        this.departmentService = new DepartmentServiceImpl();
+    public EmployeeServiceDaoImpl() {
+        this.employeeRepository = new EmployeeRepositoryDaoImpl();
+        this.personInfoService = new PersonInfoServiceDaoImpl();
+        this.departmentService = new DepartmentServiceDaoImpl();
     }
 
     @Override
@@ -56,5 +56,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Long retrieveNumberOfEntries() {
         return employeeRepository.countOfEntries();
+    }
+
+    @Override
+    public void updateField(Employee employee, String field) {
+        employeeRepository.update(employee, field);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        employeeRepository.deleteById(id);
     }
 }

@@ -2,20 +2,21 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
+import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.persistence.CustomerRepository;
-import com.solvd.delivery_service.persistence.impl.CustomerRepositoryImpl;
+import com.solvd.delivery_service.persistence.impl.CustomerRepositoryDaoImpl;
 import com.solvd.delivery_service.service.CustomerService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceDaoImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PersonInfoService personInfoService;
 
-    public CustomerServiceImpl() {
-        this.customerRepository = new CustomerRepositoryImpl();
-        this.personInfoService = new PersonInfoServiceImpl();
+    public CustomerServiceDaoImpl() {
+        this.customerRepository = new CustomerRepositoryDaoImpl();
+        this.personInfoService = new PersonInfoServiceDaoImpl();
     }
 
     @Override
@@ -47,5 +48,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer retrieveById(Long id) {
         return customerRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Package> retrieveCustomerPackages(Customer customer) {
+        return customerRepository.findCustomerPackages(customer);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        customerRepository.deleteById(id);
     }
 }

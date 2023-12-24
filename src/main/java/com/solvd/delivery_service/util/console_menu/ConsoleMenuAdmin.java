@@ -1,12 +1,7 @@
 package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.AdminActions;
-import com.solvd.delivery_service.util.console_menu.menu_enums.AdminDepartmentMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.AdminEmployeeMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.AdminMainMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.AdminPackageMenu;
-
-import static com.solvd.delivery_service.util.Printers.*;
+import com.solvd.delivery_service.util.console_menu.menu_enums.*;
 
 public class ConsoleMenuAdmin extends ConsoleMenu {
 
@@ -24,9 +19,12 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
-                return runAdminPackageMenu();
+                return runAdminCustomerMenu();
             }
             case (5) -> {
+                return runAdminPackageMenu();
+            }
+            case (6) -> {
                 return (ConsoleMenuAdmin) runDeliveryServiceMenu();
             }
             default -> {
@@ -43,6 +41,14 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminPackageMenu();
             }
             case (2) -> {
+                AdminActions.updatePackageField();
+                return runAdminPackageMenu();
+            }
+            case (3) -> {
+                AdminActions.removePackage();
+                return runAdminPackageMenu();
+            }
+            case (4) -> {
                 return runAdminMainMenu();
             }
             default -> {
@@ -63,6 +69,14 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
+                AdminActions.updateEmployeeField();
+                return runAdminEmployeeMenu();
+            }
+            case (4) -> {
+                AdminActions.removeEmployee();
+                return runAdminEmployeeMenu();
+            }
+            case (5) -> {
                 return runAdminMainMenu();
             }
             default -> {
@@ -83,6 +97,38 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminDepartmentMenu();
             }
             case (3) -> {
+                AdminActions.renameDepartment();
+                return runAdminDepartmentMenu();
+            }
+            case (4) -> {
+                AdminActions.removeDepartment();
+                return runAdminDepartmentMenu();
+            }
+            case (5) -> {
+                return runAdminMainMenu();
+            }
+            default -> {
+                return (ConsoleMenuAdmin) tearDown();
+            }
+        }
+    }
+
+    private ConsoleMenuAdmin runAdminCustomerMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("ADMIN CUSTOMER MENU", AdminCustomerMenu.values());
+        switch (answer) {
+            case (1) -> {
+                AdminActions.showCustomers();
+                return runAdminCustomerMenu();
+            }
+            case (2) -> {
+                AdminActions.updateCustomerField();
+                return runAdminCustomerMenu();
+            }
+            case (3) -> {
+                AdminActions.removeCustomer();
+                return runAdminCustomerMenu();
+            }
+            case (4) -> {
                 return runAdminMainMenu();
             }
             default -> {
