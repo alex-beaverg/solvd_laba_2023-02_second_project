@@ -38,4 +38,8 @@ public enum PackageType implements IMenu {
     public Double getBaseCost() {
         return baseCost;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.PersonInfoRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT
+        INTO persons (first_name, last_name, age, passport_id, address_id)
+        VALUES (#{personInfo.firstName}, #{personInfo.lastName}, #{personInfo.age}, #{personInfo.passport.id}, #{personInfo.address.id})
+    </insert>
+    <sql id="personAllSelect">
+        SELECT
+            p.id AS person_id, p.first_name, p.last_name, p.age,
+            ps.id AS passport_id, ps.number AS passport,
+            a.id AS address_id, a.city, a.street, a.house, a.flat, a.zip_code, a.country
+        FROM persons p
+        JOIN passports ps ON p.passport_id = ps.id
+        JOIN addresses a ON p.address_id = a.id
+    </sql>
+    <select id="findAll" resultMap="PersonResultMap">
+        <include refid="personAllSelect"/>
+        ORDER BY p.id
+    </select>
+    <select id="findById" resultMap="PersonResultMap">
+        <include refid="personAllSelect"/>
+        WHERE p.id = #{id}
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesPersonResultMap">
+        SELECT
+            COUNT(*) AS persons_count
+        FROM persons
+    </select>
+    <update id="update">
+        UPDATE persons
+        <if test="field == 'firstName'">
+            SET first_name = #{personInfo.firstName}
+        </if>
+        <if test="field == 'lastName'">
+            SET last_name = #{personInfo.lastName}
+        </if>
+        <if test="field == 'age'">
+            SET age = #{personInfo.age}
+        </if>
+        WHERE id = #{personInfo.id}
+    </update>
+    <delete id="deleteById">
+        DELETE
+        FROM persons
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="PersonResultMap" type="com.solvd.delivery_service.domain.human.PersonInfo" autoMapping="false">
+        <id column="person_id" property="id"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="age" property="age"/>
+        <association property="passport"
+                     resultMap="com.solvd.delivery_service.persistence.PassportRepository.PassportResultMap"/>
+        <association property="address"
+                     resultMap="com.solvd.delivery_service.persistence.AddressRepository.AddressResultMap"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesPersonResultMap" type="Long" autoMapping="false">
+        <result column="persons_count" property="id"/>
+    </resultMap>
+</mapper>

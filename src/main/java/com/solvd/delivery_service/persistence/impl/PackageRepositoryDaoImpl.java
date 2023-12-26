@@ -13,6 +13,7 @@ import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.PackageRepository;
+import com.solvd.delivery_service.service.DBService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PackageRepositoryDaoImpl implements PackageRepository {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PACKAGE_QUERY =
             "INSERT INTO packages(number, package_type, delivery_type, status, package_condition, address_from_id, " +
@@ -31,7 +33,7 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
     private static final String UPDATE_PACKAGE_STATUS_QUERY = "UPDATE packages SET status = ? WHERE id = ?;";
     private static final String UPDATE_PACKAGE_CONDITION_QUERY = "UPDATE packages SET package_condition = ? WHERE id = ?;";
     private static final String DELETE_PACKAGE_QUERY = "DELETE FROM packages WHERE id = ?;";
-    private static final String FIND_ALL_QUERY =
+    private static final String MAIN_QUERY =
             "SELECT pg.id AS package_id, pg.number, pg.package_type, pg.delivery_type, pg.status, pg.package_condition, " +
                     "a3.id AS address_from_id, a3.city AS city_from, a3.street AS street_from, a3.house AS house_from, " +
                     "a3.flat AS flat_from, a3.zip_code AS zip_code_from, a3.country AS country_from, a4.id AS address_to_id, " +
@@ -59,15 +61,18 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             "JOIN passports ps2 ON p2.passport_id = ps2.id " +
             "JOIN addresses a2 ON p2.address_id = a2.id " +
             "JOIN addresses a3 ON pg.address_from_id = a3.id " +
-            "JOIN addresses a4 ON pg.address_to_id = a4.id " +
-            "ORDER BY pg.id;";
+            "JOIN addresses a4 ON pg.address_to_id = a4.id ";
+    private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY pg.id;";
     private static final String FIND_MAX_PACKAGE_NUMBER = "SELECT MAX(number) FROM packages;";
     private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS packages_count FROM packages;";
+    private static final String FIND_CUSTOMER_PACKAGES_QUERY = MAIN_QUERY + "WHERE customer_id = ? ORDER BY pg.id;";
+    private static final String FIND_EMPLOYEE_PACKAGES_QUERY = MAIN_QUERY + "WHERE employee_id = ? ORDER BY pg.id;";
 
     @Override
     public void create(Package pack) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PACKAGE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PACKAGE_QUERY,
+                Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setLong(1, pack.getNumber());
             preparedStatement.setString(2, pack.getPackageType().name());
             preparedStatement.setString(3, pack.getDeliveryType().name());
@@ -104,12 +109,12 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
                             DeliveryType.valueOf(resultSet.getString(3)),
                             Status.valueOf(resultSet.getString(4)),
                             Condition.valueOf(resultSet.getString(5)),
-                            new AddressRepositoryDaoImpl().findById(resultSet.getLong(6)).get(),
-                            new AddressRepositoryDaoImpl().findById(resultSet.getLong(7)).get(),
-                            new CustomerRepositoryDaoImpl().findById(resultSet.getLong(8)).get(),
-                            new EmployeeRepositoryDaoImpl().findById(resultSet.getLong(9)).get()));
+                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(6)).get(),
+                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(7)).get(),
+                            DB_SERVICE.getCustomerRepository().findById(resultSet.getLong(8)).get(),
+                            DB_SERVICE.getEmployeeRepository().findById(resultSet.getLong(9)).get()));
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find package!", e);
+            throw new RuntimeException("Unable to find package by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -169,7 +174,7 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             preparedStatement.setLong(2, pack.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update package!", e);
+            throw new RuntimeException("Unable to update package field!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -182,10 +187,74 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to delete package!", e);
+            throw new RuntimeException("Unable to delete package by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public Long findMaxPackageNumber() {
+        long number;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_MAX_PACKAGE_NUMBER)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            number = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find max package number!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return number;
+    }
+
+    @Override
+    public List<Package> findCustomerPackages(Customer customer) {
+        List<Package> packages;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_CUSTOMER_PACKAGES_QUERY)) {
+            preparedStatement.setLong(1, customer.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            packages = mapPackages(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find customer packages!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return packages;
+    }
+
+    @Override
+    public List<Package> findEmployeePackages(Employee employee) {
+        List<Package> packages;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_EMPLOYEE_PACKAGES_QUERY)) {
+            preparedStatement.setLong(1, employee.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            packages = mapPackages(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find employee packages!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return packages;
+    }
+
+    @Override
+    public Long countOfEntries() {
+        long count = 0L;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            count = resultSet.getLong(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get number of packages!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return count;
     }
 
     private static List<Package> mapPackages(ResultSet resultSet) {
@@ -262,37 +331,5 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             throw new RuntimeException("Unable to map packages!", e);
         }
         return packages;
-    }
-
-    @Override
-    public Long findMaxPackageNumber() {
-        Long number;
-        Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_MAX_PACKAGE_NUMBER)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            number = resultSet.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to find max package number!", e);
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-        return number;
-    }
-
-    @Override
-    public Long countOfEntries() {
-        Long count = 0L;
-        Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            count = resultSet.getLong(1);
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to get count of packages!", e);
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-        return count;
     }
 }

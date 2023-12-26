@@ -12,7 +12,12 @@ public class Address {
 
     public Address() {}
 
-    public Address(String city, String street, Integer house, Integer flat, Integer zipCode, Country country) {
+    public Address(String city,
+                   String street,
+                   Integer house,
+                   Integer flat,
+                   Integer zipCode,
+                   Country country) {
         this.city = city;
         this.street = street;
         this.house = house;
@@ -21,7 +26,13 @@ public class Address {
         this.country = country;
     }
 
-    public Address(Long id, String city, String street, Integer house, Integer flat, Integer zipCode, Country country) {
+    public Address(Long id,
+                   String city,
+                   String street,
+                   Integer house,
+                   Integer flat,
+                   Integer zipCode,
+                   Country country) {
         this.id = id;
         this.city = city;
         this.street = street;
@@ -108,12 +119,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address: [Address id = " + id +
-                ", City = " + city +
-                ", Street = " + street +
-                ", House = " + house +
-                ", Flat = " + flat +
-                ", Zip code = " + zipCode +
-                ", Country = " + country.getTitle() + "]";
+        return "Address:[" + zipCode + ", " + country.getTitle() + ", " + city + ", " + street + ", " + house + "-" + flat + "]";
     }
 }

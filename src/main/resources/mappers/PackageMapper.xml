@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.PackageRepository">
+    <insert id="create" keyColumn="id" keyProperty="pack.id" useGeneratedKeys="true">
+        INSERT
+        INTO packages (number, package_type, delivery_type, status, package_condition, address_from_id,
+            address_to_id, customer_id, employee_id)
+        VALUES (#{pack.number}, #{pack.packageType}, #{pack.deliveryType}, #{pack.status},
+            #{pack.condition}, #{pack.addressFrom.id}, #{pack.addressTo.id}, #{pack.customer.id}, #{pack.employee.id})
+    </insert>
+    <sql id="packageAllSelect">
+        SELECT
+            p.id AS package_id, p.number AS package, p.package_type, p.delivery_type, p.status, p.package_condition,
+            a1.id AS from_address_id, a1.city AS from_city, a1.street AS from_street, a1.house AS from_house,
+                a1.flat AS from_flat, a1.zip_code AS from_zip_code, a1.country AS from_country,
+            a2.id AS to_address_id, a2.city AS to_city, a2.street AS to_street, a2.house AS to_house,
+                a2.flat AS to_flat, a2.zip_code AS to_zip_code, a2.country AS to_country,
+            c.id AS customer_id,
+            p1.id AS customer_person_id, p1.first_name AS customer_first_name, p1.last_name AS customer_last_name,
+                p1.age AS customer_age,
+            ps1.id AS customer_passport_id, ps1.number AS customer_passport,
+            a3.id AS customer_address_id, a3.city AS customer_city, a3.street AS customer_street,
+                a3.house AS customer_house, a3.flat AS customer_flat, a3.zip_code AS customer_zip_code,
+                a3.country AS customer_country,
+            e.id AS employee_id, e.position, e.experience,
+            d.id AS employee_dep_id, d.title AS employee_dep_title,
+            p2.id AS employee_person_id, p2.first_name AS employee_first_name, p2.last_name AS employee_last_name,
+                p2.age AS employee_age,
+            ps2.id AS employee_passport_id, ps2.number AS employee_passport,
+            a4.id AS employee_address_id, a4.city AS employee_city, a4.street AS employee_street,
+                a4.house AS employee_house, a4.flat AS employee_flat, a4.zip_code AS employee_zip_code,
+                a4.country AS employee_country
+        FROM packages p
+        JOIN addresses a1 ON p.address_from_id = a1.id
+        JOIN addresses a2 ON p.address_to_id = a2.id
+        JOIN customers c ON p.customer_id = c.id
+        JOIN persons p1 ON c.person_id = p1.id
+        JOIN passports ps1 ON p1.passport_id = ps1.id
+        JOIN addresses a3 ON p1.address_id = a3.id
+        JOIN employees e ON p.employee_id = e.id
+        JOIN departments d ON e.department_id = d.id
+        JOIN persons p2 ON e.person_id = p2.id
+        JOIN passports ps2 ON p2.passport_id = ps2.id
+        JOIN addresses a4 ON p2.address_id = a4.id
+    </sql>
+    <select id="findAll" resultMap="PackageResultMap">
+        <include refid="packageAllSelect"/>
+        ORDER BY p.id
+    </select>
+    <select id="findById" resultMap="PackageResultMap">
+        <include refid="packageAllSelect"/>
+        WHERE p.id = #{id}
+    </select>
+    <select id="findCustomerPackages" resultMap="PackageResultMap">
+        <include refid="packageAllSelect"/>
+        WHERE customer_id = #{customer.id}
+        ORDER BY p.id
+    </select>
+    <select id="findEmployeePackages" resultMap="PackageResultMap">
+        <include refid="packageAllSelect"/>
+        WHERE employee_id = #{employee.id}
+        ORDER BY p.id
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesPackageResultMap">
+        SELECT
+        COUNT(*) AS packages_count
+        FROM packages
+    </select>
+    <select id="findMaxPackageNumber" resultMap="MaxPackageNumberResultMap">
+        SELECT
+        MAX(number) AS max_package_number
+        FROM packages
+    </select>
+    <update id="update">
+        UPDATE packages
+        <if test="field == 'number'">
+            SET number = #{pack.number}
+        </if>
+        <if test="field == 'packageType'">
+            SET package_type = #{pack.packageType.name}
+        </if>
+        <if test="field == 'deliveryType'">
+            SET delivery_type = #{pack.deliveryType.name}
+        </if>
+        <if test="field == 'status'">
+            SET status = #{pack.status.name}
+        </if>
+        <if test="field == 'condition'">
+            SET package_condition = #{pack.condition.name}
+        </if>
+        WHERE id = #{pack.id}
+    </update>
+    <delete id="deleteById">
+        DELETE
+        FROM packages
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="PackageResultMap" type="com.solvd.delivery_service.domain.pack.Package" autoMapping="false">
+        <id column="package_id" property="id"/>
+        <result column="package" property="number"/>
+        <result column="package_type" property="packageType"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="status" property="status"/>
+        <result column="package_condition" property="condition"/>
+        <association property="addressFrom"
+                     columnPrefix="from_"
+                     resultMap="com.solvd.delivery_service.persistence.AddressRepository.AddressResultMap"/>
+        <association property="addressTo"
+                     columnPrefix="to_"
+                     resultMap="com.solvd.delivery_service.persistence.AddressRepository.AddressResultMap"/>
+        <association property="customer"
+                     columnPrefix="customer_"
+                     resultMap="com.solvd.delivery_service.persistence.CustomerRepository.CustomerResultMap"/>
+        <association property="employee"
+                     columnPrefix="employee_"
+                     resultMap="com.solvd.delivery_service.persistence.EmployeeRepository.EmployeeResultMap"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesPackageResultMap" type="Long" autoMapping="false">
+        <result column="packages_count" property="id"/>
+    </resultMap>
+    <resultMap id="MaxPackageNumberResultMap" type="Long" autoMapping="false">
+        <result column="max_package_number" property="id"/>
+    </resultMap>
+</mapper>

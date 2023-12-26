@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface AddressService {
     Address create(Address address);
+    Address retrieveById(Long id);
     List<Address> retrieveAll();
     Long retrieveNumberOfEntries();
-    Long retrieveMaxId();
     void updateField(Address address, String field);
+    void removeById(Long id);
 }

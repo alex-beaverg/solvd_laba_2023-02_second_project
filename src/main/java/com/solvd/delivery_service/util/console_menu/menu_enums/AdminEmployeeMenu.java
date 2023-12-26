@@ -5,8 +5,8 @@ public enum AdminEmployeeMenu implements IMenu {
     REGISTER_EMPLOYEE("Register new employee"),
     UPDATE_EMPLOYEE_FIELD("Update existing employee field"),
     REMOVE_EMPLOYEE("Remove existing employee"),
-    ADMIN_MAIN_MENU("Return to the ADMIN MAIN MENU"),
-    EXIT("Exit");
+    ADMIN_MAIN_MENU("<- ADMIN MAIN MENU"),
+    EXIT("EXIT");
 
     private final String title;
 

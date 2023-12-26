@@ -9,12 +9,8 @@ import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
-import com.solvd.delivery_service.service.CustomerService;
-import com.solvd.delivery_service.service.DepartmentService;
-import com.solvd.delivery_service.service.PackageService;
-import com.solvd.delivery_service.service.impl.CustomerServiceDaoImpl;
-import com.solvd.delivery_service.service.impl.DepartmentServiceDaoImpl;
-import com.solvd.delivery_service.service.impl.PackageServiceDaoImpl;
+import com.solvd.delivery_service.service.*;
+import com.solvd.delivery_service.service.impl.*;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 import com.solvd.delivery_service.util.custom_exceptions.*;
 
@@ -31,7 +27,7 @@ public class UserActions extends Actions {
         Address customerAddress = getAddressFromConsole();
         PersonInfo customerPersonInfo = getPersonInfoFromConsole(customerPassport, customerAddress);
         Customer customer = getCustomerWithPersonInfo(customerPersonInfo);
-        Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceDaoImpl().retrieveById(1L));
+        Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
         Package pack = registerPackage(customer, employee);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
         PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
@@ -40,7 +36,7 @@ public class UserActions extends Actions {
     public static void createPackageWithExistingCustomer() {
         PRINT2LN.info("CUSTOMER SEARCH");
         Customer customer = getCustomerByLastName();
-        Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceDaoImpl().retrieveById(1L));
+        Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
         Package pack = registerPackage(customer, employee);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
         PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
@@ -50,35 +46,23 @@ public class UserActions extends Actions {
         PRINT2LN.info("CUSTOMER SEARCH");
         Customer customer = getCustomerByLastName();
         PRINT2LN.info("CUSTOMER " + customer.getPersonInfo().getFirstName() + " " + customer.getPersonInfo().getLastName() + " PACKAGES:");
-        CustomerService customerService = new CustomerServiceDaoImpl();
-        for (Package pack : customerService.retrieveCustomerPackages(customer)) {
-            PRINTLN.info("id:[" +
-                    pack.getId() + "], N:[" +
-                    pack.getNumber() + "], Package:[" +
-                    pack.getPackageType().getTitle() + "], Delivery:[" +
-                    pack.getDeliveryType().getTitle() + "], Status:[" +
-                    pack.getStatus().getTitle() + "], Condition:[" +
-                    pack.getCondition().getTitle() + "], From:[" +
-                    pack.getAddressFrom().getCountry().getTitle() + "/" +
-                    pack.getAddressFrom().getCity() + "], To:[" +
-                    pack.getAddressTo().getCountry().getTitle() + "/" +
-                    pack.getAddressTo().getCity() + "], Employee:[" +
-                    pack.getEmployee().getPersonInfo().getFirstName() + " " +
-                    pack.getEmployee().getPersonInfo().getLastName() + "], Cost:[" +
-                    Accounting.calculatePackageCost(pack) + " BYN]");
+        PackageService packageService = new PackageServiceImpl();
+        for (Package pack : packageService.retrieveCustomerPackages(customer)) {
+            PRINTLN.info("\t- " + pack + ", Cost:[" + Accounting.calculatePackageCost(pack) + " BYN]");
         }
     }
 
     private static Package registerPackage(Customer customer, Employee employee) {
         PRINT2LN.info("REGISTRATION OF A PACKAGE");
-        PackageService packageService = new PackageServiceDaoImpl();
+        PackageService packageService = new PackageServiceImpl();
         Long number = packageService.retrieveMaxPackageNumber() + 1;
         PackageType pType = getPackageTypeDependingOnWeight();
-        DeliveryType delivery = (DeliveryType) getEnumFromConsole(DeliveryType.values(), "delivery type");
+        DeliveryType delivery = (DeliveryType) getEnumValueFromConsole(DeliveryType.values(), "delivery type");
         Address addressTo = getAddressFromConsole();
         int zones = Accounting.calculateZones(customer.getPersonInfo().getAddress(), addressTo);
-        Status status = getRandomStatus(delivery, zones);
-        Condition condition = getRandomCondition(status, delivery, zones);
+        int daysDuration = zones * delivery.getDaysCountPerZone();
+        Status status = getRandomStatus(delivery, daysDuration);
+        Condition condition = getRandomCondition(status, delivery, daysDuration);
         Package pack = new Package(number, pType, delivery, status, condition, customer.getPersonInfo().getAddress(),
                 addressTo, customer, employee);
         if (customer.getId() != null) {
@@ -94,7 +78,7 @@ public class UserActions extends Actions {
         String customerLastName;
         do {
             customerLastName = RequestMethods.getStringValueFromConsole("customer last name");
-            customers = new CustomerServiceDaoImpl().retrieveEntriesByLastName(customerLastName);
+            customers = new CustomerServiceImpl().retrieveEntriesByLastName(customerLastName);
             if (customers.size() == 0) {
                 PRINTLN.info("[Info]: Customer with last name " + customerLastName + " doesn't exist!");
             }
@@ -113,10 +97,10 @@ public class UserActions extends Actions {
     }
 
     private static Employee getRandomEmployeeFromDataBase(Department department) {
-        DepartmentService departmentService = new DepartmentServiceDaoImpl();
+        EmployeeService employeeService = new EmployeeServiceImpl();
         Random random = new Random();
-        return departmentService.retrieveDepartmentEmployees(department)
-                .get(random.nextInt(departmentService.retrieveDepartmentEmployees(department).size()));
+        return employeeService.retrieveDepartmentEmployees(department)
+                .get(random.nextInt(employeeService.retrieveDepartmentEmployees(department).size()));
     }
 
     private static PackageType getPackageTypeDependingOnWeight() {
@@ -151,22 +135,22 @@ public class UserActions extends Actions {
         } while (true);
     }
 
-    private static Status getRandomStatus(DeliveryType deliveryType, int zones) {
+    private static Status getRandomStatus(DeliveryType deliveryType, int daysDuration) {
         Status status;
         Random random = new Random();
         switch (deliveryType.name()) {
             case ("REGULAR") -> status =
-                    random.nextInt(zones * 2) == random.nextInt(zones * 2) ?
+                    random.nextInt(daysDuration * 2) == random.nextInt(daysDuration * 2) ?
                             Status.LOST : Status.DELIVERED;
             case ("EXPRESS") -> status =
-                    random.nextInt(zones * 10) == random.nextInt(zones * 10) ?
+                    random.nextInt(daysDuration * 10) == random.nextInt(daysDuration * 10) ?
                             Status.LOST : Status.DELIVERED;
             default -> status = Status.DELIVERED;
         }
         return status;
     }
 
-    private static Condition getRandomCondition(Status status, DeliveryType deliveryType, int zones) {
+    private static Condition getRandomCondition(Status status, DeliveryType deliveryType, int daysDuration) {
         Condition condition;
         Random random = new Random();
         if (status == Status.LOST) {
@@ -174,10 +158,10 @@ public class UserActions extends Actions {
         } else {
             switch (deliveryType.name()) {
                 case ("REGULAR") -> condition =
-                        random.nextInt(zones * 2) == random.nextInt(zones * 2) ?
+                        random.nextInt(daysDuration * 2) == random.nextInt(daysDuration * 2) ?
                                 Condition.DAMAGED : Condition.NOT_DAMAGED;
                 case ("EXPRESS") -> condition =
-                        random.nextInt(zones * 10) == random.nextInt(zones * 10) ?
+                        random.nextInt(daysDuration * 10) == random.nextInt(daysDuration * 10) ?
                                 Condition.DAMAGED : Condition.NOT_DAMAGED;
                 default -> condition = Condition.NOT_DAMAGED;
             }

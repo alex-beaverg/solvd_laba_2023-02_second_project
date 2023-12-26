@@ -16,4 +16,8 @@ public enum Condition implements IMenu {
     public String getTitle() {
         return title;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

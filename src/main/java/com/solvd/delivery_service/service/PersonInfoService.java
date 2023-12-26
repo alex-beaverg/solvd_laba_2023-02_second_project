@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface PersonInfoService {
     PersonInfo create(PersonInfo personInfo);
+    PersonInfo retrieveById(Long id);
     List<PersonInfo> retrieveAll();
     Long retrieveNumberOfEntries();
     void updateField(PersonInfo personInfo, String field);
+    void removeById(Long id);
 }

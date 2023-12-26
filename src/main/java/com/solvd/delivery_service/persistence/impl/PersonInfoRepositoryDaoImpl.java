@@ -6,6 +6,7 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
+import com.solvd.delivery_service.service.DBService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PERSON_QUERY =
             "INSERT INTO persons(first_name, last_name, age, passport_id, address_id) values(?, ?, ?, ?, ?);";
@@ -33,7 +35,8 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
     @Override
     public void create(PersonInfo personInfo) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PERSON_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PERSON_QUERY,
+                Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, personInfo.getFirstName());
             preparedStatement.setString(2, personInfo.getLastName());
             preparedStatement.setInt(3, personInfo.getAge());
@@ -63,10 +66,10 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
                     new PersonInfo(resultSet.getString(1),
                             resultSet.getString(2),
                             resultSet.getInt(3),
-                            new PassportRepositoryDaoImpl().findById(resultSet.getLong(4)).get(),
-                            new AddressRepositoryDaoImpl().findById(resultSet.getLong(5)).get()));
+                            DB_SERVICE.getPassportRepository().findById(resultSet.getLong(4)).get(),
+                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(5)).get()));
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find person!", e);
+            throw new RuntimeException("Unable to find person by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -118,7 +121,7 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
             preparedStatement.setLong(2, personInfo.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update person!", e);
+            throw new RuntimeException("Unable to update person field!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -131,7 +134,7 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to delete person!", e);
+            throw new RuntimeException("Unable to delete person by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -139,14 +142,14 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
 
     @Override
     public Long countOfEntries() {
-        Long count = 0L;
+        long count;
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             count = resultSet.getLong(1);
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to get count of persons!", e);
+            throw new RuntimeException("Unable to get number of persons!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }

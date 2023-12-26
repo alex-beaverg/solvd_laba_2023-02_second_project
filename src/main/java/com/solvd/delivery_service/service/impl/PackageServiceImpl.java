@@ -4,22 +4,23 @@ import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.persistence.PackageRepository;
-import com.solvd.delivery_service.persistence.impl.PackageRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
 import com.solvd.delivery_service.service.CustomerService;
+import com.solvd.delivery_service.service.DBService;
 import com.solvd.delivery_service.service.PackageService;
 
 import java.util.List;
 
-public class PackageServiceDaoImpl implements PackageService {
+public class PackageServiceImpl implements PackageService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final PackageRepository packageRepository;
     private final AddressService addressService;
     private final CustomerService customerService;
 
-    public PackageServiceDaoImpl() {
-        this.packageRepository = new PackageRepositoryDaoImpl();
-        this.addressService = new AddressServiceDaoImpl();
-        this.customerService = new CustomerServiceDaoImpl();
+    public PackageServiceImpl() {
+        this.packageRepository = DB_SERVICE.getPackageRepository();
+        this.addressService = new AddressServiceImpl();
+        this.customerService = new CustomerServiceImpl();
     }
 
     @Override
@@ -35,6 +36,11 @@ public class PackageServiceDaoImpl implements PackageService {
         }
         packageRepository.create(pack);
         return pack;
+    }
+
+    @Override
+    public Package retrieveById(Long id) {
+        return packageRepository.findById(id).get();
     }
 
     @Override
@@ -56,6 +62,11 @@ public class PackageServiceDaoImpl implements PackageService {
     @Override
     public Long retrieveMaxPackageNumber() {
         return packageRepository.findMaxPackageNumber();
+    }
+
+    @Override
+    public List<Package> retrieveCustomerPackages(Customer customer) {
+        return packageRepository.findCustomerPackages(customer);
     }
 
     @Override

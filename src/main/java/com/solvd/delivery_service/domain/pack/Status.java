@@ -15,4 +15,8 @@ public enum Status implements IMenu {
     public String getTitle() {
         return title;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

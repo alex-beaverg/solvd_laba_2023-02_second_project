@@ -20,8 +20,15 @@ public class Package {
 
     public Package() {}
 
-    public Package(Long number, PackageType packageType, DeliveryType deliveryType, Status status, Condition condition,
-                   Address addressFrom, Address addressTo, Customer customer, Employee employee) {
+    public Package(Long number,
+                   PackageType packageType,
+                   DeliveryType deliveryType,
+                   Status status,
+                   Condition condition,
+                   Address addressFrom,
+                   Address addressTo,
+                   Customer customer,
+                   Employee employee) {
         this.number = number;
         this.packageType = packageType;
         this.deliveryType = deliveryType;
@@ -33,8 +40,16 @@ public class Package {
         this.employee = employee;
     }
 
-    public Package(Long id, Long number, PackageType packageType, DeliveryType deliveryType, Status status,
-                   Condition condition, Address addressFrom, Address addressTo, Customer customer, Employee employee) {
+    public Package(Long id,
+                   Long number,
+                   PackageType packageType,
+                   DeliveryType deliveryType,
+                   Status status,
+                   Condition condition,
+                   Address addressFrom,
+                   Address addressTo,
+                   Customer customer,
+                   Employee employee) {
         this.id = id;
         this.number = number;
         this.packageType = packageType;
@@ -131,17 +146,17 @@ public class Package {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Package pack = (Package) o;
-        return Objects.equals(id, pack.id) &&
-                Objects.equals(number, pack.number) &&
-                packageType == pack.packageType &&
-                deliveryType == pack.deliveryType &&
-                status == pack.status &&
-                condition == pack.condition &&
-                Objects.equals(addressFrom, pack.addressFrom) &&
-                Objects.equals(addressTo, pack.addressTo) &&
-                Objects.equals(customer, pack.customer) &&
-                Objects.equals(employee, pack.employee);
+        Package aPackage = (Package) o;
+        return Objects.equals(id, aPackage.id) &&
+                Objects.equals(number, aPackage.number) &&
+                packageType == aPackage.packageType &&
+                deliveryType == aPackage.deliveryType &&
+                status == aPackage.status &&
+                condition == aPackage.condition &&
+                Objects.equals(addressFrom, aPackage.addressFrom) &&
+                Objects.equals(addressTo, aPackage.addressTo) &&
+                Objects.equals(customer, aPackage.customer) &&
+                Objects.equals(employee, aPackage.employee);
     }
 
     @Override
@@ -152,15 +167,11 @@ public class Package {
 
     @Override
     public String toString() {
-        return "Package: [Package id = " + id +
-                ", Package number = " + number +
-                ", Package type = " + packageType.getTitle() +
-                ", Delivery type = " + deliveryType.getTitle() +
-                ", Delivery status = " + status.getTitle() +
-                ", Package condition = " + condition.getTitle() +
-                ", \nAddress from = " + addressFrom +
-                ", \nAddress to = " + addressTo +
-                ", \nCustomer = " + customer +
-                ", \nEmployee = " + employee + "]";
+        return "id:[" + id + "], N:[" + number + "], Pack type:[" + packageType + "], Del type:[" +
+                deliveryType + "], Status:[" + status + "], Cond:[" + condition + "], From:[" +
+                addressFrom.getCountry().getTitle() + "/" + addressFrom.getCity() + "], To:[" +
+                addressTo.getCountry().getTitle() + "/" + addressTo.getCity() + "], Cust:[" +
+                customer.getPersonInfo().getFirstName() + " " + customer.getPersonInfo().getLastName() + "], Empl:[" +
+                employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + "]";
     }
 }

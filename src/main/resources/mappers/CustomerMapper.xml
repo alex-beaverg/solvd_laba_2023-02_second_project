@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.CustomerRepository">
+    <insert id="create" keyColumn="id" keyProperty="customer.id" useGeneratedKeys="true">
+        INSERT
+        INTO customers (person_id)
+        VALUES (#{customer.personInfo.id})
+    </insert>
+    <sql id="customerAllSelect">
+        SELECT
+            c.id AS customer_id,
+            p.id AS person_id, p.first_name, p.last_name, p.age,
+            ps.id AS passport_id, ps.number AS passport,
+            a.id AS address_id, a.city, a.street, a.house, a.flat, a.zip_code, a.country
+        FROM customers c
+        JOIN persons p ON c.person_id = p.id
+        JOIN passports ps ON p.passport_id = ps.id
+        JOIN addresses a ON p.address_id = a.id
+    </sql>
+    <select id="findAll" resultMap="CustomerResultMap">
+        <include refid="customerAllSelect"/>
+        ORDER BY c.id
+    </select>
+    <select id="findById" resultMap="CustomerResultMap">
+        <include refid="customerAllSelect"/>
+        WHERE c.id = #{id}
+    </select>
+    <select id="findByLastName" resultMap="CustomerResultMap">
+        <include refid="customerAllSelect"/>
+        WHERE p.last_name = #{lastName}
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesCustomerResultMap">
+        SELECT
+        COUNT(*) AS customers_count
+        FROM customers
+    </select>
+    <delete id="deleteById">
+        DELETE
+        FROM customers
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="CustomerResultMap" type="com.solvd.delivery_service.domain.human.customer.Customer" autoMapping="false">
+        <id column="customer_id" property="id"/>
+        <association property="personInfo"
+                     resultMap="com.solvd.delivery_service.persistence.PersonInfoRepository.PersonResultMap"/>
+        <collection property="packages"
+                    resultMap="com.solvd.delivery_service.persistence.PackageRepository.PackageResultMap"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesCustomerResultMap" type="Long" autoMapping="false">
+        <result column="customers_count" property="id"/>
+    </resultMap>
+</mapper>

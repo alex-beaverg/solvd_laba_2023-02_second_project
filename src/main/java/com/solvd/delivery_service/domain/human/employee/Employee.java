@@ -17,14 +17,21 @@ public class Employee {
 
     public Employee() {}
 
-    public Employee(Position position, Experience experience, Department department, PersonInfo personInfo) {
+    public Employee(Position position,
+                    Experience experience,
+                    Department department,
+                    PersonInfo personInfo) {
         this.position = position;
         this.experience = experience;
         this.department = department;
         this.personInfo = personInfo;
     }
 
-    public Employee(Long id, Position position, Experience experience, Department department, PersonInfo personInfo) {
+    public Employee(Long id,
+                    Position position,
+                    Experience experience,
+                    Department department,
+                    PersonInfo personInfo) {
         this.id = id;
         this.position = position;
         this.experience = experience;
@@ -86,23 +93,21 @@ public class Employee {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
         return Objects.equals(id, employee.id) &&
-                Objects.equals(personInfo, employee.personInfo) &&
-                Objects.equals(department, employee.department) &&
                 position == employee.position &&
-                experience == employee.experience;
+                experience == employee.experience &&
+                Objects.equals(department, employee.department) &&
+                Objects.equals(personInfo, employee.personInfo) &&
+                Objects.equals(packages, employee.packages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, personInfo, department, position, experience);
+        return Objects.hash(id, position, experience, department, personInfo, packages);
     }
 
     @Override
     public String toString() {
-        return "Employee: [Employee id = " + id +
-                ", Position = " + position.getTitle() +
-                ", Experience = " + experience.getTitle() +
-                ", \nDepartment = " + department +
-                ", \nPerson info = " + personInfo + "]";
+        return "id:[" + id + "], Pos:[" + position.getTitle() + "], Exp:[" + experience.getTitle() + "], " +
+                department + ", " + personInfo;
     }
 }

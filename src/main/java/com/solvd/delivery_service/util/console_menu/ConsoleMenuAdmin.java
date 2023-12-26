@@ -9,7 +9,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN MAIN MENU:", AdminMainMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showNumberOfEntriesInDb();
+                AdminActions.showNumberOfDatabaseEntries();
                 return runAdminMainMenu();
             }
             case (2) -> {
@@ -25,7 +25,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminPackageMenu();
             }
             case (6) -> {
-                return (ConsoleMenuAdmin) runDeliveryServiceMenu();
+                return (ConsoleMenuAdmin) runDeliveryCompanyMenu();
             }
             default -> {
                 return (ConsoleMenuAdmin) tearDown();

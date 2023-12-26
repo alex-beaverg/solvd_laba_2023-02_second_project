@@ -2,21 +2,21 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
-import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.persistence.CustomerRepository;
-import com.solvd.delivery_service.persistence.impl.CustomerRepositoryDaoImpl;
 import com.solvd.delivery_service.service.CustomerService;
+import com.solvd.delivery_service.service.DBService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
-public class CustomerServiceDaoImpl implements CustomerService {
+public class CustomerServiceImpl implements CustomerService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final CustomerRepository customerRepository;
     private final PersonInfoService personInfoService;
 
-    public CustomerServiceDaoImpl() {
-        this.customerRepository = new CustomerRepositoryDaoImpl();
-        this.personInfoService = new PersonInfoServiceDaoImpl();
+    public CustomerServiceImpl() {
+        this.customerRepository = DB_SERVICE.getCustomerRepository();
+        this.personInfoService = new PersonInfoServiceImpl();
     }
 
     @Override
@@ -48,11 +48,6 @@ public class CustomerServiceDaoImpl implements CustomerService {
     @Override
     public Customer retrieveById(Long id) {
         return customerRepository.findById(id).get();
-    }
-
-    @Override
-    public List<Package> retrieveCustomerPackages(Customer customer) {
-        return customerRepository.findCustomerPackages(customer);
     }
 
     @Override

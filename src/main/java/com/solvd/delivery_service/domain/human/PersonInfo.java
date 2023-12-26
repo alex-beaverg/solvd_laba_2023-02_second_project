@@ -14,7 +14,11 @@ public class PersonInfo {
 
     public PersonInfo() {}
 
-    public PersonInfo(String firstName, String lastName, Integer age, Passport passport, Address address) {
+    public PersonInfo(String firstName,
+                      String lastName,
+                      Integer age,
+                      Passport passport,
+                      Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -22,7 +26,12 @@ public class PersonInfo {
         this.address = address;
     }
 
-    public PersonInfo(Long id, String firstName, String lastName, Integer age, Passport passport, Address address) {
+    public PersonInfo(Long id,
+                      String firstName,
+                      String lastName,
+                      Integer age,
+                      Passport passport,
+                      Address address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,11 +108,6 @@ public class PersonInfo {
 
     @Override
     public String toString() {
-        return "Person info: [Person id = " + id +
-                ", First name = " + firstName +
-                ", Last name = " + lastName +
-                ", Age = " + age +
-                ", \nPassport = " + passport +
-                ", \nAddress = " + address + "]";
+        return "Name:[" + firstName + ", " + lastName + "], Age:[" + age + "], " + passport + ", " + address;
     }
 }

@@ -2,16 +2,17 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.persistence.PassportRepository;
-import com.solvd.delivery_service.persistence.impl.PassportRepositoryDaoImpl;
+import com.solvd.delivery_service.service.DBService;
 import com.solvd.delivery_service.service.PassportService;
 
 import java.util.List;
 
-public class PassportServiceDaoImpl implements PassportService {
+public class PassportServiceImpl implements PassportService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final PassportRepository passportRepository;
 
-    public PassportServiceDaoImpl() {
-        this.passportRepository = new PassportRepositoryDaoImpl();
+    public PassportServiceImpl() {
+        this.passportRepository = DB_SERVICE.getPassportRepository();
     }
 
     @Override
@@ -19,6 +20,11 @@ public class PassportServiceDaoImpl implements PassportService {
         passport.setId(null);
         passportRepository.create(passport);
         return passport;
+    }
+
+    @Override
+    public Passport retrieveById(Long id) {
+        return passportRepository.findById(id).get();
     }
 
     @Override
@@ -34,5 +40,10 @@ public class PassportServiceDaoImpl implements PassportService {
     @Override
     public void updateField(Passport passport) {
         passportRepository.update(passport);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        passportRepository.deleteById(id);
     }
 }

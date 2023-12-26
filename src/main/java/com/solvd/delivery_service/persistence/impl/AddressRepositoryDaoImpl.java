@@ -32,7 +32,8 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
     @Override
     public void create(Address address) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ADDRESS_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ADDRESS_QUERY,
+                Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, address.getCity());
             preparedStatement.setString(2, address.getStreet());
             preparedStatement.setInt(3, address.getHouse());
@@ -68,7 +69,7 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
                             resultSet.getInt(6),
                             Country.valueOf(resultSet.getString(7))));
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find address!", e);
+            throw new RuntimeException("Unable to find address by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -134,7 +135,7 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
             preparedStatement.setLong(2, address.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update address!", e);
+            throw new RuntimeException("Unable to update address field!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -147,7 +148,7 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to delete address!", e);
+            throw new RuntimeException("Unable to delete address by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -155,14 +156,14 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
 
     @Override
     public Long countOfEntries() {
-        Long count = 0L;
+        long count;
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             count = resultSet.getLong(1);
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to get count of addresses!", e);
+            throw new RuntimeException("Unable to get number of addresses!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -171,14 +172,14 @@ public class AddressRepositoryDaoImpl implements AddressRepository {
 
     @Override
     public Long findMaxId() {
-        Long id;
+        long id;
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_MAX_ID)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             id = resultSet.getLong(1);
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find max package number!", e);
+            throw new RuntimeException("Unable to find max package id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }

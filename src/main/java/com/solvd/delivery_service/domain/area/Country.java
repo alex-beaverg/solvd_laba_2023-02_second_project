@@ -27,4 +27,8 @@ public enum Country implements IMenu {
     public Zone getZone() {
         return zone;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

@@ -28,4 +28,8 @@ public enum DeliveryType implements IMenu {
     public Double getCostFactor() {
         return costFactor;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

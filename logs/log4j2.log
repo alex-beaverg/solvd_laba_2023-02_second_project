@@ -1,2 +1,2 @@
-2023-12-24 11:52:32,740 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!
-2023-12-24 11:59:25,921 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-26 12:02:53,900 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!
+2023-12-26 12:10:44,398 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!

@@ -23,4 +23,8 @@ public enum Position implements IMenu {
     public Double getBaseSalary() {
         return baseSalary;
     }
+
+    public String getName() {
+        return this.name();
+    }
 }

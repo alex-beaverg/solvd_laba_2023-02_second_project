@@ -1,7 +1,9 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryServiceMenu;
+import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.ServiceMenu;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,15 +12,38 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
+    public static DBService DB_SERVICE = DBService.getInstance();;
 
-    public ConsoleMenu runDeliveryServiceMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("DELIVERY SERVICE MENU:", DeliveryServiceMenu.values());
+    public ConsoleMenu runServiceMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("SERVICE MENU:", ServiceMenu.values());
+        switch (answer) {
+            case (1) -> {
+                PRINT2LN.info("RUNNING USING DAO SERVICE");
+                DB_SERVICE.setService("DAO");
+                return runDeliveryCompanyMenu();
+            }
+            case (2) -> {
+                PRINT2LN.info("RUNNING USING MYBATIS SERVICE");
+                DB_SERVICE.setService("MYBATIS");
+                return runDeliveryCompanyMenu();
+            }
+            default -> {
+                return tearDown();
+            }
+        }
+    }
+
+    protected ConsoleMenu runDeliveryCompanyMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("DELIVERY COMPANY MENU:", DeliveryCompanyMenu.values());
         switch (answer) {
             case (1) -> {
                 return new ConsoleMenuUser().runUserMainMenu();
             }
             case (2) -> {
                 return authentication();
+            }
+            case (3) -> {
+                return runServiceMenu();
             }
             default -> {
                 return tearDown();
@@ -30,7 +55,7 @@ public class ConsoleMenu {
         int index = 1;
         PRINT2LN.info(title);
         for (IMenu item : menuItems) {
-            PRINTLN.info("[" + index + "] - " + item.getTitle());
+            PRINTLN.info("[" + index + "]: " + item.getTitle());
             index++;
         }
         return RequestMethods.getNumberFromChoice("the menu item number", index - 1);
@@ -56,6 +81,6 @@ public class ConsoleMenu {
             throw new RuntimeException("You have been problem with reading from property file!", e);
         }
         PRINTLN.info("[Warning]: Password is incorrect!");
-        return runDeliveryServiceMenu();
+        return runDeliveryCompanyMenu();
     }
 }

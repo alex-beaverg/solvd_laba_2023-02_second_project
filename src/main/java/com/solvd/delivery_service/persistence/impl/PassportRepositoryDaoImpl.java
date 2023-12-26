@@ -21,7 +21,8 @@ public class PassportRepositoryDaoImpl implements PassportRepository {
     @Override
     public void create(Passport passport) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PASSPORT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PASSPORT_QUERY,
+                Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, passport.getNumber());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -45,7 +46,7 @@ public class PassportRepositoryDaoImpl implements PassportRepository {
             resultSet.next();
             passportOptional = Optional.of(new Passport(resultSet.getLong(1), resultSet.getString(2)));
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to find passport!", e);
+            throw new RuntimeException("Unable to find passport by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -75,7 +76,7 @@ public class PassportRepositoryDaoImpl implements PassportRepository {
             preparedStatement.setLong(2, passport.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to update passport!", e);
+            throw new RuntimeException("Unable to update passport number!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -88,7 +89,7 @@ public class PassportRepositoryDaoImpl implements PassportRepository {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to delete passport!", e);
+            throw new RuntimeException("Unable to delete passport by id!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
@@ -96,14 +97,14 @@ public class PassportRepositoryDaoImpl implements PassportRepository {
 
     @Override
     public Long countOfEntries() {
-        Long count = 0L;
+        long count;
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             count = resultSet.getLong(1);
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to get count of passports!", e);
+            throw new RuntimeException("Unable to get number of passports!", e);
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }

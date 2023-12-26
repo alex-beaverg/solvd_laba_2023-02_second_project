@@ -4,22 +4,23 @@ import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
-import com.solvd.delivery_service.persistence.impl.PersonInfoRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
+import com.solvd.delivery_service.service.DBService;
 import com.solvd.delivery_service.service.PassportService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
-public class PersonInfoServiceDaoImpl implements PersonInfoService {
+public class PersonInfoServiceImpl implements PersonInfoService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final PersonInfoRepository personInfoRepository;
     private final PassportService passportService;
     private final AddressService addressService;
 
-    public PersonInfoServiceDaoImpl() {
-        this.personInfoRepository = new PersonInfoRepositoryDaoImpl();
-        this.passportService = new PassportServiceDaoImpl();
-        this.addressService = new AddressServiceDaoImpl();
+    public PersonInfoServiceImpl() {
+        this.personInfoRepository = DB_SERVICE.getPersonInfoRepository();
+        this.passportService = new PassportServiceImpl();
+        this.addressService = new AddressServiceImpl();
     }
 
     @Override
@@ -38,6 +39,11 @@ public class PersonInfoServiceDaoImpl implements PersonInfoService {
     }
 
     @Override
+    public PersonInfo retrieveById(Long id) {
+        return personInfoRepository.findById(id).get();
+    }
+
+    @Override
     public List<PersonInfo> retrieveAll() {
         return personInfoRepository.findAll();
     }
@@ -50,5 +56,10 @@ public class PersonInfoServiceDaoImpl implements PersonInfoService {
     @Override
     public void updateField(PersonInfo personInfo, String field) {
         personInfoRepository.update(personInfo, field);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        personInfoRepository.deleteById(id);
     }
 }

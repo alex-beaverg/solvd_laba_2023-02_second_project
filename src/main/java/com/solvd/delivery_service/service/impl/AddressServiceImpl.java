@@ -2,16 +2,17 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;
-import com.solvd.delivery_service.persistence.impl.AddressRepositoryDaoImpl;
 import com.solvd.delivery_service.service.AddressService;
+import com.solvd.delivery_service.service.DBService;
 
 import java.util.List;
 
-public class AddressServiceDaoImpl implements AddressService {
+public class AddressServiceImpl implements AddressService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final AddressRepository addressRepository;
 
-    public AddressServiceDaoImpl() {
-        this.addressRepository = new AddressRepositoryDaoImpl();
+    public AddressServiceImpl() {
+        this.addressRepository = DB_SERVICE.getAddressRepository();
     }
 
     @Override
@@ -19,6 +20,11 @@ public class AddressServiceDaoImpl implements AddressService {
         address.setId(null);
         addressRepository.create(address);
         return address;
+    }
+
+    @Override
+    public Address retrieveById(Long id) {
+        return addressRepository.findById(id).get();
     }
 
     @Override
@@ -32,12 +38,12 @@ public class AddressServiceDaoImpl implements AddressService {
     }
 
     @Override
-    public Long retrieveMaxId() {
-        return addressRepository.findMaxId();
+    public void updateField(Address address, String field) {
+        addressRepository.update(address, field);
     }
 
     @Override
-    public void updateField(Address address, String field) {
-        addressRepository.update(address, field);
+    public void removeById(Long id) {
+        addressRepository.deleteById(id);
     }
 }

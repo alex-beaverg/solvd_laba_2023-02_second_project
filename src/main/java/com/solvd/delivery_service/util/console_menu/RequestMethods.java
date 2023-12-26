@@ -67,22 +67,6 @@ public class RequestMethods {
         return numberFromAnswer;
     }
 
-    public static String requestingInfoWithYesOrNo(String text) throws EmptyInputException, YesOrNoException {
-        PRINT.info(text);
-        String answer = scanner.nextLine();
-        if (answer.isEmpty()) {
-            throw new EmptyInputException("[EmptyInputException]: Entered data can not be empty!");
-        }
-        if (!answer.equals("y") && !answer.equals("n")) {
-            throw new YesOrNoException("[YesOrNoException]: Entered data must be equal to 'y' or 'n'!");
-        }
-        return answer;
-    }
-
-    static void closeScanner() {
-        scanner.close();
-    }
-
     public static Long getLongValueFromConsole(String name) {
         long value;
         do {
@@ -139,5 +123,9 @@ public class RequestMethods {
             }
         } while (true);
         return answer;
+    }
+
+    static void closeScanner() {
+        scanner.close();
     }
 }

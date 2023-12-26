@@ -16,7 +16,8 @@ public class Department {
         this.title = title;
     }
 
-    public Department(Long id, String title) {
+    public Department(Long id,
+                      String title) {
         this.id = id;
         this.title = title;
     }
@@ -50,7 +51,8 @@ public class Department {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Department that = (Department) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title);
     }
 
     @Override
@@ -60,6 +62,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department: [Department id = " + id + ", Department title = " + title + "]";
+        return "Dep:[" + title + "]";
     }
 }

@@ -12,7 +12,8 @@ public class Passport {
         this.number = number;
     }
 
-    public Passport(Long id, String number) {
+    public Passport(Long id,
+                    String number) {
         this.id = id;
         this.number = number;
     }
@@ -38,7 +39,8 @@ public class Passport {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passport passport = (Passport) o;
-        return Objects.equals(id, passport.id) && Objects.equals(number, passport.number);
+        return Objects.equals(id, passport.id) &&
+                Objects.equals(number, passport.number);
     }
 
     @Override
@@ -48,6 +50,6 @@ public class Passport {
 
     @Override
     public String toString() {
-        return "Passport: [Passport id = " + id + ", Number = " + number + "]";
+        return "Passport:[" + number + "]";
     }
 }

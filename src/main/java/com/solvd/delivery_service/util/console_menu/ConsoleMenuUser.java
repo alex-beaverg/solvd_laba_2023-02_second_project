@@ -17,7 +17,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runUserMainMenu();
             }
             case (3) -> {
-                return (ConsoleMenuUser) runDeliveryServiceMenu();
+                return (ConsoleMenuUser) runDeliveryCompanyMenu();
             }
             default -> {
                 return (ConsoleMenuUser) tearDown();

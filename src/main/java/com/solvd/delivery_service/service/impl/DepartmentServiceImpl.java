@@ -1,18 +1,18 @@
 package com.solvd.delivery_service.service.impl;
 
-import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.DepartmentRepository;
-import com.solvd.delivery_service.persistence.impl.DepartmentRepositoryDaoImpl;
+import com.solvd.delivery_service.service.DBService;
 import com.solvd.delivery_service.service.DepartmentService;
 
 import java.util.List;
 
-public class DepartmentServiceDaoImpl implements DepartmentService {
+public class DepartmentServiceImpl implements DepartmentService {
+    private static final DBService DB_SERVICE = DBService.getInstance();
     private final DepartmentRepository departmentRepository;
 
-    public DepartmentServiceDaoImpl() {
-        this.departmentRepository = new DepartmentRepositoryDaoImpl();
+    public DepartmentServiceImpl() {
+        this.departmentRepository = DB_SERVICE.getDepartmentRepository();
     }
 
     @Override
@@ -38,13 +38,8 @@ public class DepartmentServiceDaoImpl implements DepartmentService {
     }
 
     @Override
-    public void rename(Department department) {
+    public void updateField(Department department) {
         departmentRepository.update(department);
-    }
-
-    @Override
-    public List<Employee> retrieveDepartmentEmployees(Department department) {
-        return departmentRepository.findDepartmentEmployees(department);
     }
 
     @Override
