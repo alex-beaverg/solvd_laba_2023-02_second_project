@@ -5,66 +5,70 @@ import com.solvd.delivery_service.persistence.impl.*;
 
 public class DaoService {
     private static DaoService instance;
-    private String daoService;
+    private boolean isBasicDaoService;
 
     private DaoService() {}
 
     public static DaoService getInstance() {
         if (instance == null) {
             instance = new DaoService();
-            instance.daoService = "MYBATIS DAO";
+            instance.isBasicDaoService = true;
         }
         return instance;
     }
 
-    public void setDaoService(String daoServiceName) {
-        daoService = daoServiceName;
+    public void assignBasicDaoService() {
+        isBasicDaoService = true;
+    }
+
+    public void assignMybatisDaoService() {
+        isBasicDaoService = false;
     }
 
     public AddressRepository getAddressRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new AddressRepositoryDaoImpl();
         }
         return new AddressRepositoryMybatisImpl();
     }
 
     public CustomerRepository getCustomerRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new CustomerRepositoryDaoImpl();
         }
         return new CustomerRepositoryMybatisImpl();
     }
 
     public DepartmentRepository getDepartmentRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new DepartmentRepositoryDaoImpl();
         }
         return new DepartmentRepositoryMybatisImpl();
     }
 
     public EmployeeRepository getEmployeeRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new EmployeeRepositoryDaoImpl();
         }
         return new EmployeeRepositoryMyBatisImpl();
     }
 
     public PackageRepository getPackageRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new PackageRepositoryDaoImpl();
         }
         return new PackageRepositoryMybatisImpl();
     }
 
     public PassportRepository getPassportRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new PassportRepositoryDaoImpl();
         }
         return new PassportRepositoryMybatisImpl();
     }
 
     public PersonInfoRepository getPersonInfoRepository() {
-        if (daoService.equals("BASIC DAO")) {
+        if (isBasicDaoService) {
             return new PersonInfoRepositoryDaoImpl();
         }
         return new PersonInfoRepositoryMybatisImpl();

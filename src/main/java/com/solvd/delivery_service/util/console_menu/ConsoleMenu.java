@@ -12,19 +12,19 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
-    public static DaoService DAO_SERVICE = DaoService.getInstance();;
+    public static DaoService DAO_SERVICE = DaoService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
         switch (answer) {
             case (1) -> {
                 PRINT2LN.info("RUNNING USING BASIC DAO SERVICE");
-                DAO_SERVICE.setDaoService("BASIC DAO");
+                DAO_SERVICE.assignBasicDaoService();
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
                 PRINT2LN.info("RUNNING USING MYBATIS DAO SERVICE");
-                DAO_SERVICE.setDaoService("MYBATIS DAO");
+                DAO_SERVICE.assignMybatisDaoService();
                 return runDeliveryCompanyMenu();
             }
             default -> {
