@@ -4,7 +4,7 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.service.EmployeeService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
@@ -16,7 +16,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PersonInfoService personInfoService;
 
     public EmployeeServiceImpl() {
-        this.employeeRepository = DAO_SERVICE.getEmployeeRepository();
+        this.employeeRepository = DAO_SERVICE.getRepository(EmployeeRepository.class);
         this.personInfoService = new PersonInfoServiceImpl();
     }
 

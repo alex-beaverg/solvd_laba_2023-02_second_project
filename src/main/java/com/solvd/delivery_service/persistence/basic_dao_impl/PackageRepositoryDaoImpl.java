@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
@@ -11,9 +11,7 @@ import com.solvd.delivery_service.domain.human.employee.Position;
 import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
-import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.PackageRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -109,10 +107,10 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
                             DeliveryType.valueOf(resultSet.getString(3)),
                             Status.valueOf(resultSet.getString(4)),
                             Condition.valueOf(resultSet.getString(5)),
-                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(6)).get(),
-                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(7)).get(),
-                            DAO_SERVICE.getCustomerRepository().findById(resultSet.getLong(8)).get(),
-                            DAO_SERVICE.getEmployeeRepository().findById(resultSet.getLong(9)).get()));
+                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(6)).get(),
+                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(7)).get(),
+                            DAO_SERVICE.getRepository(CustomerRepository.class).findById(resultSet.getLong(8)).get(),
+                            DAO_SERVICE.getRepository(EmployeeRepository.class).findById(resultSet.getLong(9)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find package by id!", e);
         } finally {

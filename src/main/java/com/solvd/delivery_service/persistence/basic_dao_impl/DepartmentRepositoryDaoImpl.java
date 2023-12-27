@@ -1,9 +1,7 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.structure.Department;
-import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.DepartmentRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -68,7 +66,7 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Department department : departments) {
-            department.setEmployees(DAO_SERVICE.getEmployeeRepository().findDepartmentEmployees(department));
+            department.setEmployees(DAO_SERVICE.getRepository(EmployeeRepository.class).findDepartmentEmployees(department));
         }
         return departments;
     }

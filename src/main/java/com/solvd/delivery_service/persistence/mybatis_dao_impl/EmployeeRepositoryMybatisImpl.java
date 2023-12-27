@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.mybatis_dao_impl;
 
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryMyBatisImpl implements EmployeeRepository {
+public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
     @Override
     public void create(Employee employee, Long departmentId) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

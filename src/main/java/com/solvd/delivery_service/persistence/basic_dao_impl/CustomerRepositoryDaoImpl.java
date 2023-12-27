@@ -1,13 +1,11 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
-import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.CustomerRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -67,7 +65,7 @@ public class CustomerRepositoryDaoImpl implements CustomerRepository {
             resultSet.next();
             customerOptional = Optional.of(
                     new Customer(resultSet.getLong(1),
-                            DAO_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(2)).get()));
+                            DAO_SERVICE.getRepository(PersonInfoRepository.class).findById(resultSet.getLong(2)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find customer by id!", e);
         } finally {
@@ -89,7 +87,7 @@ public class CustomerRepositoryDaoImpl implements CustomerRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Customer customer : customers) {
-            customer.setPackages(DAO_SERVICE.getPackageRepository().findCustomerPackages(customer));
+            customer.setPackages(DAO_SERVICE.getRepository(PackageRepository.class).findCustomerPackages(customer));
         }
         return customers;
     }

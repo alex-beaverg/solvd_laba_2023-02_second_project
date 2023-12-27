@@ -1,6 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DaoServiceMenu;

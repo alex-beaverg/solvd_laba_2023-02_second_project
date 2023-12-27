@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.mybatis_dao_impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;

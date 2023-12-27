@@ -2,7 +2,7 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.persistence.PassportRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.service.PassportService;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class PassportServiceImpl implements PassportService {
     private final PassportRepository passportRepository;
 
     public PassportServiceImpl() {
-        this.passportRepository = DAO_SERVICE.getPassportRepository();
+        this.passportRepository = DAO_SERVICE.getRepository(PassportRepository.class);
     }
 
     @Override

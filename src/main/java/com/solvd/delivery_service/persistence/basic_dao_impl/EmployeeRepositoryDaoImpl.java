@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
@@ -8,9 +8,7 @@ import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.human.employee.Experience;
 import com.solvd.delivery_service.domain.human.employee.Position;
 import com.solvd.delivery_service.domain.structure.Department;
-import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -73,8 +71,8 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
                     new Employee(
                             Position.valueOf(resultSet.getString(1)),
                             Experience.valueOf(resultSet.getString(2)),
-                            DAO_SERVICE.getDepartmentRepository().findById(resultSet.getLong(3)).get(),
-                            DAO_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(4)).get()));
+                            DAO_SERVICE.getRepository(DepartmentRepository.class).findById(resultSet.getLong(3)).get(),
+                            DAO_SERVICE.getRepository(PersonInfoRepository.class).findById(resultSet.getLong(4)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find employee by id!", e);
         } finally {
@@ -96,7 +94,7 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Employee employee : employees) {
-            employee.setPackages(DAO_SERVICE.getPackageRepository().findEmployeePackages(employee));
+            employee.setPackages(DAO_SERVICE.getRepository(PackageRepository.class).findEmployeePackages(employee));
         }
         return employees;
     }

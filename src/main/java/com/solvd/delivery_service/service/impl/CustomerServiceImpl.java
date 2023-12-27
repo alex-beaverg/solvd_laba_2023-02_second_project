@@ -2,9 +2,10 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
+import com.solvd.delivery_service.persistence.AddressRepository;
 import com.solvd.delivery_service.persistence.CustomerRepository;
 import com.solvd.delivery_service.service.CustomerService;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final PersonInfoService personInfoService;
 
     public CustomerServiceImpl() {
-        this.customerRepository = DAO_SERVICE.getCustomerRepository();
+        this.customerRepository = DAO_SERVICE.getRepository(CustomerRepository.class);
         this.personInfoService = new PersonInfoServiceImpl();
     }
 

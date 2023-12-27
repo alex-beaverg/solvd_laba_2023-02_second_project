@@ -5,7 +5,7 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.service.PassportService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
@@ -18,7 +18,7 @@ public class PersonInfoServiceImpl implements PersonInfoService {
     private final AddressService addressService;
 
     public PersonInfoServiceImpl() {
-        this.personInfoRepository = DAO_SERVICE.getPersonInfoRepository();
+        this.personInfoRepository = DAO_SERVICE.getRepository(PersonInfoRepository.class);
         this.passportService = new PassportServiceImpl();
         this.addressService = new AddressServiceImpl();
     }

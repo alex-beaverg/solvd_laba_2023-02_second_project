@@ -2,7 +2,7 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.DepartmentRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 import com.solvd.delivery_service.service.DepartmentService;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
 
     public DepartmentServiceImpl() {
-        this.departmentRepository = DAO_SERVICE.getDepartmentRepository();
+        this.departmentRepository = DAO_SERVICE.getRepository(DepartmentRepository.class);
     }
 
     @Override

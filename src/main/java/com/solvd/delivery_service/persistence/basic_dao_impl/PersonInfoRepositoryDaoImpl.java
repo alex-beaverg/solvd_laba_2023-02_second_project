@@ -1,12 +1,10 @@
-package com.solvd.delivery_service.persistence.impl;
+package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
-import com.solvd.delivery_service.persistence.ConnectionPool;
-import com.solvd.delivery_service.persistence.PersonInfoRepository;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -66,8 +64,8 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
                     new PersonInfo(resultSet.getString(1),
                             resultSet.getString(2),
                             resultSet.getInt(3),
-                            DAO_SERVICE.getPassportRepository().findById(resultSet.getLong(4)).get(),
-                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(5)).get()));
+                            DAO_SERVICE.getRepository(PassportRepository.class).findById(resultSet.getLong(4)).get(),
+                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(5)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find person by id!", e);
         } finally {

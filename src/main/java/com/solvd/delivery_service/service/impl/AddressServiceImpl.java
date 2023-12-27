@@ -3,7 +3,7 @@ package com.solvd.delivery_service.service.impl;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.service.DaoService;
+import com.solvd.delivery_service.persistence.DaoService;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     public AddressServiceImpl() {
-        this.addressRepository = DAO_SERVICE.getAddressRepository();
+        this.addressRepository = DAO_SERVICE.getRepository(AddressRepository.class);
     }
 
     @Override
