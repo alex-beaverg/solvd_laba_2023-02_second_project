@@ -3,16 +3,16 @@ package com.solvd.delivery_service.service.impl;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.util.List;
 
 public class AddressServiceImpl implements AddressService {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private final AddressRepository addressRepository;
 
     public AddressServiceImpl() {
-        this.addressRepository = DB_SERVICE.getAddressRepository();
+        this.addressRepository = DAO_SERVICE.getAddressRepository();
     }
 
     @Override

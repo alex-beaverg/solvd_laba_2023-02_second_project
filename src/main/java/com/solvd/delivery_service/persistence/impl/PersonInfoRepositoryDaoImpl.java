@@ -6,7 +6,7 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PERSON_QUERY =
             "INSERT INTO persons(first_name, last_name, age, passport_id, address_id) values(?, ?, ?, ?, ?);";
@@ -66,8 +66,8 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
                     new PersonInfo(resultSet.getString(1),
                             resultSet.getString(2),
                             resultSet.getInt(3),
-                            DB_SERVICE.getPassportRepository().findById(resultSet.getLong(4)).get(),
-                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(5)).get()));
+                            DAO_SERVICE.getPassportRepository().findById(resultSet.getLong(4)).get(),
+                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(5)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find person by id!", e);
         } finally {

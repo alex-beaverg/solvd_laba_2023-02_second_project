@@ -10,7 +10,7 @@ import com.solvd.delivery_service.domain.human.employee.Position;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_EMPLOYEE_QUERY =
             "INSERT INTO employees(position, experience, department_id, person_id) values(?, ?, ?, ?);";
@@ -73,8 +73,8 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
                     new Employee(
                             Position.valueOf(resultSet.getString(1)),
                             Experience.valueOf(resultSet.getString(2)),
-                            DB_SERVICE.getDepartmentRepository().findById(resultSet.getLong(3)).get(),
-                            DB_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(4)).get()));
+                            DAO_SERVICE.getDepartmentRepository().findById(resultSet.getLong(3)).get(),
+                            DAO_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(4)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find employee by id!", e);
         } finally {
@@ -96,7 +96,7 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Employee employee : employees) {
-            employee.setPackages(DB_SERVICE.getPackageRepository().findEmployeePackages(employee));
+            employee.setPackages(DAO_SERVICE.getPackageRepository().findEmployeePackages(employee));
         }
         return employees;
     }

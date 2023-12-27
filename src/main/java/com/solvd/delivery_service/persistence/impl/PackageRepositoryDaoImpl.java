@@ -13,7 +13,7 @@ import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.PackageRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PackageRepositoryDaoImpl implements PackageRepository {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PACKAGE_QUERY =
             "INSERT INTO packages(number, package_type, delivery_type, status, package_condition, address_from_id, " +
@@ -109,10 +109,10 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
                             DeliveryType.valueOf(resultSet.getString(3)),
                             Status.valueOf(resultSet.getString(4)),
                             Condition.valueOf(resultSet.getString(5)),
-                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(6)).get(),
-                            DB_SERVICE.getAddressRepository().findById(resultSet.getLong(7)).get(),
-                            DB_SERVICE.getCustomerRepository().findById(resultSet.getLong(8)).get(),
-                            DB_SERVICE.getEmployeeRepository().findById(resultSet.getLong(9)).get()));
+                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(6)).get(),
+                            DAO_SERVICE.getAddressRepository().findById(resultSet.getLong(7)).get(),
+                            DAO_SERVICE.getCustomerRepository().findById(resultSet.getLong(8)).get(),
+                            DAO_SERVICE.getEmployeeRepository().findById(resultSet.getLong(9)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find package by id!", e);
         } finally {

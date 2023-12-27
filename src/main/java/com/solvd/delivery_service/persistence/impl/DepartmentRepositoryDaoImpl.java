@@ -3,7 +3,7 @@ package com.solvd.delivery_service.persistence.impl;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.DepartmentRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments(title) values(?);";
     private static final String FIND_DEPARTMENT_QUERY = "SELECT * FROM departments WHERE id = ?;";
@@ -68,7 +68,7 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Department department : departments) {
-            department.setEmployees(DB_SERVICE.getEmployeeRepository().findDepartmentEmployees(department));
+            department.setEmployees(DAO_SERVICE.getEmployeeRepository().findDepartmentEmployees(department));
         }
         return departments;
     }

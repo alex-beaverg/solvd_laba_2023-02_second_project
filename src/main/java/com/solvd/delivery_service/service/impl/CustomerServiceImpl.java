@@ -4,18 +4,18 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.persistence.CustomerRepository;
 import com.solvd.delivery_service.service.CustomerService;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private final CustomerRepository customerRepository;
     private final PersonInfoService personInfoService;
 
     public CustomerServiceImpl() {
-        this.customerRepository = DB_SERVICE.getCustomerRepository();
+        this.customerRepository = DAO_SERVICE.getCustomerRepository();
         this.personInfoService = new PersonInfoServiceImpl();
     }
 

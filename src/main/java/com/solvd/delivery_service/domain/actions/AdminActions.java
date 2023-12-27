@@ -17,7 +17,7 @@ import com.solvd.delivery_service.service.impl.*;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 import com.solvd.delivery_service.util.custom_exceptions.EmptyInputException;
 import com.solvd.delivery_service.util.custom_exceptions.NegativeNumberException;
-import com.solvd.delivery_service.util.custom_exceptions.YearsException;
+import com.solvd.delivery_service.util.custom_exceptions.YearsOfExperienceException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -324,7 +324,7 @@ public class AdminActions extends Actions {
             try {
                 years = getYearsFromConsole();
                 break;
-            } catch (YearsException e) {
+            } catch (YearsOfExperienceException e) {
                 LOGGER.error(e.getMessage());
             }
         } while (true);
@@ -334,12 +334,12 @@ public class AdminActions extends Actions {
         return null;
     }
 
-    private static double getYearsFromConsole() throws YearsException {
+    private static double getYearsFromConsole() throws YearsOfExperienceException {
         do {
             try {
                 double years = RequestMethods.requestingInfoDouble("Enter experience years: ");
                 if (years > 100.0) {
-                    throw new YearsException("[YearsException]: Years can not be more than 100!");
+                    throw new YearsOfExperienceException("[YearsException]: Years can not be more than 100!");
                 }
                 return years;
             } catch (EmptyInputException | NegativeNumberException e) {

@@ -4,19 +4,19 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 import com.solvd.delivery_service.service.EmployeeService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private final EmployeeRepository employeeRepository;
     private final PersonInfoService personInfoService;
 
     public EmployeeServiceImpl() {
-        this.employeeRepository = DB_SERVICE.getEmployeeRepository();
+        this.employeeRepository = DAO_SERVICE.getEmployeeRepository();
         this.personInfoService = new PersonInfoServiceImpl();
     }
 

@@ -7,7 +7,7 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.CustomerRepository;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerRepositoryDaoImpl implements CustomerRepository {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_CUSTOMER_QUERY = "INSERT INTO customers(person_id) values(?);";
     private static final String FIND_CUSTOMER_QUERY = "SELECT * FROM customers WHERE id = ?;";
@@ -67,7 +67,7 @@ public class CustomerRepositoryDaoImpl implements CustomerRepository {
             resultSet.next();
             customerOptional = Optional.of(
                     new Customer(resultSet.getLong(1),
-                            DB_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(2)).get()));
+                            DAO_SERVICE.getPersonInfoRepository().findById(resultSet.getLong(2)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find customer by id!", e);
         } finally {
@@ -89,7 +89,7 @@ public class CustomerRepositoryDaoImpl implements CustomerRepository {
             CONNECTION_POOL.releaseConnection(connection);
         }
         for (Customer customer : customers) {
-            customer.setPackages(DB_SERVICE.getPackageRepository().findCustomerPackages(customer));
+            customer.setPackages(DAO_SERVICE.getPackageRepository().findCustomerPackages(customer));
         }
         return customers;
     }

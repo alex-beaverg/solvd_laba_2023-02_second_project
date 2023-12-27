@@ -109,7 +109,7 @@ public class UserActions extends Actions {
             try {
                 weight = getWeightFromConsole();
                 break;
-            } catch (WeightException e) {
+            } catch (PackageWeightException e) {
                 LOGGER.error(e.getMessage());
             }
         } while (true);
@@ -119,12 +119,12 @@ public class UserActions extends Actions {
         return null;
     }
 
-    private static double getWeightFromConsole() throws WeightException {
+    private static double getWeightFromConsole() throws PackageWeightException {
         do {
             try {
                 double weight = RequestMethods.requestingInfoDouble("Enter package weight in kg (0...100): ");
                 if (weight > 100.0) {
-                    throw new WeightException("[WeightException]: Weight can not be more than 100 kg!");
+                    throw new PackageWeightException("[WeightException]: Weight can not be more than 100 kg!");
                 }
                 return weight;
             } catch (EmptyInputException | NegativeNumberException e) {

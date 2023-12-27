@@ -5,20 +5,20 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 import com.solvd.delivery_service.service.PassportService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;
 
 public class PersonInfoServiceImpl implements PersonInfoService {
-    private static final DBService DB_SERVICE = DBService.getInstance();
+    private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private final PersonInfoRepository personInfoRepository;
     private final PassportService passportService;
     private final AddressService addressService;
 
     public PersonInfoServiceImpl() {
-        this.personInfoRepository = DB_SERVICE.getPersonInfoRepository();
+        this.personInfoRepository = DAO_SERVICE.getPersonInfoRepository();
         this.passportService = new PassportServiceImpl();
         this.addressService = new AddressServiceImpl();
     }

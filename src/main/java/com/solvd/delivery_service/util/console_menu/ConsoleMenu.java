@@ -1,9 +1,9 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.service.DBService;
+import com.solvd.delivery_service.service.DaoService;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
-import com.solvd.delivery_service.util.console_menu.menu_enums.ServiceMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.DaoServiceMenu;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,19 +12,19 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
-    public static DBService DB_SERVICE = DBService.getInstance();;
+    public static DaoService DAO_SERVICE = DaoService.getInstance();;
 
     public ConsoleMenu runServiceMenu() {
-        int answer = drawAnyMenuAndChooseMenuItem("SERVICE MENU:", ServiceMenu.values());
+        int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
         switch (answer) {
             case (1) -> {
-                PRINT2LN.info("RUNNING USING DAO SERVICE");
-                DB_SERVICE.setService("DAO");
+                PRINT2LN.info("RUNNING USING BASIC DAO SERVICE");
+                DAO_SERVICE.setDaoService("BASIC DAO");
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
-                PRINT2LN.info("RUNNING USING MYBATIS SERVICE");
-                DB_SERVICE.setService("MYBATIS");
+                PRINT2LN.info("RUNNING USING MYBATIS DAO SERVICE");
+                DAO_SERVICE.setDaoService("MYBATIS DAO");
                 return runDeliveryCompanyMenu();
             }
             default -> {
