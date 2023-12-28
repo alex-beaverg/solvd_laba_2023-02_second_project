@@ -3,7 +3,7 @@ package com.solvd.delivery_service.service.impl;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.persistence.AddressRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 
 import java.util.List;
 

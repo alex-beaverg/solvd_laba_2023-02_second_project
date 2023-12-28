@@ -1,5 +1,6 @@
-package com.solvd.delivery_service.persistence;
+package com.solvd.delivery_service.util.console_menu;
 
+import com.solvd.delivery_service.persistence.*;
 import com.solvd.delivery_service.persistence.basic_dao_impl.*;
 import com.solvd.delivery_service.persistence.mybatis_dao_impl.*;
 
@@ -17,11 +18,11 @@ public class DaoService {
         return instance;
     }
 
-    public void assignBasicDaoService() {
+    protected void assignBasicDaoService() {
         isBasicDaoService = true;
     }
 
-    public void assignMybatisDaoService() {
+    protected void assignMybatisDaoService() {
         isBasicDaoService = false;
     }
 

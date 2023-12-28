@@ -12,6 +12,7 @@ import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.*;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;

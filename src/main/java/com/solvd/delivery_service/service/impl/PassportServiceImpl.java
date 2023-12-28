@@ -2,7 +2,7 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.persistence.PassportRepository;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 import com.solvd.delivery_service.service.PassportService;
 
 import java.util.List;

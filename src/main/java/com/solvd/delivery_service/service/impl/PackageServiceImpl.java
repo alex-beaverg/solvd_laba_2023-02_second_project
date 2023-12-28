@@ -6,7 +6,7 @@ import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.persistence.PackageRepository;
 import com.solvd.delivery_service.service.AddressService;
 import com.solvd.delivery_service.service.CustomerService;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 import com.solvd.delivery_service.service.PackageService;
 
 import java.util.List;

@@ -6,6 +6,7 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.persistence.*;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;

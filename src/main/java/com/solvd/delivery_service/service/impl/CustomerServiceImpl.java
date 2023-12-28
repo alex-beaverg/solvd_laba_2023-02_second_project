@@ -2,10 +2,9 @@ package com.solvd.delivery_service.service.impl;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
-import com.solvd.delivery_service.persistence.AddressRepository;
 import com.solvd.delivery_service.persistence.CustomerRepository;
 import com.solvd.delivery_service.service.CustomerService;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
 import java.util.List;

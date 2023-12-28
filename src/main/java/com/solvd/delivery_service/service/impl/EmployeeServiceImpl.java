@@ -4,7 +4,7 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 import com.solvd.delivery_service.service.EmployeeService;
 import com.solvd.delivery_service.service.PersonInfoService;
 

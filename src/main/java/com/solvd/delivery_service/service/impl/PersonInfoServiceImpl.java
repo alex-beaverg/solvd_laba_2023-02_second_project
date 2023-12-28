@@ -5,7 +5,7 @@ import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.PersonInfoRepository;
 import com.solvd.delivery_service.service.AddressService;
-import com.solvd.delivery_service.persistence.DaoService;
+import com.solvd.delivery_service.util.console_menu.DaoService;
 import com.solvd.delivery_service.service.PassportService;
 import com.solvd.delivery_service.service.PersonInfoService;
 
