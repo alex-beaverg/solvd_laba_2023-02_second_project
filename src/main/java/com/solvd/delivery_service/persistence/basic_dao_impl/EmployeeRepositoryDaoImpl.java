@@ -7,6 +7,7 @@ import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.human.employee.Experience;
 import com.solvd.delivery_service.domain.human.employee.Position;
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.*;
 import com.solvd.delivery_service.util.console_menu.DaoService;
@@ -29,10 +30,11 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
             "SELECT e.id AS employee_id, e.position, e.experience, d.id AS department_id, p.id AS person_id, " +
                     "d.title AS department, p.first_name, p.last_name, p.age, ps.id AS passport_id, " +
                     "a.id AS address_id, ps.number AS passport, a.city, a.street, a.house, a.flat, " +
-                    "a.zip_code, a.country " +
+                    "a.zip_code, a.country, c.id AS company_id, c.name AS company_name " +
             "FROM employees e " +
             "JOIN persons p ON e.person_id = p.id " +
             "JOIN departments d ON e.department_id = d.id " +
+            "JOIN companies c ON d.company_id = c.id " +
             "JOIN passports ps ON p.passport_id = ps.id " +
             "JOIN addresses a ON p.address_id = a.id ";
     private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY e.id;";
@@ -182,7 +184,10 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
                 employee.setDepartment(
                         new Department(
                             resultSet.getLong(4),
-                            resultSet.getString(6)));
+                            resultSet.getString(6),
+                            new Company(
+                                    resultSet.getLong(19),
+                                    resultSet.getString(20))));
                 employee.setPersonInfo(
                         new PersonInfo(
                             resultSet.getLong(5),

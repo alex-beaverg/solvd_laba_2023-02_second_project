@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.CompanyRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT
+        INTO companies (name)
+        VALUES (#{company.name})
+    </insert>
+    <sql id="companyAllSelect">
+        SELECT
+        c.id AS company_id, c.name AS company_name
+        FROM companies c
+    </sql>
+    <select id="findAll" resultMap="CompanyResultMap">
+        <include refid="companyAllSelect"/>
+        ORDER BY id
+    </select>
+    <select id="findById" resultMap="CompanyResultMap">
+        <include refid="companyAllSelect"/>
+        WHERE id = #{id}
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesCompanyResultMap">
+        SELECT
+        COUNT(*) AS companies_count
+        FROM companies
+    </select>
+    <update id="update">
+        UPDATE companies
+        SET name = #{company.name}
+        WHERE id = #{company.id}
+    </update>
+    <delete id="deleteById">
+        DELETE
+        FROM companies
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="CompanyResultMap" type="com.solvd.delivery_service.domain.structure.Company" autoMapping="false">
+        <id column="company_id" property="id"/>
+        <result column="company_name" property="name"/>
+        <collection property="departments"
+                    resultMap="com.solvd.delivery_service.persistence.DepartmentRepository.DepartmentResultMap"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesCompanyResultMap" type="Long" autoMapping="false">
+        <result column="companies_count" property="id"/>
+    </resultMap>
+</mapper>

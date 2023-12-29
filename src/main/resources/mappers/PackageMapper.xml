@@ -26,6 +26,7 @@
                 a3.country AS customer_country,
             e.id AS employee_id, e.position, e.experience,
             d.id AS employee_dep_id, d.title AS employee_dep_title,
+            com.id AS employee_company_id, com.name AS employee_company_name,
             p2.id AS employee_person_id, p2.first_name AS employee_first_name, p2.last_name AS employee_last_name,
                 p2.age AS employee_age,
             ps2.id AS employee_passport_id, ps2.number AS employee_passport,
@@ -41,6 +42,7 @@
         JOIN addresses a3 ON p1.address_id = a3.id
         JOIN employees e ON p.employee_id = e.id
         JOIN departments d ON e.department_id = d.id
+        JOIN companies com ON d.company_id = com.id
         JOIN persons p2 ON e.person_id = p2.id
         JOIN passports ps2 ON p2.passport_id = ps2.id
         JOIN addresses a4 ON p2.address_id = a4.id

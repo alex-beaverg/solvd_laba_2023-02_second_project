@@ -5,21 +5,27 @@
 <mapper namespace="com.solvd.delivery_service.persistence.DepartmentRepository">
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
         INSERT
-        INTO departments (title)
-        VALUES (#{department.title})
+        INTO departments (title, company_id)
+        VALUES (#{department.title}, #{department.company.id})
     </insert>
     <sql id="departmentAllSelect">
         SELECT
-            d.id AS dep_id, d.title AS dep_title
+            d.id AS dep_id, d.title AS dep_title,
+            com.id AS company_id, com.name AS company_name
         FROM departments d
+        JOIN companies com
     </sql>
     <select id="findAll" resultMap="DepartmentResultMap">
         <include refid="departmentAllSelect"/>
-        ORDER BY id
+        ORDER BY d.id
     </select>
     <select id="findById" resultMap="DepartmentResultMap">
         <include refid="departmentAllSelect"/>
-        WHERE id = #{id}
+        WHERE d.id = #{id}
+    </select>
+    <select id="findCompanyDepartments" resultMap="DepartmentResultMap">
+        <include refid="departmentAllSelect"/>
+        WHERE com.id = #{company.id}
     </select>
     <select id="countOfEntries" resultMap="CountOfEntriesDepartmentResultMap">
         SELECT
@@ -39,6 +45,8 @@
     <resultMap id="DepartmentResultMap" type="com.solvd.delivery_service.domain.structure.Department" autoMapping="false">
         <id column="dep_id" property="id"/>
         <result column="dep_title" property="title"/>
+        <association property="company"
+                     resultMap="com.solvd.delivery_service.persistence.CompanyRepository.CompanyResultMap"/>
         <collection property="employees"
                     resultMap="com.solvd.delivery_service.persistence.EmployeeRepository.EmployeeResultMap"/>
     </resultMap>

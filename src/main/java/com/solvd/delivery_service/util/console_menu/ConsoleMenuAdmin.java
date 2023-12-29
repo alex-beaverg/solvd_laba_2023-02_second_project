@@ -13,18 +13,21 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminMainMenu();
             }
             case (2) -> {
-                return runAdminDepartmentMenu();
+                return runAdminCompanyMenu();
             }
             case (3) -> {
-                return runAdminEmployeeMenu();
+                return runAdminDepartmentMenu();
             }
             case (4) -> {
-                return runAdminCustomerMenu();
+                return runAdminEmployeeMenu();
             }
             case (5) -> {
-                return runAdminPackageMenu();
+                return runAdminCustomerMenu();
             }
             case (6) -> {
+                return runAdminPackageMenu();
+            }
+            case (7) -> {
                 return (ConsoleMenuAdmin) runDeliveryCompanyMenu();
             }
             default -> {
@@ -97,12 +100,40 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminDepartmentMenu();
             }
             case (3) -> {
-                AdminActions.renameDepartment();
+                AdminActions.updateDepartmentField();
                 return runAdminDepartmentMenu();
             }
             case (4) -> {
                 AdminActions.removeDepartment();
                 return runAdminDepartmentMenu();
+            }
+            case (5) -> {
+                return runAdminMainMenu();
+            }
+            default -> {
+                return (ConsoleMenuAdmin) tearDown();
+            }
+        }
+    }
+
+    private ConsoleMenuAdmin runAdminCompanyMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("ADMIN COMPANY MENU", AdminCompanyMenu.values());
+        switch (answer) {
+            case (1) -> {
+                AdminActions.showCompanies();
+                return runAdminCompanyMenu();
+            }
+            case (2) -> {
+                AdminActions.registerCompany();
+                return runAdminCompanyMenu();
+            }
+            case (3) -> {
+                AdminActions.renameCompany();
+                return runAdminCompanyMenu();
+            }
+            case (4) -> {
+                AdminActions.removeCompany();
+                return runAdminCompanyMenu();
             }
             case (5) -> {
                 return runAdminMainMenu();

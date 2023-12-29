@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.persistence.mybatis_dao_impl;
 
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.DepartmentRepository;
 import com.solvd.delivery_service.persistence.EmployeeRepository;
@@ -61,6 +62,14 @@ public class DepartmentRepositoryMybatisImpl implements DepartmentRepository {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
             DepartmentRepository departmentRepository = sqlSession.getMapper(DepartmentRepository.class);
             return departmentRepository.countOfEntries();
+        }
+    }
+
+    @Override
+    public List<Department> findCompanyDepartments(Company company) {
+        try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {
+            DepartmentRepository departmentRepository = sqlSession.getMapper(DepartmentRepository.class);
+            return departmentRepository.findCompanyDepartments(company);
         }
     }
 }

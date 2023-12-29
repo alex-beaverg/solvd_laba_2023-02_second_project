@@ -62,6 +62,11 @@ public class DaoService {
                 return clazz.cast(new PersonInfoRepositoryDaoImpl());
             }
             return clazz.cast(new PersonInfoRepositoryMybatisImpl());
+        } else if (clazz.equals(CompanyRepository.class)) {
+            if (isBasicDaoService) {
+                return clazz.cast(new CompanyRepositoryDaoImpl());
+            }
+            return clazz.cast(new CompanyRepositoryMybatisImpl());
         }
         return null;
     }

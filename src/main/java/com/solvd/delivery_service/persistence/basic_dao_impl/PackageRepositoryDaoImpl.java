@@ -10,6 +10,7 @@ import com.solvd.delivery_service.domain.human.employee.Experience;
 import com.solvd.delivery_service.domain.human.employee.Position;
 import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.*;
 import com.solvd.delivery_service.util.console_menu.DaoService;
@@ -48,11 +49,12 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
                     "ps1.id AS employee_passport_id, ps1.number AS employee_passport, a1.id AS employee_address_id, " +
                     "a1.city AS employee_city, a1.street AS employee_street, a1.house AS employee_house, " +
                     "a1.flat AS employee_flat, a1.zip_code AS employee_zip_code, a1.country AS employee_country, " +
-                    "d.id AS employee_department_id, d.title AS employee_department " +
+                    "d.id AS employee_department_id, d.title AS employee_department, c.id AS company_id, c.name AS company_name " +
             "FROM packages pg " +
             "JOIN employees e ON pg.employee_id = e.id " +
             "JOIN persons p1 ON e.person_id = p1.id " +
             "JOIN departments d ON e.department_id = d.id " +
+            "JOIN companies c ON d.company_id = c.id " +
             "JOIN passports ps1 ON p1.passport_id = ps1.id " +
             "JOIN addresses a1 ON p1.address_id = a1.id " +
             "JOIN customers cu ON pg.customer_id = cu.id " +
@@ -307,7 +309,10 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
                         Experience.valueOf(resultSet.getString(37)),
                         new Department(
                                 resultSet.getLong(51),
-                                resultSet.getString(52)),
+                                resultSet.getString(52),
+                                new Company(
+                                        resultSet.getLong(53),
+                                        resultSet.getString(54))),
                         new PersonInfo(
                                 resultSet.getLong(38),
                                 resultSet.getString(39),

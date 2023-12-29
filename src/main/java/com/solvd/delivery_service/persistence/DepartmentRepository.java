@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.persistence;
 
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,5 @@ public interface DepartmentRepository {
     void update(@Param("department") Department department);
     void deleteById(@Param("id") Long id);
     Long countOfEntries();
+    List<Department> findCompanyDepartments(@Param("company") Company company);
 }

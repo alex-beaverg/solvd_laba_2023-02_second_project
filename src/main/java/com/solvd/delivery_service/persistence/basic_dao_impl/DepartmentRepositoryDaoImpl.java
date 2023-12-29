@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.persistence.basic_dao_impl;
 
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.*;
 import com.solvd.delivery_service.util.console_menu.DaoService;
@@ -12,12 +13,23 @@ import java.util.Optional;
 public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
     private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments(title) values(?);";
+    private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments(title, company_id) values(?, ?);";
     private static final String FIND_DEPARTMENT_QUERY = "SELECT * FROM departments WHERE id = ?;";
     private static final String UPDATE_DEPARTMENT_QUERY = "UPDATE departments SET title = ? WHERE id = ?;";
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM departments ORDER BY id;";
-    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS departments_count FROM departments;";
+    private static final String FIND_ALL_QUERY =
+            "SELECT " +
+                    "d.id, d.title, c.id AS company_id, c.name " +
+            "FROM departments d " +
+            "JOIN companies c ON d.company_id = c.id " +
+            "ORDER BY id;";
+    private static final String GET_COUNT_OF_ENTRIES_QUERY = "SELECT COUNT(*) AS departments_count FROM departments;";
+    private static final String FIND_COMPANY_DEPARTMENTS_QUERY =
+            "SELECT " +
+                "d.id, d.title, c.id AS company_id, c.name " +
+            "FROM departments d " +
+            "JOIN companies c ON d.company_id = c.id " +
+            "WHERE c.id = ?;";
 
     @Override
     public void create(Department department) {
@@ -25,6 +37,7 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_DEPARTMENT_QUERY,
                 Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, department.getTitle());
+            preparedStatement.setLong(2, department.getCompany().getId());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             while (resultSet.next()) {
@@ -45,7 +58,10 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            departmentOptional = Optional.of(new Department(resultSet.getLong(1), resultSet.getString(2)));
+            departmentOptional = Optional.of(new Department(
+                    resultSet.getLong(1),
+                    resultSet.getString(2),
+                    DAO_SERVICE.getRepository(CompanyRepository.class).findById(resultSet.getLong(3)).get()));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find department by id!", e);
         } finally {
@@ -103,7 +119,7 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
     public Long countOfEntries() {
         long count;
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_COUNT_OF_ENTRIES_QUERY)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             count = resultSet.getLong(1);
@@ -115,6 +131,22 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
         return count;
     }
 
+    @Override
+    public List<Department> findCompanyDepartments(Company company) {
+        List<Department> departments;
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_COMPANY_DEPARTMENTS_QUERY)) {
+            preparedStatement.setLong(1, company.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            departments = mapDepartments(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to find company departments!", e);
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+        return departments;
+    }
+
     private static List<Department> mapDepartments(ResultSet resultSet) {
         List<Department> departments = new ArrayList<>();
         try {
@@ -122,6 +154,7 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
                 Department department = new Department();
                 department.setId(resultSet.getLong(1));
                 department.setTitle(resultSet.getString(2));
+                department.setCompany(new Company(resultSet.getLong(3), resultSet.getString(4)));
                 departments.add(department);
             }
         } catch (SQLException e) {

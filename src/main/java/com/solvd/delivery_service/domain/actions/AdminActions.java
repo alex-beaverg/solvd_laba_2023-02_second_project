@@ -11,6 +11,7 @@ import com.solvd.delivery_service.domain.human.employee.Experience;
 import com.solvd.delivery_service.domain.human.employee.Position;
 import com.solvd.delivery_service.domain.pack.*;
 import com.solvd.delivery_service.domain.pack.Package;
+import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.service.*;
 import com.solvd.delivery_service.service.impl.*;
@@ -33,6 +34,7 @@ public class AdminActions extends Actions {
         PRINT2LN.info("NUMBER OF TABLE ENTRIES IN DATABASE:");
         PRINTLN.info("Addresses table: " + new AddressServiceImpl().retrieveNumberOfEntries() + " entries");
         PRINTLN.info("Customers table: " + new CustomerServiceImpl().retrieveNumberOfEntries() + " entries");
+        PRINTLN.info("Companies table: " + new CompanyServiceImpl().retrieveNumberOfEntries() + " entries");
         PRINTLN.info("Departments table: " + new DepartmentServiceImpl().retrieveNumberOfEntries() + " entries");
         PRINTLN.info("Employees table: " + new EmployeeServiceImpl().retrieveNumberOfEntries() + " entries");
         PRINTLN.info("Packages table: " + new PackageServiceImpl().retrieveNumberOfEntries() + " entries");
@@ -43,11 +45,17 @@ public class AdminActions extends Actions {
     public static void showDepartments() {
         PRINT2LN.info("ALL DEPARTMENTS:");
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
-            PRINTLN.info("DEPARTMENT: id:[" +
-                    department.getId() + "], Title:[" +
-                    department.getTitle() + "]\n\tEMPLOYEES:");
+            PRINTLN.info("DEPARTMENT: " + department + "\n\tEMPLOYEES:");
             department.getEmployees().forEach(employee -> PRINTLN.info("\t- " + employee + ", Salary:[" +
                     Accounting.calculateEmployeeSalary(employee) + " BYN]"));
+        }
+    }
+
+    public static void showCompanies() {
+        PRINT2LN.info("ALL COMPANIES:");
+        for (Company company : new CompanyServiceImpl().retrieveAll()) {
+            PRINTLN.info(company + "\n\tDEPARTMENTS:");
+            company.getDepartments().forEach(department -> PRINTLN.info("\t- " + department));
         }
     }
 
@@ -94,10 +102,19 @@ public class AdminActions extends Actions {
 
     public static void registerDepartment() {
         PRINT2LN.info("REGISTERING DEPARTMENT");
-        Department department = new Department(RequestMethods.getStringValueFromConsole("department title"));
+        Company company = getExistingCompany();
+        Department department = new Department(RequestMethods.getStringValueFromConsole("department title"), company);
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.create(department);
         PRINT2LN.info("DEPARTMENT " + department.getTitle() + " WAS REGISTERED");
+    }
+
+    public static void registerCompany() {
+        PRINT2LN.info("REGISTERING COMPANY");
+        Company company = new Company(RequestMethods.getStringValueFromConsole("company name"));
+        CompanyService companyService = new CompanyServiceImpl();
+        companyService.create(company);
+        PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
     }
 
     public static void removeDepartment() {
@@ -109,15 +126,52 @@ public class AdminActions extends Actions {
         PRINT2LN.info("DEPARTMENT " + department.getTitle() + " WAS REMOVED");
     }
 
-    public static void renameDepartment() {
-        PRINT2LN.info("RENAMING DEPARTMENT");
+    public static void removeCompany() {
+        PRINT2LN.info("REMOVING COMPANY");
+        CompanyService companyService = new CompanyServiceImpl();
+        Company company = getExistingCompany();
+        Long company_id = company.getId();
+        companyService.removeById(company_id);
+        PRINT2LN.info("COMPANY " + company.getName() + " WAS REMOVED");
+    }
+
+    public static void updateDepartmentField() {
+        PRINT2LN.info("UPDATING DEPARTMENT");
         DepartmentService departmentService = new DepartmentServiceImpl();
+        CompanyService companyService = new CompanyServiceImpl();
         Department department = getExistingDepartment();
-        String newDepartmentTitle = RequestMethods.getStringValueFromConsole("new department title");
-        String oldDepartmentTitle = department.getTitle();
-        department.setTitle(newDepartmentTitle);
-        departmentService.updateField(department);
-        PRINT2LN.info("DEPARTMENT " + oldDepartmentTitle + " WAS RENAMED TO " + newDepartmentTitle);
+        Field departmentField = getDepartmentClassFieldFromConsole();
+        String oldValue = "", newValue = "";
+        switch (departmentField.getName()) {
+            case ("title") -> {
+                oldValue = department.getTitle();
+                department.setTitle(RequestMethods.getStringValueFromConsole(departmentField.getName()));
+                newValue = department.getTitle();
+            }
+            case ("company") -> {
+                Company company = department.getCompany();
+                oldValue = company.getName();
+                company.setName(RequestMethods.getStringValueFromConsole("company name"));
+                newValue = company.getName();
+                companyService.updateField(company);
+            }
+        }
+        if (departmentField.getName().equals("title")) {
+            departmentService.updateField(department);
+        }
+        PRINT2LN.info("DEPARTMENT " + department.getTitle() + " FIELD " + departmentField.getName() +
+                " WAS UPDATED FROM " + oldValue + " TO " + newValue);
+    }
+
+    public static void renameCompany() {
+        PRINT2LN.info("RENAMING COMPANY");
+        CompanyService companyService = new CompanyServiceImpl();
+        Company company = getExistingCompany();
+        String newCompanyName = RequestMethods.getStringValueFromConsole("new company name");
+        String oldCompanyName = company.getName();
+        company.setName(newCompanyName);
+        companyService.updateField(company);
+        PRINT2LN.info("COMPANY " + oldCompanyName + " WAS RENAMED TO " + newCompanyName);
     }
 
     public static void removeCustomer() {
@@ -281,6 +335,18 @@ public class AdminActions extends Actions {
         return departments.get(RequestMethods.getNumberFromChoice("department number", index - 1) - 1);
     }
 
+    private static Company getExistingCompany() {
+        CompanyService companyService = new CompanyServiceImpl();
+        List<Company> companies = companyService.retrieveAll();
+        int index = 1;
+        PRINTLN.info("Choose the company:");
+        for (Company item : companies) {
+            printAsMenu.print(index, item.getName());
+            index++;
+        }
+        return companies.get(RequestMethods.getNumberFromChoice("company number", index - 1) - 1);
+    }
+
     private static Employee getExistingEmployee() {
         EmployeeService employeeService = new EmployeeServiceImpl();
         List<Employee> employees = employeeService.retrieveAll();
@@ -380,6 +446,21 @@ public class AdminActions extends Actions {
         return employeeFields.get(RequestMethods.getNumberFromChoice("field number", index - 1) - 1);
     }
 
+    private static Field getDepartmentClassFieldFromConsole() {
+        int index = 1;
+        PRINTLN.info("Choose the field:");
+        List<Field> allDepartmentFields = List.of(Department.class.getDeclaredFields());
+        List<Field> departmentFields = new ArrayList<>();
+        for (Field departmentField : allDepartmentFields) {
+            if (!departmentField.getName().equals("id") && !departmentField.getName().equals("employees")) {
+                printAsMenu.print(index, departmentField.getName());
+                departmentFields.add(departmentField);
+                index++;
+            }
+        }
+        return departmentFields.get(RequestMethods.getNumberFromChoice("field number", index - 1) - 1);
+    }
+
     private static Map<String, String> switchAddressField(Field addressField, Address address) {
         Map<String, String> values = new HashMap<>();
         switch (addressField.getName()) {
@@ -456,6 +537,7 @@ public class AdminActions extends Actions {
 
     private static Map<String, String> switchEmployeeField(Field employeeField, Employee employee) {
         DepartmentService departmentService = new DepartmentServiceImpl();
+        CompanyService companyService = new CompanyServiceImpl();
         PersonInfoService personInfoService = new PersonInfoServiceImpl();
         Map<String, String> values = new HashMap<>();
         switch (employeeField.getName()) {
@@ -471,10 +553,24 @@ public class AdminActions extends Actions {
             }
             case ("department") -> {
                 Department department = employee.getDepartment();
-                values.put("old", department.getTitle());
-                department.setTitle(RequestMethods.getStringValueFromConsole(employeeField.getName()));
-                values.put("new", department.getTitle());
-                departmentService.updateField(department);
+                Field departmentField = getDepartmentClassFieldFromConsole();
+                switch (departmentField.getName()) {
+                    case ("title") -> {
+                        values.put("old", department.getTitle());
+                        department.setTitle(RequestMethods.getStringValueFromConsole(departmentField.getName()));
+                        values.put("new", department.getTitle());
+                    }
+                    case ("company") -> {
+                        Company company = department.getCompany();
+                        values.put("old", company.getName());
+                        company.setName(RequestMethods.getStringValueFromConsole("company name"));
+                        values.put("new", company.getName());
+                        companyService.updateField(company);
+                    }
+                }
+                if (departmentField.getName().equals("title")) {
+                    departmentService.updateField(department);
+                }
             }
             case ("personInfo") -> {
                 PersonInfo personInfo = employee.getPersonInfo();

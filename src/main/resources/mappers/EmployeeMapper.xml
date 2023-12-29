@@ -12,12 +12,14 @@
         SELECT
             e.id AS employee_id, e.position, e.experience,
             d.id AS dep_id, d.title AS dep_title,
+            com.id AS company_id, com.name AS company_name,
             p.id AS person_id, p.first_name, p.last_name, p.age,
             ps.id AS passport_id, ps.number AS passport,
             a.id AS address_id, a.city, a.street, a.house, a.flat, a.zip_code, a.country
         FROM employees e
         JOIN persons p ON e.person_id = p.id
         JOIN departments d ON e.department_id = d.id
+        JOIN companies com ON d.company_id = com.id
         JOIN passports ps ON p.passport_id = ps.id
         JOIN addresses a ON p.address_id = a.id
     </sql>

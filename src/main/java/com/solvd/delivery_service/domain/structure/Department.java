@@ -8,18 +8,23 @@ import java.util.Objects;
 public class Department {
     private Long id;
     private String title;
+    private Company company;
     private List<Employee> employees;
 
     public Department() {}
 
-    public Department(String title) {
+    public Department(String title,
+                      Company company) {
         this.title = title;
+        this.company = company;
     }
 
     public Department(Long id,
-                      String title) {
+                      String title,
+                      Company company) {
         this.id = id;
         this.title = title;
+        this.company = company;
     }
 
     public Long getId() {
@@ -38,6 +43,14 @@ public class Department {
         this.title = title;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     public List<Employee> getEmployees() {
         return employees;
     }
@@ -52,16 +65,18 @@ public class Department {
         if (o == null || getClass() != o.getClass()) return false;
         Department that = (Department) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(title, that.title);
+                Objects.equals(title, that.title) &&
+                Objects.equals(company, that.company) &&
+                Objects.equals(employees, that.employees);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title);
+        return Objects.hash(id, title, company, employees);
     }
 
     @Override
     public String toString() {
-        return "Dep:[" + title + "]";
+        return "Dep:[" + title + "], " + company;
     }
 }
