@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.PassportRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT
+        INTO passports (number)
+        VALUES (#{passport.number})
+    </insert>
+    <sql id="passportAllSelect">
+        SELECT
+            ps.id AS passport_id, ps.number AS passport
+        FROM passports ps
+    </sql>
+    <select id="findAll" resultMap="PassportResultMap">
+        <include refid="passportAllSelect"/>
+        ORDER BY id
+    </select>
+    <select id="findById" resultMap="PassportResultMap">
+        <include refid="passportAllSelect"/>
+        WHERE id = #{id}
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesPassportResultMap">
+        SELECT
+            COUNT(*) AS passports_count
+        FROM passports
+    </select>
+    <update id="update">
+        UPDATE passports
+        SET number = #{passport.number}
+        WHERE id = #{passport.id}
+    </update>
+    <delete id="deleteById">
+        DELETE
+        FROM passports
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="PassportResultMap" type="com.solvd.delivery_service.domain.human.Passport" autoMapping="false">
+        <id column="passport_id" property="id"/>
+        <result column="passport" property="number"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesPassportResultMap" type="Long" autoMapping="false">
+        <result column="passports_count" property="id"/>
+    </resultMap>
+</mapper>

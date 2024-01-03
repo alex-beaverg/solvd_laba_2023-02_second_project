@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.delivery_service.persistence.DepartmentRepository">
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT
+        INTO departments (title, company_id)
+        VALUES (#{department.title}, #{department.company.id})
+    </insert>
+    <sql id="departmentAllSelect">
+        SELECT
+            d.id AS dep_id, d.title AS dep_title,
+            com.id AS company_id, com.name AS company_name
+        FROM departments d
+        JOIN companies com
+    </sql>
+    <select id="findAll" resultMap="DepartmentResultMap">
+        <include refid="departmentAllSelect"/>
+        ORDER BY d.id
+    </select>
+    <select id="findById" resultMap="DepartmentResultMap">
+        <include refid="departmentAllSelect"/>
+        WHERE d.id = #{id}
+    </select>
+    <select id="findCompanyDepartments" resultMap="DepartmentResultMap">
+        <include refid="departmentAllSelect"/>
+        WHERE com.id = #{company.id}
+    </select>
+    <select id="countOfEntries" resultMap="CountOfEntriesDepartmentResultMap">
+        SELECT
+            COUNT(*) AS dep_count
+        FROM departments
+    </select>
+    <update id="update">
+        UPDATE departments
+        SET title = #{department.title}
+        WHERE id = #{department.id}
+    </update>
+    <delete id="deleteById">
+        DELETE
+        FROM departments
+        WHERE id = #{id}
+    </delete>
+    <resultMap id="DepartmentResultMap" type="com.solvd.delivery_service.domain.structure.Department" autoMapping="false">
+        <id column="dep_id" property="id"/>
+        <result column="dep_title" property="title"/>
+        <association property="company"
+                     resultMap="com.solvd.delivery_service.persistence.CompanyRepository.CompanyResultMap"/>
+        <collection property="employees"
+                    resultMap="com.solvd.delivery_service.persistence.EmployeeRepository.EmployeeResultMap"/>
+    </resultMap>
+    <resultMap id="CountOfEntriesDepartmentResultMap" type="Long" autoMapping="false">
+        <result column="dep_count" property="id"/>
+    </resultMap>
+</mapper>

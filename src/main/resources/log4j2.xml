@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <Console name="InsteadOfSOUT_ln" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg%n"/>
+        </Console>
+        <Console name="InsteadOfSOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg"/>
+        </Console>
+        <Console name="ln_InsteadOfSOUT_ln" target="SYSTEM_OUT">
+            <PatternLayout pattern="%n%msg%n"/>
+        </Console>
+        <Console name="InsteadOfSOUT_ln_For_Errors" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern="%highlight{%msg%n}{ERROR=yellow}"/>
+        </Console>
+        <RollingFile name="rollingFile"
+                     fileName="logs/log4j2.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "1" />
+                <SizeBasedTriggeringPolicy
+                        size="250 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="InsteadOfSOUT_ln" level="info" additivity="false">
+            <AppenderRef ref="InsteadOfSOUT_ln"/>
+        </Logger>
+        <Logger name="InsteadOfSOUT" level="info" additivity="false">
+            <AppenderRef ref="InsteadOfSOUT"/>
+        </Logger>
+        <Logger name="ln_InsteadOfSOUT_ln" level="info" additivity="false">
+            <AppenderRef ref="ln_InsteadOfSOUT_ln"/>
+        </Logger>
+        <Logger name="com.solvd.delivery_service.util.console_menu.ConsoleMenu" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
+        <Logger name="com.solvd.delivery_service.domain.actions.Actions" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
+        <Logger name="com.solvd.delivery_service.util.console_menu.RequestMethods" level="error" additivity="false">
+            <AppenderRef ref="rollingFile"/>
+            <AppenderRef ref="InsteadOfSOUT_ln_For_Errors"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
