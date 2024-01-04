@@ -27,7 +27,7 @@
             <lastName>Customer</lastName>
             <age>35</age>
             <passport id="1">
-                <number>EE01015555</number>
+                <number>CUSTOMER55</number>
             </passport>
             <address id="2">
                 <city>Minsk</city>
@@ -54,7 +54,7 @@
             <lastName>Employee</lastName>
             <age>26</age>
             <passport id="2">
-                <number>WW01015555</number>
+                <number>EMPLOYEE55</number>
             </passport>
             <address id="1">
                 <city>Minsk</city>

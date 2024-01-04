@@ -680,37 +680,9 @@ public class ParsersActions extends UserActions {
                             nextEvent = reader.nextEvent();
                             if (nextEvent.isStartElement()) {
                                 startElement = nextEvent.asStartElement();
-                                if (startElement.getName().getLocalPart().equals("personInfo")) {
-                                    while (reader.hasNext()) {
-                                        nextEvent = reader.nextEvent();
-                                        if (nextEvent.isStartElement()) {
-                                            startElement = nextEvent.asStartElement();
-                                            if (startElement.getName().getLocalPart().equals("passport")) {
-                                                while (reader.hasNext()) {
-                                                    nextEvent = reader.nextEvent();
-                                                    if (nextEvent.isStartElement()) {
-                                                        startElement = nextEvent.asStartElement();
-                                                        if (startElement.getName().getLocalPart().equals("number")) {
-                                                            nextEvent = reader.nextEvent();
-                                                            passport.setNumber(nextEvent.asCharacters().getData());
-                                                        }
-                                                    }
-                                                    if (nextEvent.isEndElement()) {
-                                                        EndElement endElement = nextEvent.asEndElement();
-                                                        if (endElement.getName().getLocalPart().equals("passport")) {
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (nextEvent.isEndElement()) {
-                                            EndElement endElement = nextEvent.asEndElement();
-                                            if (endElement.getName().getLocalPart().equals("personInfo")) {
-                                                break;
-                                            }
-                                        }
-                                    }
+                                if (startElement.getName().getLocalPart().equals("number")) {
+                                    nextEvent = reader.nextEvent();
+                                    passport.setNumber(nextEvent.asCharacters().getData());
                                 }
                             }
                             if (nextEvent.isEndElement()) {

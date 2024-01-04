@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <employee id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_employee.xsd">
-    <position>MANAGER_1CAT</position>
-    <experience>MIDDLE</experience>
+    <position>MANAGER_2CAT</position>
+    <experience>JUNIOR</experience>
     <department id="1">
         <title>Order department</title>
         <company>
@@ -9,18 +9,18 @@
         </company>
     </department>
     <personInfo id="1">
-        <firstName>Lisa</firstName>
-        <lastName>Tate</lastName>
-        <age>23</age>
+        <firstName>Masha</firstName>
+        <lastName>Hill</lastName>
+        <age>19</age>
         <passport id="1">
-            <number>II01017777</number>
+            <number>II01012222</number>
         </passport>
         <address id="1">
-            <city>Minsk</city>
-            <street>Time street</street>
-            <house>88</house>
-            <flat>23</flat>
-            <zipCode>220245</zipCode>
+            <city>Fanipol</city>
+            <street>High street</street>
+            <house>24</house>
+            <flat>3</flat>
+            <zipCode>220023</zipCode>
             <country>BELARUS</country>
         </address>
     </personInfo>
