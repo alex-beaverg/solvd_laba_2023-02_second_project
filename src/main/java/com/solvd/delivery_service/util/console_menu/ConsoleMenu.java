@@ -3,6 +3,7 @@ package com.solvd.delivery_service.util.console_menu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DaoServiceMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.ParserServiceMenu;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
     public static DaoService DAO_SERVICE = DaoService.getInstance();
+    public static ParserService PARSER_SERVICE = ParserService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
@@ -19,12 +21,34 @@ public class ConsoleMenu {
             case (1) -> {
                 PRINT2LN.info("RUNNING USING BASIC DAO SERVICE");
                 DAO_SERVICE.assignBasicDaoService();
-                return runDeliveryCompanyMenu();
+                return runParserMenu();
             }
             case (2) -> {
                 PRINT2LN.info("RUNNING USING MYBATIS DAO SERVICE");
                 DAO_SERVICE.assignMybatisDaoService();
+                return runParserMenu();
+            }
+            default -> {
+                return tearDown();
+            }
+        }
+    }
+
+    protected ConsoleMenu runParserMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("PARSER SERVICE MENU:", ParserServiceMenu.values());
+        switch (answer) {
+            case (1) -> {
+                PRINT2LN.info("RUNNING USING STAX PARSER SERVICE");
+                PARSER_SERVICE.assignStaxParserService();
                 return runDeliveryCompanyMenu();
+            }
+            case (2) -> {
+                PRINT2LN.info("RUNNING USING JAXB PARSER SERVICE");
+                PARSER_SERVICE.assignJaxbParserService();
+                return runDeliveryCompanyMenu();
+            }
+            case (3) -> {
+                return runServiceMenu();
             }
             default -> {
                 return tearDown();
@@ -42,7 +66,7 @@ public class ConsoleMenu {
                 return authentication();
             }
             case (3) -> {
-                return runServiceMenu();
+                return runParserMenu();
             }
             default -> {
                 return tearDown();

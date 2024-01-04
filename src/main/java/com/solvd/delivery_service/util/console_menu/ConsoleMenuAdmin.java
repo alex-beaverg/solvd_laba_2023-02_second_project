@@ -1,6 +1,7 @@
 package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.AdminActions;
+import com.solvd.delivery_service.domain.actions.ParsersActions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.*;
 
 public class ConsoleMenuAdmin extends ConsoleMenu {
@@ -72,14 +73,22 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
-                AdminActions.updateEmployeeField();
+                if (PARSER_SERVICE.isStaxParserService()) {
+                    ParsersActions.registerEmployeeFromXmlUsingStax();
+                } else {
+                    ParsersActions.registerEmployeeFromXmlUsingJaxb();
+                }
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
-                AdminActions.removeEmployee();
+                AdminActions.updateEmployeeField();
                 return runAdminEmployeeMenu();
             }
             case (5) -> {
+                AdminActions.removeEmployee();
+                return runAdminEmployeeMenu();
+            }
+            case (6) -> {
                 return runAdminMainMenu();
             }
             default -> {
@@ -128,14 +137,22 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminCompanyMenu();
             }
             case (3) -> {
-                AdminActions.renameCompany();
+                if (PARSER_SERVICE.isStaxParserService()) {
+                    ParsersActions.registerCompanyFromXmlUsingStax();
+                } else {
+                    ParsersActions.registerCompanyFromXmlUsingJaxb();
+                }
                 return runAdminCompanyMenu();
             }
             case (4) -> {
-                AdminActions.removeCompany();
+                AdminActions.renameCompany();
                 return runAdminCompanyMenu();
             }
             case (5) -> {
+                AdminActions.removeCompany();
+                return runAdminCompanyMenu();
+            }
+            case (6) -> {
                 return runAdminMainMenu();
             }
             default -> {

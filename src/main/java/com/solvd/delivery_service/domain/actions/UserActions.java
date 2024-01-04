@@ -52,7 +52,7 @@ public class UserActions extends Actions {
         }
     }
 
-    private static Package registerPackage(Customer customer, Employee employee) {
+    protected static Package registerPackage(Customer customer, Employee employee) {
         PRINT2LN.info("REGISTRATION OF A PACKAGE");
         PackageService packageService = new PackageServiceImpl();
         Long number = packageService.retrieveMaxPackageNumber() + 1;
@@ -66,7 +66,7 @@ public class UserActions extends Actions {
         Package pack = new Package(number, pType, delivery, status, condition, customer.getPersonInfo().getAddress(),
                 addressTo, customer, employee);
         if (customer.getId() != null) {
-            packageService.createWithExistCustomer(pack);
+            packageService.createWithExistingCustomer(pack);
         } else {
             packageService.create(pack);
         }
@@ -96,11 +96,11 @@ public class UserActions extends Actions {
         return new Customer(personInfo);
     }
 
-    private static Employee getRandomEmployeeFromDataBase(Department department) {
+    protected static Employee getRandomEmployeeFromDataBase(Department department) {
         EmployeeService employeeService = new EmployeeServiceImpl();
         Random random = new Random();
-        return employeeService.retrieveDepartmentEmployees(department)
-                .get(random.nextInt(employeeService.retrieveDepartmentEmployees(department).size()));
+        int index = random.nextInt(employeeService.retrieveDepartmentEmployees(department).size());
+        return employeeService.retrieveDepartmentEmployees(department).get(index);
     }
 
     private static PackageType getPackageTypeDependingOnWeight() {

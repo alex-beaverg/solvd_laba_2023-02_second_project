@@ -3,16 +3,22 @@ package com.solvd.delivery_service.domain.human.employee;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
+    @XmlAttribute(name = "id")
     private Long id;
     private Position position;
     private Experience experience;
     private Department department;
     private PersonInfo personInfo;
+    @XmlElementWrapper(name = "packages")
+    @XmlElement(name = "pack")
     private List<Package> packages;
 
     public Employee() {}

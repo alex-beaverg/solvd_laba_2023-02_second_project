@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_package.xsd">
+    <packageNumber>1400</packageNumber>
+    <packageType>MEDIUM</packageType>
+    <deliveryType>VIP</deliveryType>
+    <status>DELIVERED</status>
+    <condition>NOT_DAMAGED</condition>
+    <addressFrom id="2">
+        <city>Minsk</city>
+        <street>FF street</street>
+        <house>12</house>
+        <flat>1</flat>
+        <zipCode>220245</zipCode>
+        <country>BELARUS</country>
+    </addressFrom>
+    <addressTo id="3">
+        <city>Berlin</city>
+        <street>TT street</street>
+        <house>34</house>
+        <flat>3</flat>
+        <zipCode>1545</zipCode>
+        <country>GERMANY</country>
+    </addressTo>
+    <customer id="1">
+        <personInfo id="2">
+            <firstName>Lena</firstName>
+            <lastName>Customer</lastName>
+            <age>31</age>
+            <passport id="1">
+                <number>EE01010244</number>
+            </passport>
+            <address id="2">
+                <city>Minsk</city>
+                <street>CC street</street>
+                <house>67</house>
+                <flat>54</flat>
+                <zipCode>220123</zipCode>
+                <country>BELARUS</country>
+            </address>
+        </personInfo>
+        <packages> </packages>
+    </customer>
+    <employee id="1">
+        <position>ENGINEER_1CAT</position>
+        <experience>SENIOR</experience>
+        <department id="1">
+            <title>Order department</title>
+            <company>
+                <name>Delivery Service</name>
+            </company>
+        </department>
+        <personInfo id="1">
+            <firstName>Lena</firstName>
+            <lastName>Employee</lastName>
+            <age>29</age>
+            <passport id="2">
+                <number>WW01010244</number>
+            </passport>
+            <address id="1">
+                <city>Minsk</city>
+                <street>EE street</street>
+                <house>22</house>
+                <flat>1</flat>
+                <zipCode>220166</zipCode>
+                <country>BELARUS</country>
+            </address>
+        </personInfo>
+        <packages> </packages>
+    </employee>
+</package>

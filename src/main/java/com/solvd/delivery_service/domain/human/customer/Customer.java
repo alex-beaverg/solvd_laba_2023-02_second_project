@@ -2,13 +2,19 @@ package com.solvd.delivery_service.domain.human.customer;
 
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.pack.Package;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "customer")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Customer {
+    @XmlAttribute(name = "id")
     private Long id;
     private PersonInfo personInfo;
+    @XmlElementWrapper(name = "packages")
+    @XmlElement(name = "pack")
     private List<Package> packages;
 
     public Customer() {}

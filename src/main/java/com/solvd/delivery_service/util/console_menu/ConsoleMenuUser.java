@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
+import com.solvd.delivery_service.domain.actions.ParsersActions;
 import com.solvd.delivery_service.domain.actions.UserActions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserGetCustomerMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserMainMenu;
@@ -13,10 +14,18 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
-                UserActions.showCustomerPackages();
+                if (PARSER_SERVICE.isStaxParserService()) {
+                    ParsersActions.createPackageFromXmlUsingStax();
+                } else {
+                    ParsersActions.createPackageFromXmlUsingJaxb();
+                }
                 return runUserMainMenu();
             }
             case (3) -> {
+                UserActions.showCustomerPackages();
+                return runUserMainMenu();
+            }
+            case (4) -> {
                 return (ConsoleMenuUser) runDeliveryCompanyMenu();
             }
             default -> {
@@ -37,6 +46,14 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runUserMainMenu();
             }
             case (3) -> {
+                if (PARSER_SERVICE.isStaxParserService()) {
+                    ParsersActions.createPackageWithRegistrationNewCustomerFromXmlUsingStax();
+                } else {
+                    ParsersActions.createPackageWithRegistrationNewCustomerFromXmlUsingJaxb();
+                }
+                return runUserMainMenu();
+            }
+            case (4) -> {
                 return runUserMainMenu();
             }
             default -> {

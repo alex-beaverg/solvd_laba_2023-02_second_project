@@ -1,10 +1,15 @@
 package com.solvd.delivery_service.domain.human;
 
 import com.solvd.delivery_service.domain.area.Address;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PersonInfo {
+    @XmlAttribute(name = "id")
     private Long id;
     private String firstName;
     private String lastName;

@@ -3,7 +3,7 @@ package com.solvd.delivery_service.util.console_menu.menu_enums;
 public enum DeliveryCompanyMenu implements IMenu {
     USER_MAIN_MENU("USER MENU"),
     ADMIN_MAIN_MENU("ADMIN MENU"),
-    DAO_SERVICE_MENU("<- DAO SERVICE MENU"),
+    PARSER_SERVICE_MENU("<- PARSER SERVICE MENU"),
     EXIT("EXIT");
 
     private final String title;

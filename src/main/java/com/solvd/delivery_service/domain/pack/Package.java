@@ -3,11 +3,16 @@ package com.solvd.delivery_service.domain.pack;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.Objects;
 
+@XmlRootElement(name = "package")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Package {
+    @XmlAttribute(name = "id")
     private Long id;
+    @XmlElement(name = "packageNumber")
     private Long number;
     private PackageType packageType;
     private DeliveryType deliveryType;
