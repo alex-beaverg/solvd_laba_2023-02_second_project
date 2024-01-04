@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_package.xsd">
-    <packageNumber>1400</packageNumber>
-    <packageType>MEDIUM</packageType>
-    <deliveryType>VIP</deliveryType>
+    <packageNumber>1600</packageNumber>
+    <packageType>LARGE</packageType>
+    <deliveryType>EXPRESS</deliveryType>
     <status>DELIVERED</status>
     <condition>NOT_DAMAGED</condition>
     <addressFrom id="2">
         <city>Minsk</city>
-        <street>FF street</street>
+        <street>FF-STREET</street>
         <house>12</house>
         <flat>1</flat>
-        <zipCode>220245</zipCode>
+        <zipCode>220241</zipCode>
         <country>BELARUS</country>
     </addressFrom>
     <addressTo id="3">
         <city>Berlin</city>
-        <street>TT street</street>
-        <house>34</house>
-        <flat>3</flat>
-        <zipCode>1545</zipCode>
+        <street>TT-STREET</street>
+        <house>6</house>
+        <flat>4</flat>
+        <zipCode>5649</zipCode>
         <country>GERMANY</country>
     </addressTo>
     <customer id="1">
         <personInfo id="2">
-            <firstName>Lena</firstName>
+            <firstName>Tina</firstName>
             <lastName>Customer</lastName>
-            <age>31</age>
+            <age>35</age>
             <passport id="1">
-                <number>EE01010244</number>
+                <number>EE01015555</number>
             </passport>
             <address id="2">
                 <city>Minsk</city>
-                <street>CC street</street>
-                <house>67</house>
-                <flat>54</flat>
-                <zipCode>220123</zipCode>
+                <street>CC-STREET</street>
+                <house>16</house>
+                <flat>24</flat>
+                <zipCode>220229</zipCode>
                 <country>BELARUS</country>
             </address>
         </personInfo>
@@ -42,7 +42,7 @@
     </customer>
     <employee id="1">
         <position>ENGINEER_1CAT</position>
-        <experience>SENIOR</experience>
+        <experience>JUNIOR_PLUS</experience>
         <department id="1">
             <title>Order department</title>
             <company>
@@ -50,18 +50,18 @@
             </company>
         </department>
         <personInfo id="1">
-            <firstName>Lena</firstName>
+            <firstName>Tina</firstName>
             <lastName>Employee</lastName>
-            <age>29</age>
+            <age>26</age>
             <passport id="2">
-                <number>WW01010244</number>
+                <number>WW01015555</number>
             </passport>
             <address id="1">
                 <city>Minsk</city>
-                <street>EE street</street>
-                <house>22</house>
-                <flat>1</flat>
-                <zipCode>220166</zipCode>
+                <street>EE-STREET</street>
+                <house>2</house>
+                <flat>16</flat>
+                <zipCode>220223</zipCode>
                 <country>BELARUS</country>
             </address>
         </personInfo>

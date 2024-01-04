@@ -109,82 +109,8 @@ public class ParsersActions extends UserActions {
     }
 
     public static void createPackageWithRegistrationNewCustomerFromXmlUsingStax() {
-        Customer customer = new Customer();
-        PersonInfo customerPersonInfo = new PersonInfo();
-        Passport customerPassport = new Passport();
-        Address customerAddress = new Address();
         File fileWithCustomer = new File("src/main/resources/xml_data/new_customer.xml");
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fis = new FileInputStream(fileWithCustomer)) {
-            XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
-            while (reader.hasNext()) {
-                XMLEvent nextEvent = reader.nextEvent();
-                if (nextEvent.isStartElement()) {
-                    StartElement startElement = nextEvent.asStartElement();
-                    switch (startElement.getName().getLocalPart()) {
-                        case ("firstName") -> {
-                            nextEvent = reader.nextEvent();
-                            customerPersonInfo.setFirstName(nextEvent.asCharacters().getData());
-                        }
-                        case ("lastName") -> {
-                            nextEvent = reader.nextEvent();
-                            customerPersonInfo.setLastName(nextEvent.asCharacters().getData());
-                        }
-                        case ("age") -> {
-                            nextEvent = reader.nextEvent();
-                            customerPersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
-                        }
-                        case ("passport") -> {
-                            while (reader.hasNext()) {
-                                nextEvent = reader.nextEvent();
-                                if (nextEvent.isStartElement()) {
-                                    startElement = nextEvent.asStartElement();
-                                    if (startElement.getName().getLocalPart().equals("number")) {
-                                        nextEvent = reader.nextEvent();
-                                        customerPassport.setNumber(nextEvent.asCharacters().getData());
-                                        customerPersonInfo.setPassport(customerPassport);
-                                    }
-                                }
-                                if (nextEvent.isEndElement()) {
-                                    EndElement endElement = nextEvent.asEndElement();
-                                    if (endElement.getName().getLocalPart().equals("passport")) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        case ("city") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setCity(nextEvent.asCharacters().getData());
-                        }
-                        case ("street") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setStreet(nextEvent.asCharacters().getData());
-                        }
-                        case ("house") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
-                        }
-                        case ("flat") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
-                        }
-                        case ("zipCode") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
-                        }
-                        case ("country") -> {
-                            nextEvent = reader.nextEvent();
-                            customerAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
-                            customerPersonInfo.setAddress(customerAddress);
-                            customer.setPersonInfo(customerPersonInfo);
-                        }
-                    }
-                }
-            }
-        } catch (IOException | XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
+        Customer customer = parseCustomerFromXmlUsingStax(fileWithCustomer);
         Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
         Package pack = registerPackage(customer, employee);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
@@ -197,14 +123,6 @@ public class ParsersActions extends UserActions {
         Package pack = new Package();
         Address addressFrom = new Address();
         Address addressTo = new Address();
-        Customer customer = new Customer();
-        PersonInfo customerPersonInfo = new PersonInfo();
-        Passport customerPassport = new Passport();
-        Address customerAddress = new Address();
-        Employee employee = new Employee();
-        PersonInfo employeePersonInfo = new PersonInfo();
-        Passport employeePassport = new Passport();
-        Address employeeAddress = new Address();
         File fileWithPackage = new File("src/main/resources/xml_data/new_package.xml");
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         try (FileInputStream fis = new FileInputStream(fileWithPackage)) {
@@ -316,229 +234,19 @@ public class ParsersActions extends UserActions {
                                 }
                             }
                         }
-                        case ("customer") -> {
-                            while (reader.hasNext()) {
-                                nextEvent = reader.nextEvent();
-                                if (nextEvent.isStartElement()) {
-                                    startElement = nextEvent.asStartElement();
-                                    switch (startElement.getName().getLocalPart()) {
-                                        case ("firstName") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerPersonInfo.setFirstName(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("lastName") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerPersonInfo.setLastName(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("age") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerPersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("passport") -> {
-                                            while (reader.hasNext()) {
-                                                nextEvent = reader.nextEvent();
-                                                if (nextEvent.isStartElement()) {
-                                                    startElement = nextEvent.asStartElement();
-                                                    if (startElement.getName().getLocalPart().equals("number")) {
-                                                        nextEvent = reader.nextEvent();
-                                                        customerPassport.setNumber(nextEvent.asCharacters().getData());
-                                                        customerPersonInfo.setPassport(customerPassport);
-                                                    }
-                                                }
-                                                if (nextEvent.isEndElement()) {
-                                                    EndElement endElement = nextEvent.asEndElement();
-                                                    if (endElement.getName().getLocalPart().equals("passport")) {
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        case ("city") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setCity(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("street") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setStreet(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("house") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("flat") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("zipCode") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("country") -> {
-                                            nextEvent = reader.nextEvent();
-                                            customerAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
-                                            customerPersonInfo.setAddress(customerAddress);
-                                            customer.setPersonInfo(customerPersonInfo);
-                                            pack.setCustomer(customer);
-                                        }
-                                    }
-                                }
-                                if (nextEvent.isEndElement()) {
-                                    EndElement endElement = nextEvent.asEndElement();
-                                    if (endElement.getName().getLocalPart().equals("customer")) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        case ("employee") -> {
-                            while (reader.hasNext()) {
-                                nextEvent = reader.nextEvent();
-                                if (nextEvent.isStartElement()) {
-                                    startElement = nextEvent.asStartElement();
-                                    switch (startElement.getName().getLocalPart()) {
-                                        case ("position") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employee.setPosition(Position.valueOf(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("experience") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employee.setExperience(Experience.valueOf(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("department") -> {
-                                            while (reader.hasNext()) {
-                                                nextEvent = reader.nextEvent();
-                                                if (nextEvent.isStartElement()) {
-                                                    startElement = nextEvent.asStartElement();
-                                                    if (startElement.getName().getLocalPart().equals("title")) {
-                                                        nextEvent = reader.nextEvent();
-                                                        String next = nextEvent.asCharacters().getData();
-                                                        employee.setDepartment(new DepartmentServiceImpl().retrieveAll().stream()
-                                                                .filter(department -> department.getTitle().equals(next))
-                                                                .findFirst().get());
-                                                    } else if (startElement.getName().getLocalPart().equals("company")) {
-                                                        while (reader.hasNext()) {
-                                                            nextEvent = reader.nextEvent();
-                                                            if (nextEvent.isStartElement()) {
-                                                                startElement = nextEvent.asStartElement();
-                                                                if (startElement.getName().getLocalPart().equals("name")) {
-                                                                    nextEvent = reader.nextEvent();
-                                                                    String next = nextEvent.asCharacters().getData();
-                                                                    employee.getDepartment().setCompany(new CompanyServiceImpl().retrieveAll().stream()
-                                                                            .filter(company -> company.getName().equals(next))
-                                                                            .findFirst().get());
-                                                                }
-                                                            }
-                                                            if (nextEvent.isEndElement()) {
-                                                                EndElement endElement = nextEvent.asEndElement();
-                                                                if (endElement.getName().getLocalPart().equals("company")) {
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                if (nextEvent.isEndElement()) {
-                                                    EndElement endElement = nextEvent.asEndElement();
-                                                    if (endElement.getName().getLocalPart().equals("department")) {
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        case ("personInfo") -> {
-                                            while (reader.hasNext()) {
-                                                nextEvent = reader.nextEvent();
-                                                if (nextEvent.isStartElement()) {
-                                                    startElement = nextEvent.asStartElement();
-                                                    switch (startElement.getName().getLocalPart()) {
-                                                        case ("firstName") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeePersonInfo.setFirstName(nextEvent.asCharacters().getData());
-                                                        }
-                                                        case ("lastName") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeePersonInfo.setLastName(nextEvent.asCharacters().getData());
-                                                        }
-                                                        case ("age") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeePersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                                        }
-                                                        case ("passport") -> {
-                                                            while (reader.hasNext()) {
-                                                                nextEvent = reader.nextEvent();
-                                                                if (nextEvent.isStartElement()) {
-                                                                    startElement = nextEvent.asStartElement();
-                                                                    if (startElement.getName().getLocalPart().equals("number")) {
-                                                                        nextEvent = reader.nextEvent();
-                                                                        employeePassport.setNumber(nextEvent.asCharacters().getData());
-                                                                        employeePersonInfo.setPassport(employeePassport);
-                                                                    }
-                                                                }
-                                                                if (nextEvent.isEndElement()) {
-                                                                    EndElement endElement = nextEvent.asEndElement();
-                                                                    if (endElement.getName().getLocalPart().equals("passport")) {
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        case ("city") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setCity(nextEvent.asCharacters().getData());
-                                                        }
-                                                        case ("street") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setStreet(nextEvent.asCharacters().getData());
-                                                        }
-                                                        case ("house") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                                        }
-                                                        case ("flat") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                                        }
-                                                        case ("zipCode") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                                        }
-                                                        case ("country") -> {
-                                                            nextEvent = reader.nextEvent();
-                                                            employeeAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
-                                                            employeePersonInfo.setAddress(employeeAddress);
-                                                            employee.setPersonInfo(employeePersonInfo);
-                                                            pack.setEmployee(employeeService
-                                                                    .create(employee, new DepartmentServiceImpl().retrieveAll()
-                                                                            .stream()
-                                                                            .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
-                                                                            .findFirst().get().getId()));
-                                                        }
-                                                    }
-                                                }
-                                                if (nextEvent.isEndElement()) {
-                                                    EndElement endElement = nextEvent.asEndElement();
-                                                    if (endElement.getName().getLocalPart().equals("personInfo")) {
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (nextEvent.isEndElement()) {
-                                    EndElement endElement = nextEvent.asEndElement();
-                                    if (endElement.getName().getLocalPart().equals("employee")) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
         } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
         }
+        Employee employee = parseEmployeeFromXmlUsingStax(fileWithPackage);
+        pack.setEmployee(employeeService
+                .create(employee, new DepartmentServiceImpl().retrieveAll()
+                        .stream()
+                        .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
+                        .findFirst().get().getId()));
+        pack.setCustomer(parseCustomerFromXmlUsingStax(fileWithPackage));
         PackageService packageService = new PackageServiceImpl();
         packageService.createWithExistingAddressTo(pack);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
@@ -547,149 +255,10 @@ public class ParsersActions extends UserActions {
 
     public static void registerEmployeeFromXmlUsingStax() {
         EmployeeService employeeService = new EmployeeServiceImpl();
-        Employee employee = new Employee();
-        Passport employeePassport = new Passport();
-        Address employeeAddress = new Address();
-        PersonInfo employeePersonInfo = new PersonInfo();
         File fileWithEmployee = new File("src/main/resources/xml_data/new_employee.xml");
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fis = new FileInputStream(fileWithEmployee)) {
-            XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
-            while (reader.hasNext()) {
-                XMLEvent nextEvent = reader.nextEvent();
-                if (nextEvent.isStartElement()) {
-                    StartElement startElement = nextEvent.asStartElement();
-                    switch (startElement.getName().getLocalPart()) {
-                        case ("position") -> {
-                            nextEvent = reader.nextEvent();
-                            employee.setPosition(Position.valueOf(nextEvent.asCharacters().getData()));
-                        }
-                        case ("experience") -> {
-                            nextEvent = reader.nextEvent();
-                            employee.setExperience(Experience.valueOf(nextEvent.asCharacters().getData()));
-                        }
-                        case ("department") -> {
-                            while (reader.hasNext()) {
-                                nextEvent = reader.nextEvent();
-                                if (nextEvent.isStartElement()) {
-                                    startElement = nextEvent.asStartElement();
-                                    if (startElement.getName().getLocalPart().equals("title")) {
-                                        nextEvent = reader.nextEvent();
-                                        String next = nextEvent.asCharacters().getData();
-                                        employee.setDepartment(new DepartmentServiceImpl().retrieveAll().stream()
-                                                .filter(department -> department.getTitle().equals(next))
-                                                .findFirst().get());
-                                    } else if (startElement.getName().getLocalPart().equals("company")) {
-                                        while (reader.hasNext()) {
-                                            nextEvent = reader.nextEvent();
-                                            if (nextEvent.isStartElement()) {
-                                                startElement = nextEvent.asStartElement();
-                                                if (startElement.getName().getLocalPart().equals("name")) {
-                                                    nextEvent = reader.nextEvent();
-                                                    String next = nextEvent.asCharacters().getData();
-                                                    employee.getDepartment().setCompany(new CompanyServiceImpl().retrieveAll().stream()
-                                                            .filter(company -> company.getName().equals(next))
-                                                            .findFirst().get());
-                                                }
-                                            }
-                                            if (nextEvent.isEndElement()) {
-                                                EndElement endElement = nextEvent.asEndElement();
-                                                if (endElement.getName().getLocalPart().equals("company")) {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (nextEvent.isEndElement()) {
-                                    EndElement endElement = nextEvent.asEndElement();
-                                    if (endElement.getName().getLocalPart().equals("department")) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        case ("personInfo") -> {
-                            while (reader.hasNext()) {
-                                nextEvent = reader.nextEvent();
-                                if (nextEvent.isStartElement()) {
-                                    startElement = nextEvent.asStartElement();
-                                    switch (startElement.getName().getLocalPart()) {
-                                        case ("firstName") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeePersonInfo.setFirstName(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("lastName") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeePersonInfo.setLastName(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("age") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeePersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("passport") -> {
-                                            while (reader.hasNext()) {
-                                                nextEvent = reader.nextEvent();
-                                                if (nextEvent.isStartElement()) {
-                                                    startElement = nextEvent.asStartElement();
-                                                    if (startElement.getName().getLocalPart().equals("number")) {
-                                                        nextEvent = reader.nextEvent();
-                                                        employeePassport.setNumber(nextEvent.asCharacters().getData());
-                                                        employeePersonInfo.setPassport(employeePassport);
-                                                    }
-                                                }
-                                                if (nextEvent.isEndElement()) {
-                                                    EndElement endElement = nextEvent.asEndElement();
-                                                    if (endElement.getName().getLocalPart().equals("passport")) {
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        case ("city") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setCity(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("street") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setStreet(nextEvent.asCharacters().getData());
-                                        }
-                                        case ("house") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("flat") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("zipCode") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
-                                        }
-                                        case ("country") -> {
-                                            nextEvent = reader.nextEvent();
-                                            employeeAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
-                                            employeePersonInfo.setAddress(employeeAddress);
-                                            employee.setPersonInfo(employeePersonInfo);
-                                        }
-                                    }
-                                }
-                                if (nextEvent.isEndElement()) {
-                                    EndElement endElement = nextEvent.asEndElement();
-                                    if (endElement.getName().getLocalPart().equals("personInfo")) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (IOException | XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
+        Employee employee = parseEmployeeFromXmlUsingStax(fileWithEmployee);
         employeeService.create(employee, employee.getDepartment().getId());
-        PRINT2LN.info("EMPLOYEE " + employeePersonInfo.getFirstName() + " " + employeePersonInfo.getLastName() + " WAS REGISTERED");
+        PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
         PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
     }
 
@@ -836,5 +405,327 @@ public class ParsersActions extends UserActions {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Customer parseCustomerFromXmlUsingStax(File file) {
+        Customer customer = new Customer();
+        PersonInfo customerPersonInfo = new PersonInfo();
+        Address customerAddress = new Address();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        try (FileInputStream fis = new FileInputStream(file)) {
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
+            while (reader.hasNext()) {
+                XMLEvent nextEvent = reader.nextEvent();
+                if (nextEvent.isStartElement()) {
+                    StartElement startElement = nextEvent.asStartElement();
+                    if (startElement.getName().getLocalPart().equals("customer")) {
+                        while (reader.hasNext()) {
+                            nextEvent = reader.nextEvent();
+                            if (nextEvent.isStartElement()) {
+                                startElement = nextEvent.asStartElement();
+                                if (startElement.getName().getLocalPart().equals("personInfo")) {
+                                    while (reader.hasNext()) {
+                                        nextEvent = reader.nextEvent();
+                                        if (nextEvent.isStartElement()) {
+                                            startElement = nextEvent.asStartElement();
+                                            switch (startElement.getName().getLocalPart()) {
+                                                case ("firstName") -> {
+                                                    nextEvent = reader.nextEvent();
+                                                    customerPersonInfo.setFirstName(nextEvent.asCharacters().getData());
+                                                }
+                                                case ("lastName") -> {
+                                                    nextEvent = reader.nextEvent();
+                                                    customerPersonInfo.setLastName(nextEvent.asCharacters().getData());
+                                                }
+                                                case ("age") -> {
+                                                    nextEvent = reader.nextEvent();
+                                                    customerPersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                }
+                                                case ("address") -> {
+                                                    while (reader.hasNext()) {
+                                                        nextEvent = reader.nextEvent();
+                                                        if (nextEvent.isStartElement()) {
+                                                            startElement = nextEvent.asStartElement();
+                                                            switch (startElement.getName().getLocalPart()) {
+                                                                case ("city") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setCity(nextEvent.asCharacters().getData());
+                                                                }
+                                                                case ("street") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setStreet(nextEvent.asCharacters().getData());
+                                                                }
+                                                                case ("house") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                }
+                                                                case ("flat") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                }
+                                                                case ("zipCode") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                }
+                                                                case ("country") -> {
+                                                                    nextEvent = reader.nextEvent();
+                                                                    customerAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
+                                                                    customerPersonInfo.setAddress(customerAddress);
+                                                                    customer.setPersonInfo(customerPersonInfo);
+                                                                }
+                                                            }
+                                                        }
+                                                        if (nextEvent.isEndElement()) {
+                                                            EndElement endElement = nextEvent.asEndElement();
+                                                            if (endElement.getName().getLocalPart().equals("address")) {
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (nextEvent.isEndElement()) {
+                                            EndElement endElement = nextEvent.asEndElement();
+                                            if (endElement.getName().getLocalPart().equals("personInfo")) {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (nextEvent.isEndElement()) {
+                                EndElement endElement = nextEvent.asEndElement();
+                                if (endElement.getName().getLocalPart().equals("customer")) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException | XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        customerPersonInfo.setPassport(parsePassportFromXmlUsingStax(file, "customer"));
+        return customer;
+    }
+
+    private static Employee parseEmployeeFromXmlUsingStax(File file) {
+        Employee employee = new Employee();
+        PersonInfo employeePersonInfo = new PersonInfo();
+        Address employeeAddress = new Address();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        try (FileInputStream fis = new FileInputStream(file)) {
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
+            while (reader.hasNext()) {
+                XMLEvent nextEvent = reader.nextEvent();
+                if (nextEvent.isStartElement()) {
+                    StartElement startElement = nextEvent.asStartElement();
+                    if (startElement.getName().getLocalPart().equals("employee")) {
+                        while (reader.hasNext()) {
+                            nextEvent = reader.nextEvent();
+                            if (nextEvent.isStartElement()) {
+                                startElement = nextEvent.asStartElement();
+                                switch (startElement.getName().getLocalPart()) {
+                                    case ("position") -> {
+                                        nextEvent = reader.nextEvent();
+                                        employee.setPosition(Position.valueOf(nextEvent.asCharacters().getData()));
+                                    }
+                                    case ("experience") -> {
+                                        nextEvent = reader.nextEvent();
+                                        employee.setExperience(Experience.valueOf(nextEvent.asCharacters().getData()));
+                                    }
+                                    case ("department") -> {
+                                        while (reader.hasNext()) {
+                                            nextEvent = reader.nextEvent();
+                                            if (nextEvent.isStartElement()) {
+                                                startElement = nextEvent.asStartElement();
+                                                if (startElement.getName().getLocalPart().equals("title")) {
+                                                    nextEvent = reader.nextEvent();
+                                                    String next = nextEvent.asCharacters().getData();
+                                                    employee.setDepartment(new DepartmentServiceImpl().retrieveAll().stream()
+                                                            .filter(department -> department.getTitle().equals(next))
+                                                            .findFirst().get());
+                                                } else if (startElement.getName().getLocalPart().equals("company")) {
+                                                    while (reader.hasNext()) {
+                                                        nextEvent = reader.nextEvent();
+                                                        if (nextEvent.isStartElement()) {
+                                                            startElement = nextEvent.asStartElement();
+                                                            if (startElement.getName().getLocalPart().equals("name")) {
+                                                                nextEvent = reader.nextEvent();
+                                                                String next = nextEvent.asCharacters().getData();
+                                                                employee.getDepartment().setCompany(new CompanyServiceImpl().retrieveAll().stream()
+                                                                        .filter(company -> company.getName().equals(next))
+                                                                        .findFirst().get());
+                                                            }
+                                                        }
+                                                        if (nextEvent.isEndElement()) {
+                                                            EndElement endElement = nextEvent.asEndElement();
+                                                            if (endElement.getName().getLocalPart().equals("company")) {
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (nextEvent.isEndElement()) {
+                                                EndElement endElement = nextEvent.asEndElement();
+                                                if (endElement.getName().getLocalPart().equals("department")) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    case ("personInfo") -> {
+                                        while (reader.hasNext()) {
+                                            nextEvent = reader.nextEvent();
+                                            if (nextEvent.isStartElement()) {
+                                                startElement = nextEvent.asStartElement();
+                                                switch (startElement.getName().getLocalPart()) {
+                                                    case ("firstName") -> {
+                                                        nextEvent = reader.nextEvent();
+                                                        employeePersonInfo.setFirstName(nextEvent.asCharacters().getData());
+                                                    }
+                                                    case ("lastName") -> {
+                                                        nextEvent = reader.nextEvent();
+                                                        employeePersonInfo.setLastName(nextEvent.asCharacters().getData());
+                                                    }
+                                                    case ("age") -> {
+                                                        nextEvent = reader.nextEvent();
+                                                        employeePersonInfo.setAge(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                    }
+                                                    case ("address") -> {
+                                                        while (reader.hasNext()) {
+                                                            nextEvent = reader.nextEvent();
+                                                            if (nextEvent.isStartElement()) {
+                                                                startElement = nextEvent.asStartElement();
+                                                                switch (startElement.getName().getLocalPart()) {
+                                                                    case ("city") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setCity(nextEvent.asCharacters().getData());
+                                                                    }
+                                                                    case ("street") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setStreet(nextEvent.asCharacters().getData());
+                                                                    }
+                                                                    case ("house") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setHouse(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                    }
+                                                                    case ("flat") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setFlat(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                    }
+                                                                    case ("zipCode") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setZipCode(Integer.parseInt(nextEvent.asCharacters().getData()));
+                                                                    }
+                                                                    case ("country") -> {
+                                                                        nextEvent = reader.nextEvent();
+                                                                        employeeAddress.setCountry(Country.valueOf(nextEvent.asCharacters().getData()));
+                                                                        employeePersonInfo.setAddress(employeeAddress);
+                                                                        employee.setPersonInfo(employeePersonInfo);
+                                                                    }
+                                                                }
+                                                            }
+                                                            if (nextEvent.isEndElement()) {
+                                                                EndElement endElement = nextEvent.asEndElement();
+                                                                if (endElement.getName().getLocalPart().equals("address")) {
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (nextEvent.isEndElement()) {
+                                                EndElement endElement = nextEvent.asEndElement();
+                                                if (endElement.getName().getLocalPart().equals("personInfo")) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (nextEvent.isEndElement()) {
+                                EndElement endElement = nextEvent.asEndElement();
+                                if (endElement.getName().getLocalPart().equals("employee")) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException | XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        employeePersonInfo.setPassport(parsePassportFromXmlUsingStax(file, "employee"));
+        return employee;
+    }
+
+    private static Passport parsePassportFromXmlUsingStax(File file, String personType) {
+        Passport passport = new Passport();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        try (FileInputStream fis = new FileInputStream(file)) {
+            XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
+            while (reader.hasNext()) {
+                XMLEvent nextEvent = reader.nextEvent();
+                if (nextEvent.isStartElement()) {
+                    StartElement startElement = nextEvent.asStartElement();
+                    if (startElement.getName().getLocalPart().equals(personType)) {
+                        while (reader.hasNext()) {
+                            nextEvent = reader.nextEvent();
+                            if (nextEvent.isStartElement()) {
+                                startElement = nextEvent.asStartElement();
+                                if (startElement.getName().getLocalPart().equals("personInfo")) {
+                                    while (reader.hasNext()) {
+                                        nextEvent = reader.nextEvent();
+                                        if (nextEvent.isStartElement()) {
+                                            startElement = nextEvent.asStartElement();
+                                            if (startElement.getName().getLocalPart().equals("passport")) {
+                                                while (reader.hasNext()) {
+                                                    nextEvent = reader.nextEvent();
+                                                    if (nextEvent.isStartElement()) {
+                                                        startElement = nextEvent.asStartElement();
+                                                        if (startElement.getName().getLocalPart().equals("number")) {
+                                                            nextEvent = reader.nextEvent();
+                                                            passport.setNumber(nextEvent.asCharacters().getData());
+                                                        }
+                                                    }
+                                                    if (nextEvent.isEndElement()) {
+                                                        EndElement endElement = nextEvent.asEndElement();
+                                                        if (endElement.getName().getLocalPart().equals("passport")) {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (nextEvent.isEndElement()) {
+                                            EndElement endElement = nextEvent.asEndElement();
+                                            if (endElement.getName().getLocalPart().equals("personInfo")) {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (nextEvent.isEndElement()) {
+                                EndElement endElement = nextEvent.asEndElement();
+                                if (endElement.getName().getLocalPart().equals(personType)) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException | XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        return passport;
     }
 }

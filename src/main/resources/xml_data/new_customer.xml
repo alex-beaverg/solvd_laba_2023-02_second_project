@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <customer id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_customer.xsd">
     <personInfo id="1">
-        <firstName>Hans</firstName>
-        <lastName>Grubber</lastName>
-        <age>35</age>
+        <firstName>Mike</firstName>
+        <lastName>Apple</lastName>
+        <age>23</age>
         <passport id="1">
-            <number>AA01010666</number>
+            <number>AA01010777</number>
         </passport>
         <address id="1">
             <city>Minsk</city>
-            <street>Tree street</street>
-            <house>33</house>
-            <flat>2</flat>
-            <zipCode>220133</zipCode>
+            <street>Land street</street>
+            <house>21</house>
+            <flat>23</flat>
+            <zipCode>220138</zipCode>
             <country>BELARUS</country>
         </address>
     </personInfo>
