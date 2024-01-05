@@ -1,5 +1,9 @@
 package com.solvd.delivery_service.util.console_menu;
 
+import com.solvd.delivery_service.domain.actions.IParserActions;
+import com.solvd.delivery_service.domain.actions.JaxbXmlParserActions;
+import com.solvd.delivery_service.domain.actions.StaxXmlParserActions;
+
 public class ParserService {
     private static ParserService instance;
     private boolean isStaxParserService;
@@ -24,5 +28,13 @@ public class ParserService {
 
     public boolean isStaxParserService() {
         return isStaxParserService;
+    }
+
+    public IParserActions getParser() {
+        if (isStaxParserService) {
+            return new StaxXmlParserActions();
+        } else {
+            return new JaxbXmlParserActions();
+        }
     }
 }

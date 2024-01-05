@@ -38,12 +38,12 @@ public class ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("PARSER SERVICE MENU:", ParserServiceMenu.values());
         switch (answer) {
             case (1) -> {
-                PRINT2LN.info("RUNNING USING STAX PARSER SERVICE");
+                PRINT2LN.info("RUNNING USING STAX XML PARSER SERVICE");
                 PARSER_SERVICE.assignStaxParserService();
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
-                PRINT2LN.info("RUNNING USING JAXB PARSER SERVICE");
+                PRINT2LN.info("RUNNING USING JAXB XML PARSER SERVICE");
                 PARSER_SERVICE.assignJaxbParserService();
                 return runDeliveryCompanyMenu();
             }

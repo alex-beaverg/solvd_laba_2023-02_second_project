@@ -1,7 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.AdminActions;
-import com.solvd.delivery_service.domain.actions.ParsersActions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.*;
 
 public class ConsoleMenuAdmin extends ConsoleMenu {
@@ -73,11 +72,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
-                if (PARSER_SERVICE.isStaxParserService()) {
-                    ParsersActions.registerEmployeeFromXmlUsingStax();
-                } else {
-                    ParsersActions.registerEmployeeFromXmlUsingJaxb();
-                }
+                PARSER_SERVICE.getParser().registerEmployeeFromFile();
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
@@ -137,11 +132,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminCompanyMenu();
             }
             case (3) -> {
-                if (PARSER_SERVICE.isStaxParserService()) {
-                    ParsersActions.registerCompanyFromXmlUsingStax();
-                } else {
-                    ParsersActions.registerCompanyFromXmlUsingJaxb();
-                }
+                PARSER_SERVICE.getParser().registerCompanyFromFile();
                 return runAdminCompanyMenu();
             }
             case (4) -> {

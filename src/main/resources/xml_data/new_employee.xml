@@ -9,18 +9,18 @@
         </company>
     </department>
     <personInfo id="1">
-        <firstName>Masha</firstName>
-        <lastName>Hill</lastName>
-        <age>19</age>
+        <firstName>Greta</firstName>
+        <lastName>Mans</lastName>
+        <age>25</age>
         <passport id="1">
-            <number>II01012222</number>
+            <number>II01014444</number>
         </passport>
         <address id="1">
-            <city>Fanipol</city>
-            <street>High street</street>
-            <house>24</house>
-            <flat>3</flat>
-            <zipCode>220023</zipCode>
+            <city>Minsk</city>
+            <street>Light street</street>
+            <house>55</house>
+            <flat>21</flat>
+            <zipCode>220111</zipCode>
             <country>BELARUS</country>
         </address>
     </personInfo>
