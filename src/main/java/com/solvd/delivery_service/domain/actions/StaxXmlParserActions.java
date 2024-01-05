@@ -15,7 +15,9 @@ import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.service.*;
 import com.solvd.delivery_service.service.impl.*;
-import com.solvd.delivery_service.util.DateAdapter;
+import com.solvd.delivery_service.util.XmlDateAdapter;
+import com.solvd.delivery_service.util.XmlSchemaValidator;
+import com.solvd.delivery_service.util.custom_exceptions.XsdException;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -29,15 +31,22 @@ import java.io.IOException;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
-public class StaxXmlParserActions implements IParserActions {
+public class StaxXmlParserActions extends UserActions implements IParserActions {
     @Override
     public void createPackageWithRegistrationNewCustomerFromFile() {
-        File fileWithCustomer = new File("src/main/resources/xml_data/new_customer.xml");
-        Customer customer = parseCustomerFromXmlUsingStax(fileWithCustomer);
-        Employee employee = UserActions.getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
-        Package pack = UserActions.registerPackage(customer, employee);
-        PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
-        PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+        File xmlFileWithCustomer = new File("src/main/resources/xml_data/new_customer.xml");
+        File xsdFileWithCustomer = new File("src/main/resources/xml_data/new_customer.xsd");
+        try {
+            XmlSchemaValidator.validate(xmlFileWithCustomer, xsdFileWithCustomer);
+            Customer customer = parseCustomerFromXmlUsingStax(xmlFileWithCustomer);
+            Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
+            Package pack = registerPackage(customer, employee);
+            PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
+            PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+        } catch (XsdException e) {
+            LOGGER.error(e.getMessage());
+            PRINTLN.info("PACKAGE WAS NOT CREATED");
+        }
     }
 
     @Override
@@ -47,9 +56,11 @@ public class StaxXmlParserActions implements IParserActions {
         Package pack = new Package();
         Address addressFrom = new Address();
         Address addressTo = new Address();
-        File fileWithPackage = new File("src/main/resources/xml_data/new_package.xml");
+        File xmlFileWithPackage = new File("src/main/resources/xml_data/new_package.xml");
+        File xsdFileWithPackage = new File("src/main/resources/xml_data/new_package.xsd");
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fis = new FileInputStream(fileWithPackage)) {
+        try (FileInputStream fis = new FileInputStream(xmlFileWithPackage)) {
+            XmlSchemaValidator.validate(xmlFileWithPackage, xsdFileWithPackage);
             XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();
@@ -161,30 +172,40 @@ public class StaxXmlParserActions implements IParserActions {
                     }
                 }
             }
+            Employee employee = parseEmployeeFromXmlUsingStax(xmlFileWithPackage);
+            pack.setEmployee(employeeService
+                    .create(employee, new DepartmentServiceImpl().retrieveAll()
+                            .stream()
+                            .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
+                            .findFirst().get().getId()));
+            pack.setCustomer(parseCustomerFromXmlUsingStax(xmlFileWithPackage));
+            PackageService packageService = new PackageServiceImpl();
+            packageService.createWithExistingAddressTo(pack);
+            PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
+            PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
         } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
+        } catch (XsdException e) {
+            LOGGER.error(e.getMessage());
+            PRINTLN.info("PACKAGE WAS NOT CREATED");
         }
-        Employee employee = parseEmployeeFromXmlUsingStax(fileWithPackage);
-        pack.setEmployee(employeeService
-                .create(employee, new DepartmentServiceImpl().retrieveAll()
-                        .stream()
-                        .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
-                        .findFirst().get().getId()));
-        pack.setCustomer(parseCustomerFromXmlUsingStax(fileWithPackage));
-        PackageService packageService = new PackageServiceImpl();
-        packageService.createWithExistingAddressTo(pack);
-        PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
-        PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
     }
 
     @Override
     public void registerEmployeeFromFile() {
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        File fileWithEmployee = new File("src/main/resources/xml_data/new_employee.xml");
-        Employee employee = parseEmployeeFromXmlUsingStax(fileWithEmployee);
-        employeeService.create(employee, employee.getDepartment().getId());
-        PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
-        PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+        File xmlFileWithEmployee = new File("src/main/resources/xml_data/new_employee.xml");
+        File xsdFileWithEmployee = new File("src/main/resources/xml_data/new_employee.xsd");
+        try {
+            XmlSchemaValidator.validate(xmlFileWithEmployee, xsdFileWithEmployee);
+            EmployeeService employeeService = new EmployeeServiceImpl();
+            Employee employee = parseEmployeeFromXmlUsingStax(xmlFileWithEmployee);
+            employeeService.create(employee, employee.getDepartment().getId());
+            PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
+            PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+        } catch (XsdException e) {
+            LOGGER.error(e.getMessage());
+            PRINTLN.info("EMPLOYEE WAS NOT REGISTERED");
+        }
     }
 
     @Override
@@ -198,9 +219,11 @@ public class StaxXmlParserActions implements IParserActions {
         PersonInfo personInfo = new PersonInfo();
         Passport passport = new Passport();
         Address address = new Address();
-        File fileWithCompany = new File("src/main/resources/xml_data/new_company.xml");
+        File xmlFileWithCompany = new File("src/main/resources/xml_data/new_company.xml");
+        File xsdFileWithCompany = new File("src/main/resources/xml_data/new_company.xsd");
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        try (FileInputStream fis = new FileInputStream(fileWithCompany)) {
+        try (FileInputStream fis = new FileInputStream(xmlFileWithCompany)) {
+            XmlSchemaValidator.validate(xmlFileWithCompany, xsdFileWithCompany);
             XMLEventReader reader = xmlInputFactory.createXMLEventReader(fis);
             while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();
@@ -321,15 +344,18 @@ public class StaxXmlParserActions implements IParserActions {
                         }
                         case ("date") -> {
                             nextEvent = reader.nextEvent();
-                            company.setDate(new DateAdapter().unmarshal(nextEvent.asCharacters().getData()));
+                            company.setDate(new XmlDateAdapter().unmarshal(nextEvent.asCharacters().getData()));
                         }
                     }
                 }
             }
             PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-            PRINTLN.info("DATE FROM XML-FILE: " + new DateAdapter().marshal(company.getDate()));
-        } catch (Exception e) {
+            PRINTLN.info("DATE FROM XML-FILE: " + new XmlDateAdapter().marshal(company.getDate()));
+        } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
+        } catch (XsdException e) {
+            LOGGER.error(e.getMessage());
+            PRINTLN.info("COMPANY WAS NOT REGISTERED");
         }
     }
 

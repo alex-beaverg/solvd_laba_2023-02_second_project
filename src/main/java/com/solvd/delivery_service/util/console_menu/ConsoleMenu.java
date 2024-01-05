@@ -12,8 +12,8 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
-    public static DaoService DAO_SERVICE = DaoService.getInstance();
-    public static ParserService PARSER_SERVICE = ParserService.getInstance();
+    protected static DaoService DAO_SERVICE = DaoService.getInstance();
+    protected static ParserActionsService PARSER_ACTIONS_SERVICE = ParserActionsService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
@@ -39,12 +39,12 @@ public class ConsoleMenu {
         switch (answer) {
             case (1) -> {
                 PRINT2LN.info("RUNNING USING STAX XML PARSER SERVICE");
-                PARSER_SERVICE.assignStaxParserService();
+                PARSER_ACTIONS_SERVICE.assignStaxXmlParserActionsService();
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
                 PRINT2LN.info("RUNNING USING JAXB XML PARSER SERVICE");
-                PARSER_SERVICE.assignJaxbParserService();
+                PARSER_ACTIONS_SERVICE.assignJaxbXmlParserActionsService();
                 return runDeliveryCompanyMenu();
             }
             case (3) -> {

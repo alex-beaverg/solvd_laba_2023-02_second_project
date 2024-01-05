@@ -4,9 +4,9 @@ import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import java.time.LocalDate;
 
-public class DateAdapter extends XmlAdapter<String, LocalDate> {
+public class XmlDateAdapter extends XmlAdapter<String, LocalDate> {
     @Override
-    public LocalDate unmarshal(String s) throws Exception {
+    public LocalDate unmarshal(String s) {
         return LocalDate.of(
                 Integer.parseInt(s.split("-")[0]),
                 Integer.parseInt(s.split("-")[1]),
@@ -14,7 +14,7 @@ public class DateAdapter extends XmlAdapter<String, LocalDate> {
     }
 
     @Override
-    public String marshal(LocalDate localDate) throws Exception {
+    public String marshal(LocalDate localDate) {
         int year = localDate.getYear();
         int month = localDate.getMonthValue();
         int dayOfMonth = localDate.getDayOfMonth();

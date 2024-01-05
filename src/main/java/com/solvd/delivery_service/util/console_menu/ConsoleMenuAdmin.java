@@ -72,7 +72,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
-                PARSER_SERVICE.getParser().registerEmployeeFromFile();
+                PARSER_ACTIONS_SERVICE.getParserActions().registerEmployeeFromFile();
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
@@ -132,7 +132,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminCompanyMenu();
             }
             case (3) -> {
-                PARSER_SERVICE.getParser().registerCompanyFromFile();
+                PARSER_ACTIONS_SERVICE.getParserActions().registerCompanyFromFile();
                 return runAdminCompanyMenu();
             }
             case (4) -> {

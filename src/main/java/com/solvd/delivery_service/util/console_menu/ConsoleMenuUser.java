@@ -13,7 +13,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
-                PARSER_SERVICE.getParser().createPackageFromFile();
+                PARSER_ACTIONS_SERVICE.getParserActions().createPackageFromFile();
                 return runUserMainMenu();
             }
             case (3) -> {
@@ -41,7 +41,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runUserMainMenu();
             }
             case (3) -> {
-                PARSER_SERVICE.getParser().createPackageWithRegistrationNewCustomerFromFile();
+                PARSER_ACTIONS_SERVICE.getParserActions().createPackageWithRegistrationNewCustomerFromFile();
                 return runUserMainMenu();
             }
             case (4) -> {

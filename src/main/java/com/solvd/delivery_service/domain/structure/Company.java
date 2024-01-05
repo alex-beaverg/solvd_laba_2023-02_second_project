@@ -1,6 +1,6 @@
 package com.solvd.delivery_service.domain.structure;
 
-import com.solvd.delivery_service.util.DateAdapter;
+import com.solvd.delivery_service.util.XmlDateAdapter;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -17,7 +17,7 @@ public class Company {
     @XmlElementWrapper(name = "departments")
     @XmlElement(name = "department")
     private List<Department> departments;
-    @XmlJavaTypeAdapter(DateAdapter.class)
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
     private LocalDate date;
 
     public Company() {}
