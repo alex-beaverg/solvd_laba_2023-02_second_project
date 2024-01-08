@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "position": "MANAGER_1CAT",
+  "experience": "MIDDLE",
+  "department": {
+    "id": 1,
+    "title": "Order department",
+    "company": {
+      "name": "Delivery Service"
+    }
+  },
+  "personInfo": {
+    "id": 1,
+    "firstName": "Sandy",
+    "lastName": "Summer",
+    "age": 30,
+    "passport": {
+      "id": 1,
+      "number": "JSON888888"
+    },
+    "address": {
+      "id": 1,
+      "city": "Minsk",
+      "street": "File street",
+      "house": 41,
+      "flat": 6,
+      "zipCode": 221500,
+      "country": "BELARUS"
+    }
+  }
+}

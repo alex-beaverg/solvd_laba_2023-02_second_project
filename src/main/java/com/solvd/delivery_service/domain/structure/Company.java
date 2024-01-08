@@ -1,5 +1,7 @@
 package com.solvd.delivery_service.domain.structure;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.delivery_service.util.JsonDateAdapter;
 import com.solvd.delivery_service.util.XmlDateAdapter;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -17,6 +19,7 @@ public class Company {
     @XmlElementWrapper(name = "departments")
     @XmlElement(name = "department")
     private List<Department> departments;
+    @JsonDeserialize(using = JsonDateAdapter.class)
     @XmlJavaTypeAdapter(XmlDateAdapter.class)
     private LocalDate date;
 

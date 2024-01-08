@@ -1,0 +1,79 @@
+{
+  "id": 1,
+  "number": 6200,
+  "packageType": "LARGE",
+  "deliveryType": "VIP",
+  "status": "DELIVERED",
+  "condition": "NOT_DAMAGED",
+  "addressFrom": {
+    "id": 1,
+    "city": "Minsk",
+    "street": "JSON From street",
+    "house": 11,
+    "flat": 77,
+    "zipCode": 221225,
+    "country": "BELARUS"
+  },
+  "addressTo": {
+    "id": 2,
+    "city": "Espoo",
+    "street": "JSON To street",
+    "house": 33,
+    "flat": 88,
+    "zipCode": 66543,
+    "country": "FINLAND"
+  },
+  "customer": {
+    "id": 1,
+    "personInfo": {
+      "id": 1,
+      "firstName": "Kim",
+      "lastName": "Close",
+      "age": 31,
+      "passport": {
+        "id": 1,
+        "number": "JSONCUST33"
+      },
+      "address": {
+        "id": 3,
+        "city": "Minsk",
+        "street": "Tree street",
+        "house": 11,
+        "flat": 12,
+        "zipCode": 221265,
+        "country": "BELARUS"
+      }
+    }
+  },
+  "employee": {
+    "id": 1,
+    "position": "ENGINEER_1CAT",
+    "experience": "MIDDLE",
+    "department": {
+      "id": 1,
+      "title": "Order department",
+      "company": {
+        "name": "Delivery Service"
+      }
+    },
+    "personInfo": {
+      "id": 1,
+      "firstName": "Lem",
+      "lastName": "Core",
+      "age": 22,
+      "passport": {
+        "id": 2,
+        "number": "JSONEMPL33"
+      },
+      "address": {
+        "id": 4,
+        "city": "Minsk",
+        "street": "Fuel street",
+        "house": 14,
+        "flat": 116,
+        "zipCode": 221276,
+        "country": "BELARUS"
+      }
+    }
+  }
+}

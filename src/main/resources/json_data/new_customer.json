@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "personInfo": {
+    "id": 1,
+    "firstName": "Felix",
+    "lastName": "Cat",
+    "age": 26,
+    "passport": {
+      "id": 1,
+      "number": "VV11003388"
+    },
+    "address": {
+      "city": "Minsk",
+      "street": "High street",
+      "house": 50,
+      "flat": 24,
+      "zipCode": 221205,
+      "country": "BELARUS"
+    }
+  }
+}

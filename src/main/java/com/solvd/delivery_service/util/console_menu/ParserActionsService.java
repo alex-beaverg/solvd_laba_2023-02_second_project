@@ -1,12 +1,13 @@
 package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.IParserActions;
+import com.solvd.delivery_service.domain.actions.JacksonJsonParserActions;
 import com.solvd.delivery_service.domain.actions.JaxbXmlParserActions;
 import com.solvd.delivery_service.domain.actions.StaxXmlParserActions;
 
 public class ParserActionsService {
     private static ParserActionsService instance;
-    private boolean isStaxXmlParserActionsService;
+    private int numberOfActionService;
 
     private ParserActionsService() {}
 
@@ -18,18 +19,27 @@ public class ParserActionsService {
     }
 
     protected void assignStaxXmlParserActionsService() {
-        isStaxXmlParserActionsService = true;
+        numberOfActionService = 0;
     }
 
     protected void assignJaxbXmlParserActionsService() {
-        isStaxXmlParserActionsService = false;
+        numberOfActionService = 1;
+    }
+
+    protected void assignJacksonJsonParserActionsService() {
+        numberOfActionService = 2;
     }
 
     public IParserActions getParserActions() {
-        if (isStaxXmlParserActionsService) {
+        if (numberOfActionService == 0) {
             return new StaxXmlParserActions();
-        } else {
+        }
+        if (numberOfActionService == 1) {
             return new JaxbXmlParserActions();
         }
+        if (numberOfActionService == 2) {
+            return new JacksonJsonParserActions();
+        }
+        return null;
     }
 }

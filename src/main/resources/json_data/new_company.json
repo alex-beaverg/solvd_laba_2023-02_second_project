@@ -1,0 +1,95 @@
+{
+  "id": 2,
+  "name": "New Delivery Service",
+  "departments": [
+    {
+      "id": 1,
+      "title": "New Order department",
+      "company": {
+        "id": 2,
+        "name": "New Delivery Service",
+        "departments": []
+      },
+      "employees": [
+        {
+          "id": 1,
+          "position": "ENGINEER_1CAT",
+          "experience": "SENIOR",
+          "department": {
+            "id": 1,
+            "title": "New Order department",
+            "company": {
+              "id": 2,
+              "name": "New Delivery Service",
+              "departments": []
+            }
+          },
+          "personInfo": {
+            "id": 1,
+            "firstName": "Kate",
+            "lastName": "Moon",
+            "age": 23,
+            "passport": {
+              "id": 1,
+              "number": "JSON787878"
+            },
+            "address": {
+              "id": 1,
+              "city": "Minsk",
+              "street": "Mean street",
+              "house": 41,
+              "flat": 6,
+              "zipCode": 221123,
+              "country": "BELARUS"
+            }
+          },
+          "packages": []
+        },
+        {
+          "id": 2,
+          "position": "ENGINEER_2CAT",
+          "experience": "MIDDLE",
+          "department": {
+            "id": 1,
+            "title": "New Order department",
+            "company": {
+              "id": 2,
+              "name": "New Delivery Service",
+              "departments": []
+            }
+          },
+          "personInfo": {
+            "id": 1,
+            "firstName": "Lida",
+            "lastName": "Need",
+            "age": 43,
+            "passport": {
+              "id": 2,
+              "number": "JSON979797"
+            },
+            "address": {
+              "id": 1,
+              "city": "Minsk",
+              "street": "Other street",
+              "house": 35,
+              "flat": 61,
+              "zipCode": 221144,
+              "country": "BELARUS"
+            }
+          },
+          "packages": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "New Accounting department",
+      "company": {
+        "id": 2,
+        "name": "New Delivery Service"
+      },
+      "employees": []
+    }
+  ],
+  "date": "2024-01-08"
+}

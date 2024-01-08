@@ -15,6 +15,7 @@
         <mavenJarPluginVersion>3.3.0</mavenJarPluginVersion>
         <slf4jVersion>2.0.5</slf4jVersion>
         <jaxbVersion>4.0.4</jaxbVersion>
+        <jacksonVersion>2.16.1</jacksonVersion>
     </properties>
 
     <dependencies>
@@ -67,6 +68,16 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-core</artifactId>
             <version>${jaxbVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jacksonVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jacksonVersion}</version>
         </dependency>
     </dependencies>
 

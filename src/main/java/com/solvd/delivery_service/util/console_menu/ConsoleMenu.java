@@ -48,6 +48,11 @@ public class ConsoleMenu {
                 return runDeliveryCompanyMenu();
             }
             case (3) -> {
+                PRINT2LN.info("RUNNING USING JACKSON JSON PARSER SERVICE");
+                PARSER_ACTIONS_SERVICE.assignJacksonJsonParserActionsService();
+                return runDeliveryCompanyMenu();
+            }
+            case (4) -> {
                 return runServiceMenu();
             }
             default -> {
