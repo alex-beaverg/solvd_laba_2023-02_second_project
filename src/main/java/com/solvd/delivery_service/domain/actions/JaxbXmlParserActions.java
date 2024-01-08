@@ -35,7 +35,7 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             JAXBContext context = JAXBContext.newInstance(Customer.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Customer customer = (Customer) unmarshaller.unmarshal(xmlFileWithCustomer);
-            customer.setId(null);
+            customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
@@ -44,7 +44,7 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             throw new RuntimeException(e);
         } catch (XsdException e) {
             LOGGER.error(e.getMessage());
-            PRINTLN.info("PACKAGE WAS NOT CREATED");
+            PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
     }
 
@@ -59,16 +59,26 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Package pack = (Package) unmarshaller.unmarshal(xmlFileWithPackage);
             pack.setId(null);
-            pack.getCustomer().setId(null);
-            pack.getEmployee().setId(null);
-            Package packToCreate = packageService.createWithNewEmployee(pack);
+            pack.setNumber(getPackageNumberByPackage(pack));
+            pack.getCustomer().setId(getCustomerIdByPassport(pack.getCustomer().getPersonInfo().getPassport()));
+            pack.getEmployee().setId(getEmployeeIdByPassport(pack.getEmployee().getPersonInfo().getPassport()));
+            Package packToCreate;
+            if (pack.getCustomer().getId() == null && pack.getEmployee().getId() == null) {
+                packToCreate = packageService.createWithNewEmployeeAndNewCustomer(pack);
+            } else if (pack.getCustomer().getId() != null && pack.getEmployee().getId() == null) {
+                packToCreate = packageService.createWithExistingCustomerAndNewEmployee(pack);
+            } else if (pack.getCustomer().getId() == null && pack.getEmployee().getId() != null) {
+                packToCreate = packageService.createWithExistingEmployeeAndNewCustomer(pack);
+            } else {
+                packToCreate = packageService.createWithExistingCustomerAndEmployee(pack);
+            }
             PRINT2LN.info("PACKAGE N" + packToCreate.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(packToCreate) + " BYN");
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         } catch (XsdException e) {
             LOGGER.error(e.getMessage());
-            PRINTLN.info("PACKAGE WAS NOT CREATED");
+            PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
     }
 
@@ -82,14 +92,18 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             JAXBContext context = JAXBContext.newInstance(Employee.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Employee employee = (Employee) unmarshaller.unmarshal(xmlFileWithEmployee);
-            employeeService.create(employee, employee.getDepartment().getId());
-            PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
-            PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+            if (getEmployeeIdByPassport(employee.getPersonInfo().getPassport()) != null) {
+                PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
+            } else {
+                employeeService.create(employee, employee.getDepartment().getId());
+                PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
+                PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+            }
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         } catch (XsdException e) {
             LOGGER.error(e.getMessage());
-            PRINTLN.info("EMPLOYEE WAS NOT REGISTERED");
+            PRINT2LN.info("EMPLOYEE WAS NOT REGISTERED");
         }
     }
 
@@ -105,17 +119,21 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             JAXBContext context = JAXBContext.newInstance(Company.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Company company = (Company) unmarshaller.unmarshal(xmlFileWithCompany);
-            company = companyService.create(company);
-            for (int i = 0; i < company.getDepartments().size(); i++) {
-                Department department = company.getDepartments().get(i);
-                department.setCompany(company);
-                department = departmentService.create(department);
-                for (Employee employee : department.getEmployees()) {
-                    employeeService.create(employee, department.getId());
+            if (!isCompanyExist(company)) {
+                company = companyService.create(company);
+                for (int i = 0; i < company.getDepartments().size(); i++) {
+                    Department department = company.getDepartments().get(i);
+                    department.setCompany(company);
+                    department = departmentService.create(department);
+                    for (Employee employee : department.getEmployees()) {
+                        employeeService.create(employee, department.getId());
+                    }
                 }
+                PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
+                PRINTLN.info("DATE FROM XML-FILE: " + new XmlDateAdapter().marshal(company.getDate()));
+            } else {
+                PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }
-            PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-            PRINTLN.info("DATE FROM XML-FILE: " + new XmlDateAdapter().marshal(company.getDate()));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         } catch (XsdException e) {

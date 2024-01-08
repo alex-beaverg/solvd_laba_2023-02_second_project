@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_package.xsd">
-    <packageNumber>1600</packageNumber>
+    <packageNumber>1800</packageNumber>
     <packageType>LARGE</packageType>
     <deliveryType>EXPRESS</deliveryType>
     <status>DELIVERED</status>
     <condition>NOT_DAMAGED</condition>
     <addressFrom id="2">
         <city>Minsk</city>
-        <street>FF-STREET</street>
+        <street>FFFF-STREET</street>
         <house>12</house>
         <flat>1</flat>
         <zipCode>220241</zipCode>
@@ -15,7 +15,7 @@
     </addressFrom>
     <addressTo id="3">
         <city>Berlin</city>
-        <street>TT-STREET</street>
+        <street>TTTT-STREET</street>
         <house>6</house>
         <flat>4</flat>
         <zipCode>5649</zipCode>
@@ -23,15 +23,15 @@
     </addressTo>
     <customer id="1">
         <personInfo id="2">
-            <firstName>Tina</firstName>
+            <firstName>Elis</firstName>
             <lastName>Customer</lastName>
             <age>35</age>
             <passport id="1">
-                <number>CUSTOMER55</number>
+                <number>CUSTOMER88</number>
             </passport>
             <address id="2">
                 <city>Minsk</city>
-                <street>CC-STREET</street>
+                <street>CCCC-STREET</street>
                 <house>16</house>
                 <flat>24</flat>
                 <zipCode>220229</zipCode>
@@ -50,15 +50,15 @@
             </company>
         </department>
         <personInfo id="1">
-            <firstName>Tina</firstName>
+            <firstName>Elis</firstName>
             <lastName>Employee</lastName>
             <age>26</age>
             <passport id="2">
-                <number>EMPLOYEE55</number>
+                <number>EMPLOYEE88</number>
             </passport>
             <address id="1">
                 <city>Minsk</city>
-                <street>EE-STREET</street>
+                <street>EEEE-STREET</street>
                 <house>2</house>
                 <flat>16</flat>
                 <zipCode>220223</zipCode>

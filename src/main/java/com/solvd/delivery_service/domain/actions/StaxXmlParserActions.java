@@ -39,6 +39,7 @@ public class StaxXmlParserActions extends UserActions implements IParserActions 
         try {
             XmlSchemaValidator.validate(xmlFileWithCustomer, xsdFileWithCustomer);
             Customer customer = parseCustomerFromXmlUsingStax(xmlFileWithCustomer);
+            customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
@@ -172,15 +173,26 @@ public class StaxXmlParserActions extends UserActions implements IParserActions 
                     }
                 }
             }
+            pack.setNumber(getPackageNumberByPackage(pack));
             Employee employee = parseEmployeeFromXmlUsingStax(xmlFileWithPackage);
-            pack.setEmployee(employeeService
-                    .create(employee, new DepartmentServiceImpl().retrieveAll()
-                            .stream()
-                            .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
-                            .findFirst().get().getId()));
-            pack.setCustomer(parseCustomerFromXmlUsingStax(xmlFileWithPackage));
-            PackageService packageService = new PackageServiceImpl();
-            packageService.createWithExistingAddressTo(pack);
+            employee.setId(getEmployeeIdByPassport(employee.getPersonInfo().getPassport()));
+            if (employee.getId() == null) {
+                pack.setEmployee(employeeService
+                        .create(employee, new DepartmentServiceImpl().retrieveAll()
+                                .stream()
+                                .filter(department -> department.getTitle().equals(employee.getDepartment().getTitle()))
+                                .findFirst().get().getId()));
+            } else {
+                pack.setEmployee(employee);
+            }
+            Customer customer = parseCustomerFromXmlUsingStax(xmlFileWithPackage);
+            customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
+            if (customer.getId() == null) {
+                pack.setCustomer(new CustomerServiceImpl().create(customer));
+            } else {
+                pack.setCustomer(customer);
+            }
+            new PackageServiceImpl().createWithExistingCustomerAndEmployee(pack);
             PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
         } catch (IOException | XMLStreamException e) {
@@ -199,9 +211,13 @@ public class StaxXmlParserActions extends UserActions implements IParserActions 
             XmlSchemaValidator.validate(xmlFileWithEmployee, xsdFileWithEmployee);
             EmployeeService employeeService = new EmployeeServiceImpl();
             Employee employee = parseEmployeeFromXmlUsingStax(xmlFileWithEmployee);
-            employeeService.create(employee, employee.getDepartment().getId());
-            PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
-            PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+            if (getEmployeeIdByPassport(employee.getPersonInfo().getPassport()) != null) {
+                PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
+            } else {
+                employeeService.create(employee, employee.getDepartment().getId());
+                PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
+                PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+            }
         } catch (XsdException e) {
             LOGGER.error(e.getMessage());
             PRINTLN.info("EMPLOYEE WAS NOT REGISTERED");

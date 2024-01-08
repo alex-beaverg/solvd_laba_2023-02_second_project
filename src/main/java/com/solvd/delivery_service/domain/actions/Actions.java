@@ -4,6 +4,11 @@ import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
+import com.solvd.delivery_service.domain.human.customer.Customer;
+import com.solvd.delivery_service.domain.human.employee.Employee;
+import com.solvd.delivery_service.domain.pack.Package;
+import com.solvd.delivery_service.domain.structure.Company;
+import com.solvd.delivery_service.service.impl.*;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
 import com.solvd.delivery_service.util.custom_exceptions.*;
@@ -73,5 +78,41 @@ public class Actions {
             index++;
         }
         return enumArray[RequestMethods.getNumberFromChoice(name + " number", index - 1) - 1];
+    }
+
+    protected static Long getCustomerIdByPassport(Passport passport) {
+        for (Customer customer : new CustomerServiceImpl().retrieveAll()) {
+            if (customer.getPersonInfo().getPassport().getNumber().equals(passport.getNumber())) {
+                return customer.getId();
+            }
+        }
+        return null;
+    }
+
+    protected static Long getEmployeeIdByPassport(Passport passport) {
+        for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
+            if (employee.getPersonInfo().getPassport().getNumber().equals(passport.getNumber())) {
+                return employee.getId();
+            }
+        }
+        return null;
+    }
+
+    protected static Long getPackageNumberByPackage(Package pack) {
+        for (Package packFromDb : new PackageServiceImpl().retrieveAll()) {
+            if (packFromDb.getNumber().equals(pack.getNumber())) {
+                return new PackageServiceImpl().retrieveMaxPackageNumber() + 1;
+            }
+        }
+        return pack.getNumber();
+    }
+
+    protected static boolean isCompanyExist(Company company) {
+        for (Company compFromDb : new CompanyServiceImpl().retrieveAll()) {
+            if (compFromDb.getName().equals(company.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -54,7 +54,7 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public Package createWithNewEmployee(Package pack) {
+    public Package createWithNewEmployeeAndNewCustomer(Package pack) {
         pack.setId(null);
         if (pack.getAddressFrom() != null) {
             Address addressFrom = addressService.create(pack.getAddressFrom());
@@ -68,9 +68,62 @@ public class PackageServiceImpl implements PackageService {
             Customer customer = customerService.create(pack.getCustomer());
             pack.setCustomer(customer);
         }
-        if (pack.getCustomer() != null) {
+        if (pack.getEmployee() != null) {
             Employee employee = employeeService.create(pack.getEmployee(), pack.getEmployee().getDepartment().getId());
             pack.setEmployee(employee);
+        }
+        packageRepository.create(pack);
+        return pack;
+    }
+
+    @Override
+    public Package createWithExistingEmployeeAndNewCustomer(Package pack) {
+        pack.setId(null);
+        if (pack.getAddressFrom() != null) {
+            Address addressFrom = addressService.create(pack.getAddressFrom());
+            pack.setAddressFrom(addressFrom);
+        }
+        if (pack.getAddressTo() != null) {
+            Address addressTo = addressService.create(pack.getAddressTo());
+            pack.setAddressTo(addressTo);
+        }
+        if (pack.getCustomer() != null) {
+            Customer customer = customerService.create(pack.getCustomer());
+            pack.setCustomer(customer);
+        }
+        packageRepository.create(pack);
+        return pack;
+    }
+
+    @Override
+    public Package createWithExistingCustomerAndNewEmployee(Package pack) {
+        pack.setId(null);
+        if (pack.getAddressFrom() != null) {
+            Address addressFrom = addressService.create(pack.getAddressFrom());
+            pack.setAddressFrom(addressFrom);
+        }
+        if (pack.getAddressTo() != null) {
+            Address addressTo = addressService.create(pack.getAddressTo());
+            pack.setAddressTo(addressTo);
+        }
+        if (pack.getEmployee() != null) {
+            Employee employee = employeeService.create(pack.getEmployee(), pack.getEmployee().getDepartment().getId());
+            pack.setEmployee(employee);
+        }
+        packageRepository.create(pack);
+        return pack;
+    }
+
+    @Override
+    public Package createWithExistingCustomerAndEmployee(Package pack) {
+        pack.setId(null);
+        if (pack.getAddressFrom() != null) {
+            Address addressFrom = addressService.create(pack.getAddressFrom());
+            pack.setAddressFrom(addressFrom);
+        }
+        if (pack.getAddressTo() != null) {
+            Address addressTo = addressService.create(pack.getAddressTo());
+            pack.setAddressTo(addressTo);
         }
         packageRepository.create(pack);
         return pack;
