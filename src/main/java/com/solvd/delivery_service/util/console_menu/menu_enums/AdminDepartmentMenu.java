@@ -5,7 +5,7 @@ public enum AdminDepartmentMenu implements IMenu {
     REGISTER_DEPARTMENT("Register new department"),
     UPDATE_DEPARTMENT("Update existing department field"),
     REMOVE_DEPARTMENT("Remove existing department"),
-    ADMIN_MAIN_MENU("<- ADMIN MAIN MENU"),
+    ADMIN_MAIN_MENU("<-- ADMIN MAIN MENU"),
     EXIT("EXIT");
 
     private final String title;

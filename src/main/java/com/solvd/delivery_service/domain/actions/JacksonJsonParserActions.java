@@ -15,7 +15,7 @@ import com.solvd.delivery_service.service.impl.CompanyServiceImpl;
 import com.solvd.delivery_service.service.impl.DepartmentServiceImpl;
 import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
 import com.solvd.delivery_service.service.impl.PackageServiceImpl;
-import com.solvd.delivery_service.util.XmlDateAdapter;
+import com.solvd.delivery_service.util.JsonDateAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +106,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                     }
                 }
                 PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-                PRINTLN.info("DATE FROM XML-FILE: " + new XmlDateAdapter().marshal(company.getDate()));
+                PRINTLN.info("DATE FROM JSON-FILE: " + new JsonDateAdapter().serialize(company.getDate()));
             } else {
                 PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }

@@ -6,7 +6,7 @@ public enum AdminCompanyMenu implements IMenu {
     REGISTER_COMPANY_FROM_FILE("Register new company FROM FILE"),
     RENAME_COMPANY("Rename existing company"),
     REMOVE_COMPANY("Remove existing company"),
-    ADMIN_MAIN_MENU("<- ADMIN MAIN MENU"),
+    ADMIN_MAIN_MENU("<-- ADMIN MAIN MENU"),
     EXIT("EXIT");
 
     private final String title;
