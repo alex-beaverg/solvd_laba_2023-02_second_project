@@ -1,9 +1,9 @@
 {
   "id": 1,
-  "personInfo": {
+  "person_info": {
     "id": 1,
-    "firstName": "Felix",
-    "lastName": "Cat",
+    "first_name": "Felix",
+    "last_name": "Cat",
     "age": 26,
     "passport": {
       "id": 1,
@@ -14,8 +14,9 @@
       "street": "High street",
       "house": 50,
       "flat": 24,
-      "zipCode": 221205,
+      "zip_code": 221205,
       "country": "BELARUS"
     }
-  }
+  },
+  "packages": []
 }

@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.domain.human.customer;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.pack.Package;
 import jakarta.xml.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.Objects;
 public class Customer {
     @XmlAttribute(name = "id")
     private Long id;
+    @JsonAlias({"person_info"})
     private PersonInfo personInfo;
     @XmlElementWrapper(name = "packages")
     @XmlElement(name = "pack")

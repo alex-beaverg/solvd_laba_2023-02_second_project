@@ -24,10 +24,10 @@
               "departments": []
             }
           },
-          "personInfo": {
+          "person_info": {
             "id": 1,
-            "firstName": "Kate",
-            "lastName": "Moon",
+            "first_name": "Kate",
+            "last_name": "Moon",
             "age": 23,
             "passport": {
               "id": 1,
@@ -39,7 +39,7 @@
               "street": "Mean street",
               "house": 41,
               "flat": 6,
-              "zipCode": 221123,
+              "zip_code": 221123,
               "country": "BELARUS"
             }
           },
@@ -58,10 +58,10 @@
               "departments": []
             }
           },
-          "personInfo": {
+          "person_info": {
             "id": 1,
-            "firstName": "Lida",
-            "lastName": "Need",
+            "first_name": "Lida",
+            "last_name": "Need",
             "age": 43,
             "passport": {
               "id": 2,
@@ -73,7 +73,7 @@
               "street": "Other street",
               "house": 35,
               "flat": 61,
-              "zipCode": 221144,
+              "zip_code": 221144,
               "country": "BELARUS"
             }
           },

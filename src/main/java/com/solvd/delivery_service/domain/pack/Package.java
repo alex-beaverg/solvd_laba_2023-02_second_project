@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.domain.pack;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
@@ -14,11 +15,15 @@ public class Package {
     private Long id;
     @XmlElement(name = "packageNumber")
     private Long number;
+    @JsonAlias({"package_type"})
     private PackageType packageType;
+    @JsonAlias({"delivery_type"})
     private DeliveryType deliveryType;
     private Status status;
     private Condition condition;
+    @JsonAlias({"address_from"})
     private Address addressFrom;
+    @JsonAlias({"address_to"})
     private Address addressTo;
     private Customer customer;
     private Employee employee;

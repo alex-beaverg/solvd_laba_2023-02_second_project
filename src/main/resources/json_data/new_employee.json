@@ -9,10 +9,10 @@
       "name": "Delivery Service"
     }
   },
-  "personInfo": {
+  "person_info": {
     "id": 1,
-    "firstName": "Sandy",
-    "lastName": "Summer",
+    "first_name": "Sandy",
+    "last_name": "Summer",
     "age": 30,
     "passport": {
       "id": 1,
@@ -24,8 +24,9 @@
       "street": "File street",
       "house": 41,
       "flat": 6,
-      "zipCode": 221500,
+      "zip_code": 221500,
       "country": "BELARUS"
     }
-  }
+  },
+  "packages": []
 }

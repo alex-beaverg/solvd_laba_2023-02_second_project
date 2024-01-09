@@ -1,5 +1,6 @@
 package com.solvd.delivery_service.domain.human;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.solvd.delivery_service.domain.area.Address;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +12,9 @@ import java.util.Objects;
 public class PersonInfo {
     @XmlAttribute(name = "id")
     private Long id;
+    @JsonAlias({"first_name"})
     private String firstName;
+    @JsonAlias({"last_name"})
     private String lastName;
     private Integer age;
     private Passport passport;

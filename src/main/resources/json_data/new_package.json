@@ -1,34 +1,34 @@
 {
   "id": 1,
-  "number": 6200,
-  "packageType": "LARGE",
-  "deliveryType": "VIP",
+  "number": 6300,
+  "package_type": "LARGE",
+  "delivery_type": "VIP",
   "status": "DELIVERED",
   "condition": "NOT_DAMAGED",
-  "addressFrom": {
+  "address_from": {
     "id": 1,
     "city": "Minsk",
     "street": "JSON From street",
     "house": 11,
     "flat": 77,
-    "zipCode": 221225,
+    "zip_code": 221225,
     "country": "BELARUS"
   },
-  "addressTo": {
+  "address_to": {
     "id": 2,
     "city": "Espoo",
     "street": "JSON To street",
     "house": 33,
     "flat": 88,
-    "zipCode": 66543,
+    "zip_code": 66543,
     "country": "FINLAND"
   },
   "customer": {
     "id": 1,
-    "personInfo": {
+    "person_info": {
       "id": 1,
-      "firstName": "Kim",
-      "lastName": "Close",
+      "first_name": "Kim",
+      "last_name": "Close",
       "age": 31,
       "passport": {
         "id": 1,
@@ -40,10 +40,11 @@
         "street": "Tree street",
         "house": 11,
         "flat": 12,
-        "zipCode": 221265,
+        "zip_code": 221265,
         "country": "BELARUS"
       }
-    }
+    },
+    "packages": []
   },
   "employee": {
     "id": 1,
@@ -56,10 +57,10 @@
         "name": "Delivery Service"
       }
     },
-    "personInfo": {
+    "person_info": {
       "id": 1,
-      "firstName": "Lem",
-      "lastName": "Core",
+      "first_name": "Lem",
+      "last_name": "Core",
       "age": 22,
       "passport": {
         "id": 2,
@@ -71,9 +72,10 @@
         "street": "Fuel street",
         "house": 14,
         "flat": 116,
-        "zipCode": 221276,
+        "zip_code": 221276,
         "country": "BELARUS"
       }
-    }
+    },
+    "packages": []
   }
 }
