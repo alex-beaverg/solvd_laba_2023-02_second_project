@@ -13,10 +13,14 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
-                UserActions.showCustomerPackages();
+                PARSER_ACTIONS_SERVICE.getParserActions().createPackageFromFile();
                 return runUserMainMenu();
             }
             case (3) -> {
+                UserActions.showCustomerPackages();
+                return runUserMainMenu();
+            }
+            case (4) -> {
                 return (ConsoleMenuUser) runDeliveryCompanyMenu();
             }
             default -> {
@@ -37,6 +41,10 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runUserMainMenu();
             }
             case (3) -> {
+                PARSER_ACTIONS_SERVICE.getParserActions().createPackageWithRegistrationNewCustomerFromFile();
+                return runUserMainMenu();
+            }
+            case (4) -> {
                 return runUserMainMenu();
             }
             default -> {

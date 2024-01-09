@@ -1,8 +1,14 @@
 package com.solvd.delivery_service.domain.human;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Passport {
+    @XmlAttribute(name = "id")
     private Long id;
     private String number;
 

@@ -3,6 +3,7 @@ package com.solvd.delivery_service.util.console_menu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DaoServiceMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.ParserServiceMenu;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,20 +12,48 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
-    public static DaoService DAO_SERVICE = DaoService.getInstance();
+    protected static DaoService DAO_SERVICE = DaoService.getInstance();
+    protected static ParserActionsService PARSER_ACTIONS_SERVICE = ParserActionsService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
         switch (answer) {
             case (1) -> {
-                PRINT2LN.info("RUNNING USING BASIC DAO SERVICE");
+                PRINT2LN.info("RUNNING USING 'BASIC DAO' SERVICE");
                 DAO_SERVICE.assignBasicDaoService();
+                return runParserMenu();
+            }
+            case (2) -> {
+                PRINT2LN.info("RUNNING USING 'MYBATIS DAO' SERVICE");
+                DAO_SERVICE.assignMybatisDaoService();
+                return runParserMenu();
+            }
+            default -> {
+                return tearDown();
+            }
+        }
+    }
+
+    protected ConsoleMenu runParserMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("PARSER SERVICE MENU:", ParserServiceMenu.values());
+        switch (answer) {
+            case (1) -> {
+                PRINT2LN.info("RUNNING USING 'STAX (XML) PARSER' SERVICE");
+                PARSER_ACTIONS_SERVICE.assignStaxXmlParserActionsService();
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
-                PRINT2LN.info("RUNNING USING MYBATIS DAO SERVICE");
-                DAO_SERVICE.assignMybatisDaoService();
+                PRINT2LN.info("RUNNING USING 'JAXB (XML) PARSER' SERVICE");
+                PARSER_ACTIONS_SERVICE.assignJaxbXmlParserActionsService();
                 return runDeliveryCompanyMenu();
+            }
+            case (3) -> {
+                PRINT2LN.info("RUNNING USING 'JACKSON (JSON) PROCESSOR' SERVICE");
+                PARSER_ACTIONS_SERVICE.assignJacksonJsonParserActionsService();
+                return runDeliveryCompanyMenu();
+            }
+            case (4) -> {
+                return runServiceMenu();
             }
             default -> {
                 return tearDown();
@@ -42,7 +71,7 @@ public class ConsoleMenu {
                 return authentication();
             }
             case (3) -> {
-                return runServiceMenu();
+                return runParserMenu();
             }
             default -> {
                 return tearDown();

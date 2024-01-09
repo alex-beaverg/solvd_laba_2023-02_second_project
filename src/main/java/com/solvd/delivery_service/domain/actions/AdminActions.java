@@ -97,7 +97,7 @@ public class AdminActions extends Actions {
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.create(employee, employeeDepartment.getId());
         PRINT2LN.info("EMPLOYEE " + employeePersonInfo.getFirstName() + " " + employeePersonInfo.getLastName() + " WAS REGISTERED");
-        PRINT2LN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+        PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
     }
 
     public static void registerDepartment() {

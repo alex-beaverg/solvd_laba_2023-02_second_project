@@ -72,14 +72,18 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
-                AdminActions.updateEmployeeField();
+                PARSER_ACTIONS_SERVICE.getParserActions().registerEmployeeFromFile();
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
-                AdminActions.removeEmployee();
+                AdminActions.updateEmployeeField();
                 return runAdminEmployeeMenu();
             }
             case (5) -> {
+                AdminActions.removeEmployee();
+                return runAdminEmployeeMenu();
+            }
+            case (6) -> {
                 return runAdminMainMenu();
             }
             default -> {
@@ -128,14 +132,18 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminCompanyMenu();
             }
             case (3) -> {
-                AdminActions.renameCompany();
+                PARSER_ACTIONS_SERVICE.getParserActions().registerCompanyFromFile();
                 return runAdminCompanyMenu();
             }
             case (4) -> {
-                AdminActions.removeCompany();
+                AdminActions.renameCompany();
                 return runAdminCompanyMenu();
             }
             case (5) -> {
+                AdminActions.removeCompany();
+                return runAdminCompanyMenu();
+            }
+            case (6) -> {
                 return runAdminMainMenu();
             }
             default -> {
