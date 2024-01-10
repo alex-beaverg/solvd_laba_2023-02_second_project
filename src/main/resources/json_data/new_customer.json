@@ -2,19 +2,19 @@
   "id": 1,
   "person_info": {
     "id": 1,
-    "first_name": "Adam",
-    "last_name": "Morris",
-    "age": 29,
+    "first_name": "Glen",
+    "last_name": "Beam",
+    "age": 35,
     "passport": {
       "id": 1,
-      "number": "VV55556666"
+      "number": "VV10010550"
     },
     "address": {
       "city": "Minsk",
-      "street": "Low street",
-      "house": 5,
-      "flat": 214,
-      "zip_code": 221235,
+      "street": "Crew street",
+      "house": 2,
+      "flat": 41,
+      "zip_code": 221245,
       "country": "BELARUS"
     }
   },
