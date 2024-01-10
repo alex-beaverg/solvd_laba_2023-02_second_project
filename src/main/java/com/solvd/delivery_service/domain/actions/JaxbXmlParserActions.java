@@ -16,7 +16,7 @@ import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
 import com.solvd.delivery_service.service.impl.PackageServiceImpl;
 import com.solvd.delivery_service.util.XmlDateAdapter;
 import com.solvd.delivery_service.util.XmlSchemaValidator;
-import com.solvd.delivery_service.util.custom_exceptions.XsdException;
+import com.solvd.delivery_service.util.custom_exceptions.XsdValidateException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -40,9 +40,10 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+            PRINTLN.info("CUSTOMER WAS TAKEN FROM XML FILE: '" + xmlFileWithCustomer.getName() + "'");
         } catch (JAXBException e) {
             throw new RuntimeException(e);
-        } catch (XsdException e) {
+        } catch (XsdValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
@@ -74,9 +75,10 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             }
             PRINT2LN.info("PACKAGE N" + packToCreate.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(packToCreate) + " BYN");
+            PRINTLN.info("PACKAGE WAS TAKEN FROM XML FILE: '" + xmlFileWithPackage.getName() + "'");
         } catch (JAXBException e) {
             throw new RuntimeException(e);
-        } catch (XsdException e) {
+        } catch (XsdValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
@@ -98,10 +100,11 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                 employeeService.create(employee, employee.getDepartment().getId());
                 PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
                 PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+                PRINTLN.info("EMPLOYEE WAS TAKEN FROM XML FILE: '" + xmlFileWithEmployee.getName() + "'");
             }
         } catch (JAXBException e) {
             throw new RuntimeException(e);
-        } catch (XsdException e) {
+        } catch (XsdValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("EMPLOYEE WAS NOT REGISTERED");
         }
@@ -130,13 +133,14 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                     }
                 }
                 PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-                PRINTLN.info("DATE FROM XML-FILE: " + new XmlDateAdapter().marshal(company.getDate()));
+                PRINTLN.info("DATE FROM XML FILE: " + new XmlDateAdapter().marshal(company.getDate()));
+                PRINTLN.info("COMPANY WAS TAKEN FROM XML FILE: '" + xmlFileWithCompany.getName() + "'");
             } else {
                 PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }
         } catch (JAXBException e) {
             throw new RuntimeException(e);
-        } catch (XsdException e) {
+        } catch (XsdValidateException e) {
             LOGGER.error(e.getMessage());
             PRINTLN.info("COMPANY WAS NOT REGISTERED");
         }

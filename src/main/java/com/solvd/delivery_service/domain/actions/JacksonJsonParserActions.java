@@ -16,6 +16,8 @@ import com.solvd.delivery_service.service.impl.DepartmentServiceImpl;
 import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
 import com.solvd.delivery_service.service.impl.PackageServiceImpl;
 import com.solvd.delivery_service.util.JsonDateAdapter;
+import com.solvd.delivery_service.util.JsonValidator;
+import com.solvd.delivery_service.util.custom_exceptions.JsonValidateException;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,14 +30,19 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         File jsonFileWithCustomer = new File("src/main/resources/json_data/new_customer.json");
         ObjectMapper mapper = new ObjectMapper();
         try {
+            JsonValidator.validate(jsonFileWithCustomer);
             Customer customer = mapper.readValue(jsonFileWithCustomer, Customer.class);
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+            PRINTLN.info("CUSTOMER WAS TAKEN FROM JSON FILE: '" + jsonFileWithCustomer.getName() + "'");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (JsonValidateException e) {
+            LOGGER.error(e.getMessage());
+            PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
     }
 
@@ -45,6 +52,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         File jsonFileWithPackage = new File("src/main/resources/json_data/new_package.json");
         ObjectMapper mapper = new ObjectMapper();
         try {
+            JsonValidator.validate(jsonFileWithPackage);
             Package pack = mapper.readValue(jsonFileWithPackage, Package.class);
             pack.setId(null);
             pack.setNumber(getPackageNumberByPackage(pack));
@@ -62,8 +70,12 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
             }
             PRINT2LN.info("PACKAGE N" + packToCreate.getNumber() + " WAS CREATED");
             PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(packToCreate) + " BYN");
+            PRINTLN.info("PACKAGE WAS TAKEN FROM JSON FILE: '" + jsonFileWithPackage.getName() + "'");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (JsonValidateException e) {
+            LOGGER.error(e.getMessage());
+            PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
     }
 
@@ -73,6 +85,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         File jsonFileWithEmployee = new File("src/main/resources/json_data/new_employee.json");
         ObjectMapper mapper = new ObjectMapper();
         try {
+            JsonValidator.validate(jsonFileWithEmployee);
             Employee employee = mapper.readValue(jsonFileWithEmployee, Employee.class);
             if (getEmployeeIdByPassport(employee.getPersonInfo().getPassport()) != null) {
                 PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
@@ -80,9 +93,13 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                 employeeService.create(employee, employee.getDepartment().getId());
                 PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
                 PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+                PRINTLN.info("EMPLOYEE WAS TAKEN FROM JSON FILE: '" + jsonFileWithEmployee.getName() + "'");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (JsonValidateException e) {
+            LOGGER.error(e.getMessage());
+            PRINT2LN.info("EMPLOYEE WAS NOT REGISTERED");
         }
     }
 
@@ -94,6 +111,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         File jsonFileWithCompany = new File("src/main/resources/json_data/new_company.json");
         ObjectMapper mapper = new ObjectMapper();
         try {
+            JsonValidator.validate(jsonFileWithCompany);
             Company company = mapper.readValue(jsonFileWithCompany, Company.class);
             if (!isCompanyExist(company)) {
                 company = companyService.create(company);
@@ -106,12 +124,16 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                     }
                 }
                 PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-                PRINTLN.info("DATE FROM JSON-FILE: " + new JsonDateAdapter().serialize(company.getDate()));
+                PRINTLN.info("DATE FROM JSON FILE: " + new JsonDateAdapter().serialize(company.getDate()));
+                PRINTLN.info("COMPANY WAS TAKEN FROM JSON FILE: '" + jsonFileWithCompany.getName() + "'");
             } else {
                 PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (JsonValidateException e) {
+            LOGGER.error(e.getMessage());
+            PRINT2LN.info("COMPANY WAS NOT REGISTERED");
         }
     }
 }

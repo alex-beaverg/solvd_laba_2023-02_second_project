@@ -14,9 +14,6 @@ public class JsonDateAdapter extends JsonDeserializer<LocalDate> {
     }
 
     public String serialize(LocalDate localDate) {
-        int year = localDate.getYear();
-        int month = localDate.getMonthValue();
-        int dayOfMonth = localDate.getDayOfMonth();
-        return String.format("%d.%d.%d", dayOfMonth, month, year);
+        return String.format("%d.%d.%d", localDate.getDayOfMonth(), localDate.getMonthValue(), localDate.getYear());
     }
 }

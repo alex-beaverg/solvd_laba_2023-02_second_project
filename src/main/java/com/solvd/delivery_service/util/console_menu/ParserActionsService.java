@@ -5,6 +5,8 @@ import com.solvd.delivery_service.domain.actions.JacksonJsonParserActions;
 import com.solvd.delivery_service.domain.actions.JaxbXmlParserActions;
 import com.solvd.delivery_service.domain.actions.StaxXmlParserActions;
 
+import static com.solvd.delivery_service.util.Printers.*;
+
 public class ParserActionsService {
     private static ParserActionsService instance;
     private int numberOfActionService;
@@ -19,14 +21,17 @@ public class ParserActionsService {
     }
 
     protected void assignStaxXmlParserActionsService() {
+        PRINT2LN.info("RUNNING USING 'STAX (XML) PARSER' SERVICE");
         numberOfActionService = 0;
     }
 
     protected void assignJaxbXmlParserActionsService() {
+        PRINT2LN.info("RUNNING USING 'JAXB (XML) PARSER' SERVICE");
         numberOfActionService = 1;
     }
 
     protected void assignJacksonJsonParserActionsService() {
+        PRINT2LN.info("RUNNING USING 'JACKSON (JSON) PROCESSOR' SERVICE");
         numberOfActionService = 2;
     }
 

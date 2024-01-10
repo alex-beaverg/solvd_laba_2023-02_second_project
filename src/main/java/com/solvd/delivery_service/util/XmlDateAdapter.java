@@ -3,21 +3,18 @@ package com.solvd.delivery_service.util;
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class XmlDateAdapter extends XmlAdapter<String, LocalDate> {
     @Override
     public LocalDate unmarshal(String s) {
-        return LocalDate.of(
-                Integer.parseInt(s.split("-")[0]),
-                Integer.parseInt(s.split("-")[1]),
-                Integer.parseInt(s.split("-")[2]));
+        List<Integer> dateList = Arrays.stream(s.split("-")).map(Integer::parseInt).toList();
+        return LocalDate.of(dateList.get(0), dateList.get(1), dateList.get(2));
     }
 
     @Override
     public String marshal(LocalDate localDate) {
-        int year = localDate.getYear();
-        int month = localDate.getMonthValue();
-        int dayOfMonth = localDate.getDayOfMonth();
-        return String.format("%d.%d.%d", dayOfMonth, month, year);
+        return String.format("%d.%d.%d", localDate.getDayOfMonth(), localDate.getMonthValue(), localDate.getYear());
     }
 }

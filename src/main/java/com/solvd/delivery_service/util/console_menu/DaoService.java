@@ -4,6 +4,8 @@ import com.solvd.delivery_service.persistence.*;
 import com.solvd.delivery_service.persistence.basic_dao_impl.*;
 import com.solvd.delivery_service.persistence.mybatis_dao_impl.*;
 
+import static com.solvd.delivery_service.util.Printers.*;
+
 public class DaoService {
     private static DaoService instance;
     private boolean isBasicDaoService;
@@ -19,10 +21,12 @@ public class DaoService {
     }
 
     protected void assignBasicDaoService() {
+        PRINT2LN.info("RUNNING USING 'BASIC DAO' SERVICE");
         isBasicDaoService = true;
     }
 
     protected void assignMybatisDaoService() {
+        PRINT2LN.info("RUNNING USING 'MYBATIS DAO' SERVICE");
         isBasicDaoService = false;
     }
 
