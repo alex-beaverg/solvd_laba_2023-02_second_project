@@ -15,7 +15,7 @@ import com.solvd.delivery_service.service.impl.DepartmentServiceImpl;
 import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
 import com.solvd.delivery_service.service.impl.PackageServiceImpl;
 import com.solvd.delivery_service.util.JsonDateAdapter;
-import com.solvd.delivery_service.util.JsonValidator;
+import com.solvd.delivery_service.util.JsonReader;
 import com.solvd.delivery_service.util.custom_exceptions.JsonValidateException;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
     public void createPackageWithRegistrationNewCustomerFromFile() {
         File jsonFileWithCustomer = new File("src/main/resources/json_data/new_customer.json");
         try {
-            Customer customer = JsonValidator.validateAndReadValue(jsonFileWithCustomer, Customer.class);
+            Customer customer = JsonReader.validateAndReadValue(jsonFileWithCustomer, Customer.class);
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
@@ -45,7 +45,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         PackageService packageService = new PackageServiceImpl();
         File jsonFileWithPackage = new File("src/main/resources/json_data/new_package.json");
         try {
-            Package pack = JsonValidator.validateAndReadValue(jsonFileWithPackage, Package.class);
+            Package pack = JsonReader.validateAndReadValue(jsonFileWithPackage, Package.class);
             pack.setId(null);
             pack.setNumber(getPackageNumberByPackage(pack));
             pack.getCustomer().setId(getCustomerIdByPassport(pack.getCustomer().getPersonInfo().getPassport()));
@@ -74,7 +74,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         EmployeeService employeeService = new EmployeeServiceImpl();
         File jsonFileWithEmployee = new File("src/main/resources/json_data/new_employee.json");
         try {
-            Employee employee = JsonValidator.validateAndReadValue(jsonFileWithEmployee, Employee.class);
+            Employee employee = JsonReader.validateAndReadValue(jsonFileWithEmployee, Employee.class);
             if (getEmployeeIdByPassport(employee.getPersonInfo().getPassport()) != null) {
                 PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
             } else {
@@ -96,7 +96,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
         EmployeeService employeeService = new EmployeeServiceImpl();
         File jsonFileWithCompany = new File("src/main/resources/json_data/new_company.json");
         try {
-            Company company = JsonValidator.validateAndReadValue(jsonFileWithCompany, Company.class);
+            Company company = JsonReader.validateAndReadValue(jsonFileWithCompany, Company.class);
             if (!isCompanyExist(company)) {
                 company = companyService.create(company);
                 for (int i = 0; i < company.getDepartments().size(); i++) {

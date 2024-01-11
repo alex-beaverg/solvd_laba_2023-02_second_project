@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static com.solvd.delivery_service.util.Printers.PRINTLN;
 
-public class JsonValidator {
+public class JsonReader {
     public static <T> T validateAndReadValue(File jsonFile, Class<T> clazz) throws JsonValidateException {
         T value;
         ObjectMapper mapper = new ObjectMapper();
