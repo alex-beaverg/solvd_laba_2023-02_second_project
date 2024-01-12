@@ -15,18 +15,18 @@ import static com.solvd.delivery_service.util.Printers.*;
 
 public class XmlSchemaValidator {
     public static void validate(File xmlFile, File xsdFile) throws XsdValidateException {
+        String xmlName = xmlFile.getName();
+        String xsdName = xsdFile.getName();
         try {
-            SchemaFactory factory =
-                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(xsdFile);
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(xmlFile));
-            PRINTLN.info("[Info]: XML file '" + xmlFile.getName() + "' matches XSD file '" + xsdFile.getName() + "'");
+            PRINTLN.info(String.format("[Info]: XML file '%s' matches XSD file '%s'", xmlName, xsdName));
         } catch (SAXException e) {
-            throw new XsdValidateException("[XsdValidateException]: XML file '" + xmlFile.getName() + "' is not valid!");
+            throw new XsdValidateException(String.format("[XsdValidateException]: XML file '%s' is not valid!", xmlName));
         } catch (IOException e) {
-            throw new XsdValidateException("[XsdValidateException]: XML file '" + xmlFile.getName() +
-                    "' (XSD file '" + xsdFile.getName() + "') is not exist!");
+            throw new XsdValidateException(String.format("[XsdValidateException]: XML file '%s' (XSD file '%s') was not found!", xmlName, xsdName));
         }
     }
 }
