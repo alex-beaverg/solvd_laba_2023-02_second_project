@@ -32,14 +32,14 @@ public class AdminActions extends Actions {
 
     public static void showNumberOfDatabaseEntries() {
         PRINT2LN.info("NUMBER OF TABLE ENTRIES IN DATABASE:");
-        PRINTLN.info("Addresses table: " + new AddressServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Customers table: " + new CustomerServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Companies table: " + new CompanyServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Departments table: " + new DepartmentServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Employees table: " + new EmployeeServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Packages table: " + new PackageServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Passports table: " + new PassportServiceImpl().retrieveNumberOfEntries() + " entries");
-        PRINTLN.info("Persons table: " + new PersonInfoServiceImpl().retrieveNumberOfEntries() + " entries");
+        PRINTLN.info(String.format("%-18s %3d entries", "Addresses table:", new AddressServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Customers table:", new CustomerServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Companies table:", new CompanyServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Departments table:", new DepartmentServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Employees table:", new EmployeeServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Packages table:", new PackageServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Passports table:", new PassportServiceImpl().retrieveNumberOfEntries()));
+        PRINTLN.info(String.format("%-18s %3d entries", "Persons table:", new PersonInfoServiceImpl().retrieveNumberOfEntries()));
     }
 
     public static void showDepartments() {

@@ -39,15 +39,15 @@ public class ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("PARSER SERVICE MENU:", ParserServiceMenu.values());
         switch (answer) {
             case (1) -> {
-                PARSER_ACTIONS_SERVICE.assignStaxXmlParserActionsService();
+                PARSER_ACTIONS_SERVICE.assignParser("STAX");
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
-                PARSER_ACTIONS_SERVICE.assignJaxbXmlParserActionsService();
+                PARSER_ACTIONS_SERVICE.assignParser("JAXB");
                 return runDeliveryCompanyMenu();
             }
             case (3) -> {
-                PARSER_ACTIONS_SERVICE.assignJacksonJsonParserActionsService();
+                PARSER_ACTIONS_SERVICE.assignParser("JACKSON");
                 return runDeliveryCompanyMenu();
             }
             case (4) -> {
@@ -81,7 +81,7 @@ public class ConsoleMenu {
         int index = 1;
         PRINT2LN.info(title);
         for (IMenu item : menuItems) {
-            PRINTLN.info("[" + index + "]: " + item.getTitle());
+            PRINTLN.info(String.format("[%d]: %s", index, item.getTitle()));
             index++;
         }
         return RequestMethods.getNumberFromChoice("the menu item number", index - 1);

@@ -31,9 +31,9 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
-            PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
-            PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
-            PRINTLN.info("CUSTOMER WAS TAKEN FROM JSON FILE: '" + jsonFileWithCustomer.getName() + "'");
+            PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(pack)));
+            PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCustomer.getName()));
         } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
@@ -60,9 +60,9 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
             } else {
                 packToCreate = packageService.createWithExistingCustomerAndEmployee(pack);
             }
-            PRINT2LN.info("PACKAGE N" + packToCreate.getNumber() + " WAS CREATED");
-            PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(packToCreate) + " BYN");
-            PRINTLN.info("PACKAGE WAS TAKEN FROM JSON FILE: '" + jsonFileWithPackage.getName() + "'");
+            PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", packToCreate.getNumber()));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(packToCreate)));
+            PRINTLN.info(String.format("PACKAGE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithPackage.getName()));
         } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
@@ -79,9 +79,11 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                 PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
             } else {
                 employeeService.create(employee, employee.getDepartment().getId());
-                PRINT2LN.info("EMPLOYEE " + employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + " WAS REGISTERED");
-                PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
-                PRINTLN.info("EMPLOYEE WAS TAKEN FROM JSON FILE: '" + jsonFileWithEmployee.getName() + "'");
+                String firstName = employee.getPersonInfo().getFirstName();
+                String lastName = employee.getPersonInfo().getLastName();
+                PRINT2LN.info(String.format("EMPLOYEE %s %s WAS REGISTERED", firstName, lastName));
+                PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", Accounting.calculateEmployeeSalary(employee)));
+                PRINTLN.info(String.format("EMPLOYEE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithEmployee.getName()));
             }
         } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
@@ -107,9 +109,9 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                         employeeService.create(employee, department.getId());
                     }
                 }
-                PRINT2LN.info("COMPANY " + company.getName() + " WAS REGISTERED");
-                PRINTLN.info("DATE FROM JSON FILE: " + new JsonDateAdapter().serialize(company.getDate()));
-                PRINTLN.info("COMPANY WAS TAKEN FROM JSON FILE: '" + jsonFileWithCompany.getName() + "'");
+                PRINT2LN.info(String.format("COMPANY %s WAS REGISTERED", company.getName()));
+                PRINTLN.info(String.format("DATE FROM JSON FILE: %s", new JsonDateAdapter().serialize(company.getDate())));
+                PRINTLN.info(String.format("COMPANY WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCompany.getName()));
             } else {
                 PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }

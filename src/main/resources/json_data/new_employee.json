@@ -11,20 +11,20 @@
   },
   "person_info": {
     "id": 1,
-    "first_name": "Sandy",
-    "last_name": "Summer",
-    "age": 30,
+    "first_name": "Nick",
+    "last_name": "Don",
+    "age": 32,
     "passport": {
       "id": 1,
-      "number": "JSON888888"
+      "number": "JSON066605"
     },
     "address": {
       "id": 1,
       "city": "Minsk",
-      "street": "File street",
-      "house": 41,
+      "street": "Json street",
+      "house": 425,
       "flat": 6,
-      "zip_code": 221500,
+      "zip_code": 221005,
       "country": "BELARUS"
     }
   },

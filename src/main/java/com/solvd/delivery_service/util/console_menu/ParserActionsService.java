@@ -1,15 +1,12 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.IParserActions;
-import com.solvd.delivery_service.domain.actions.JacksonJsonParserActions;
-import com.solvd.delivery_service.domain.actions.JaxbXmlParserActions;
-import com.solvd.delivery_service.domain.actions.StaxXmlParserActions;
+import com.solvd.delivery_service.domain.actions.*;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ParserActionsService {
     private static ParserActionsService instance;
-    private int numberOfActionService;
+    private int numberOfActionsService;
 
     private ParserActionsService() {}
 
@@ -20,29 +17,19 @@ public class ParserActionsService {
         return instance;
     }
 
-    protected void assignStaxXmlParserActionsService() {
-        PRINT2LN.info("RUNNING USING 'STAX (XML) PARSER' SERVICE");
-        numberOfActionService = 0;
-    }
-
-    protected void assignJaxbXmlParserActionsService() {
-        PRINT2LN.info("RUNNING USING 'JAXB (XML) PARSER' SERVICE");
-        numberOfActionService = 1;
-    }
-
-    protected void assignJacksonJsonParserActionsService() {
-        PRINT2LN.info("RUNNING USING 'JACKSON (JSON) PROCESSOR' SERVICE");
-        numberOfActionService = 2;
+    protected void assignParser(String title) {
+        numberOfActionsService = Parser.valueOf(title).getNumber();
+        PRINT2LN.info(String.format("RUNNING USING '%s' SERVICE", Parser.valueOf(title).getDescription()));
     }
 
     public IParserActions getParserActions() {
-        if (numberOfActionService == 0) {
+        if (numberOfActionsService == 1) {
             return new StaxXmlParserActions();
         }
-        if (numberOfActionService == 1) {
+        if (numberOfActionsService == 2) {
             return new JaxbXmlParserActions();
         }
-        if (numberOfActionService == 2) {
+        if (numberOfActionsService == 3) {
             return new JacksonJsonParserActions();
         }
         return null;

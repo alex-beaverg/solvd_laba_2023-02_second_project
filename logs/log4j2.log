@@ -1,4 +1,1 @@
-2024-01-10 13:22:47,351 ERROR c.s.d.u.c.ConsoleMenu [main] [Warning]: Password is incorrect!
-2024-01-10 15:01:43,504 ERROR c.s.d.d.a.Actions [main] [JsonValidateException]: JSON file 'new_customer.json' is not valid!
-2024-01-10 15:02:43,255 ERROR c.s.d.d.a.Actions [main] [JsonValidateException]: JSON file 'new_customer.json' is not valid!
-2024-01-10 15:03:31,855 ERROR c.s.d.d.a.Actions [main] [XsdValidateException]: JSON file 'new_customer1.json' is not exist!
+2024-01-12 13:31:10,948 ERROR c.s.d.d.a.Actions [main] [XsdValidateException]: JSON file 'new_employee1.json' was not found!
