@@ -1,6 +1,5 @@
 package com.solvd.delivery_service.domain.actions;
 
-import com.solvd.delivery_service.domain.accounting.Accounting;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
@@ -30,7 +29,7 @@ public class UserActions extends Actions {
         Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
         Package pack = registerPackage(customer, employee);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
-        PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+        PRINTLN.info("PACKAGE COST: " + accounting.calculatePackageCost(pack) + " BYN");
     }
 
     public static void createPackageWithExistingCustomer() {
@@ -39,7 +38,7 @@ public class UserActions extends Actions {
         Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
         Package pack = registerPackage(customer, employee);
         PRINT2LN.info("PACKAGE N" + pack.getNumber() + " WAS CREATED");
-        PRINTLN.info("PACKAGE COST: " + Accounting.calculatePackageCost(pack) + " BYN");
+        PRINTLN.info("PACKAGE COST: " + accounting.calculatePackageCost(pack) + " BYN");
     }
 
     public static void showCustomerPackages() {
@@ -48,7 +47,7 @@ public class UserActions extends Actions {
         PRINT2LN.info("CUSTOMER " + customer.getPersonInfo().getFirstName() + " " + customer.getPersonInfo().getLastName() + " PACKAGES:");
         PackageService packageService = new PackageServiceImpl();
         for (Package pack : packageService.retrieveCustomerPackages(customer)) {
-            PRINTLN.info("\t- " + pack + ", Cost:[" + Accounting.calculatePackageCost(pack) + " BYN]");
+            PRINTLN.info("\t- " + pack + ", Cost:[" + accounting.calculatePackageCost(pack) + " BYN]");
         }
     }
 
@@ -59,7 +58,7 @@ public class UserActions extends Actions {
         PackageType pType = getPackageTypeDependingOnWeight();
         DeliveryType delivery = (DeliveryType) getEnumValueFromConsole(DeliveryType.values(), "delivery type");
         Address addressTo = getAddressFromConsole();
-        int zones = Accounting.calculateZones(customer.getPersonInfo().getAddress(), addressTo);
+        int zones = accounting.calculateZones(customer.getPersonInfo().getAddress(), addressTo);
         int daysDuration = zones * delivery.getDaysCountPerZone();
         Status status = getRandomStatus(delivery, daysDuration);
         Condition condition = getRandomCondition(status, delivery, daysDuration);

@@ -1,6 +1,5 @@
 package com.solvd.delivery_service.domain.actions;
 
-import com.solvd.delivery_service.domain.accounting.Accounting;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.pack.Package;
@@ -32,7 +31,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
-            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(pack)));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(pack)));
             PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCustomer.getName()));
         } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
@@ -61,7 +60,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                 packToCreate = packageService.createWithExistingCustomerAndEmployee(pack);
             }
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", packToCreate.getNumber()));
-            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(packToCreate)));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(packToCreate)));
             PRINTLN.info(String.format("PACKAGE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithPackage.getName()));
         } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
@@ -82,7 +81,7 @@ public class JacksonJsonParserActions extends UserActions implements IParserActi
                 String firstName = employee.getPersonInfo().getFirstName();
                 String lastName = employee.getPersonInfo().getLastName();
                 PRINT2LN.info(String.format("EMPLOYEE %s %s WAS REGISTERED", firstName, lastName));
-                PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", Accounting.calculateEmployeeSalary(employee)));
+                PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", accounting.calculateEmployeeSalary(employee)));
                 PRINTLN.info(String.format("EMPLOYEE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithEmployee.getName()));
             }
         } catch (JsonValidateException e) {

@@ -1,5 +1,8 @@
 package com.solvd.delivery_service.domain.actions;
 
+import com.solvd.delivery_service.domain.accounting.BlackAccounting;
+import com.solvd.delivery_service.domain.accounting.IAccounting;
+import com.solvd.delivery_service.domain.accounting.Accounting;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
@@ -21,6 +24,7 @@ import static com.solvd.delivery_service.util.Printers.*;
 public class Actions {
     protected static final Logger LOGGER = LogManager.getLogger(Actions.class);
     protected static final IPrintAsMenu<Integer, String> printAsMenu = (index, line) -> PRINTLN.info("[" + index + "]: " + line);
+    protected static IAccounting accounting = new BlackAccounting(new Accounting());
 
     protected static Passport getPassportFromConsole() {
         return new Passport(RequestMethods.getStringValueFromConsole("passport number"));
@@ -54,7 +58,7 @@ public class Actions {
         return personInfo;
     }
 
-    public static int getAgeFromConsole() throws AgeException {
+    protected static int getAgeFromConsole() throws AgeException {
         do {
             try {
                 int age = RequestMethods.requestingInfoInt("Enter age: ");

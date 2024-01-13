@@ -1,6 +1,5 @@
 package com.solvd.delivery_service.domain.actions;
 
-import com.solvd.delivery_service.domain.accounting.Accounting;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
@@ -47,7 +46,7 @@ public class AdminActions extends Actions {
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
             PRINTLN.info("DEPARTMENT: " + department + "\n\tEMPLOYEES:");
             department.getEmployees().forEach(employee -> PRINTLN.info("\t- " + employee + ", Salary:[" +
-                    Accounting.calculateEmployeeSalary(employee) + " BYN]"));
+                    accounting.calculateEmployeeSalary(employee) + " BYN]"));
         }
     }
 
@@ -63,16 +62,16 @@ public class AdminActions extends Actions {
         PRINT2LN.info("ALL EMPLOYEES:");
         for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
             PRINTLN.info("EMPLOYEE: " + employee + ", Salary:[" +
-                    Accounting.calculateEmployeeSalary(employee) + " BYN]\n\tPACKAGES:");
+                    accounting.calculateEmployeeSalary(employee) + " BYN]\n\tPACKAGES:");
             employee.getPackages().forEach(pack -> PRINTLN.info("\t- " + pack + ", Cost:[" +
-                    Accounting.calculatePackageCost(pack) + " BYN]"));
+                    accounting.calculatePackageCost(pack) + " BYN]"));
         }
     }
 
     public static void showPackages() {
         PRINT2LN.info("ALL PACKAGES:");
         for (Package pack : new PackageServiceImpl().retrieveAll()) {
-            PRINTLN.info(pack + ", Cost:[" + Accounting.calculatePackageCost(pack) + " BYN]");
+            PRINTLN.info(pack + ", Cost:[" + accounting.calculatePackageCost(pack) + " BYN]");
         }
     }
 
@@ -81,7 +80,7 @@ public class AdminActions extends Actions {
         for (Customer customer : new CustomerServiceImpl().retrieveAll()) {
             PRINTLN.info("CUSTOMER: " + customer + "\n\tPACKAGES:");
             customer.getPackages().forEach(pack -> PRINTLN.info("\t- " + pack + ", Cost:[" +
-                    Accounting.calculatePackageCost(pack) + " BYN]"));
+                    accounting.calculatePackageCost(pack) + " BYN]"));
         }
     }
 
@@ -97,7 +96,7 @@ public class AdminActions extends Actions {
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.create(employee, employeeDepartment.getId());
         PRINT2LN.info("EMPLOYEE " + employeePersonInfo.getFirstName() + " " + employeePersonInfo.getLastName() + " WAS REGISTERED");
-        PRINTLN.info("EMPLOYEE SALARY: " + Accounting.calculateEmployeeSalary(employee) + " BYN");
+        PRINTLN.info("EMPLOYEE SALARY: " + accounting.calculateEmployeeSalary(employee) + " BYN");
     }
 
     public static void registerDepartment() {

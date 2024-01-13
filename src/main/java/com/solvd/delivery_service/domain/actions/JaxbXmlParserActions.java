@@ -1,6 +1,5 @@
 package com.solvd.delivery_service.domain.actions;
 
-import com.solvd.delivery_service.domain.accounting.Accounting;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.pack.Package;
@@ -39,7 +38,7 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
-            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(pack)));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(pack)));
             PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM XML FILE: '%s'", xmlFileWithCustomer.getName()));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
@@ -74,7 +73,7 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                 packToCreate = packageService.createWithExistingCustomerAndEmployee(pack);
             }
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", packToCreate.getNumber()));
-            PRINTLN.info(String.format("PACKAGE COST: %s BYN", Accounting.calculatePackageCost(packToCreate)));
+            PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(packToCreate)));
             PRINTLN.info(String.format("PACKAGE WAS TAKEN FROM XML FILE: '%s'", xmlFileWithPackage.getName()));
         } catch (JAXBException e) {
             throw new RuntimeException(e);
@@ -101,7 +100,7 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                 String firstName = employee.getPersonInfo().getFirstName();
                 String lastName = employee.getPersonInfo().getLastName();
                 PRINT2LN.info(String.format("EMPLOYEE %s %s WAS REGISTERED", firstName, lastName));
-                PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", Accounting.calculateEmployeeSalary(employee)));
+                PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", accounting.calculateEmployeeSalary(employee)));
                 PRINTLN.info(String.format("EMPLOYEE WAS TAKEN FROM XML FILE: '%s'", xmlFileWithEmployee.getName()));
             }
         } catch (JAXBException e) {
