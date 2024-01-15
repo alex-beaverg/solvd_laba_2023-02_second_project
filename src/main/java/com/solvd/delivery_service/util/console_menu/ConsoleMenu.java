@@ -17,6 +17,7 @@ public class ConsoleMenu {
     protected static final Logger LOGGER = LogManager.getLogger(ConsoleMenu.class);
     protected static DaoService DAO_SERVICE = DaoService.getInstance();
     protected static ParserActionsService PARSER_ACTIONS_SERVICE = ParserActionsService.getInstance();
+    protected static EntityActionsService ENTITY_ACTIONS_SERVICE = EntityActionsService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());

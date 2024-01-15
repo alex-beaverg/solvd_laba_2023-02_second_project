@@ -1,5 +1,6 @@
-package com.solvd.delivery_service.domain.actions;
+package com.solvd.delivery_service.domain.actions.parser;
 
+import com.solvd.delivery_service.domain.actions.Actions;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.pack.Package;
@@ -13,36 +14,27 @@ import com.solvd.delivery_service.service.impl.CompanyServiceImpl;
 import com.solvd.delivery_service.service.impl.DepartmentServiceImpl;
 import com.solvd.delivery_service.service.impl.EmployeeServiceImpl;
 import com.solvd.delivery_service.service.impl.PackageServiceImpl;
-import com.solvd.delivery_service.util.XmlDateAdapter;
-import com.solvd.delivery_service.util.XmlSchemaValidator;
-import com.solvd.delivery_service.util.custom_exceptions.XsdValidateException;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
+import com.solvd.delivery_service.util.JsonDateAdapter;
+import com.solvd.delivery_service.util.JsonReader;
+import com.solvd.delivery_service.util.custom_exceptions.JsonValidateException;
 
 import java.io.File;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
-public class JaxbXmlParserActions extends UserActions implements IParserActions {
+public class JacksonJsonParserActions extends Actions implements IParserActions {
     @Override
     public void createPackageWithRegistrationNewCustomerFromFile() {
-        File xmlFileWithCustomer = new File("src/main/resources/xml_data/new_customer.xml");
-        File xsdFileWithCustomer = new File("src/main/resources/xml_data/new_customer.xsd");
+        File jsonFileWithCustomer = new File("src/main/resources/json_data/new_customer.json");
         try {
-            XmlSchemaValidator.validate(xmlFileWithCustomer, xsdFileWithCustomer);
-            JAXBContext context = JAXBContext.newInstance(Customer.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            Customer customer = (Customer) unmarshaller.unmarshal(xmlFileWithCustomer);
+            Customer customer = JsonReader.validateAndReadValue(jsonFileWithCustomer, Customer.class);
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
             Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
             Package pack = registerPackage(customer, employee);
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
             PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(pack)));
-            PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM XML FILE: '%s'", xmlFileWithCustomer.getName()));
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (XsdValidateException e) {
+            PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCustomer.getName()));
+        } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
@@ -51,13 +43,9 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
     @Override
     public void createPackageFromFile() {
         PackageService packageService = new PackageServiceImpl();
-        File xmlFileWithPackage = new File("src/main/resources/xml_data/new_package.xml");
-        File xsdFileWithPackage = new File("src/main/resources/xml_data/new_package.xsd");
+        File jsonFileWithPackage = new File("src/main/resources/json_data/new_package.json");
         try {
-            XmlSchemaValidator.validate(xmlFileWithPackage, xsdFileWithPackage);
-            JAXBContext context = JAXBContext.newInstance(Package.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            Package pack = (Package) unmarshaller.unmarshal(xmlFileWithPackage);
+            Package pack = JsonReader.validateAndReadValue(jsonFileWithPackage, Package.class);
             pack.setId(null);
             pack.setNumber(getPackageNumberByPackage(pack));
             pack.getCustomer().setId(getCustomerIdByPassport(pack.getCustomer().getPersonInfo().getPassport()));
@@ -74,10 +62,8 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
             }
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", packToCreate.getNumber()));
             PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(packToCreate)));
-            PRINTLN.info(String.format("PACKAGE WAS TAKEN FROM XML FILE: '%s'", xmlFileWithPackage.getName()));
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (XsdValidateException e) {
+            PRINTLN.info(String.format("PACKAGE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithPackage.getName()));
+        } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("PACKAGE WAS NOT CREATED");
         }
@@ -86,13 +72,9 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
     @Override
     public void registerEmployeeFromFile() {
         EmployeeService employeeService = new EmployeeServiceImpl();
-        File xmlFileWithEmployee = new File("src/main/resources/xml_data/new_employee.xml");
-        File xsdFileWithEmployee = new File("src/main/resources/xml_data/new_employee.xsd");
+        File jsonFileWithEmployee = new File("src/main/resources/json_data/new_employee.json");
         try {
-            XmlSchemaValidator.validate(xmlFileWithEmployee, xsdFileWithEmployee);
-            JAXBContext context = JAXBContext.newInstance(Employee.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            Employee employee = (Employee) unmarshaller.unmarshal(xmlFileWithEmployee);
+            Employee employee = JsonReader.validateAndReadValue(jsonFileWithEmployee, Employee.class);
             if (getEmployeeIdByPassport(employee.getPersonInfo().getPassport()) != null) {
                 PRINT2LN.info("EXISTING EMPLOYEE WAS NOT RE-REGISTERED");
             } else {
@@ -101,11 +83,9 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                 String lastName = employee.getPersonInfo().getLastName();
                 PRINT2LN.info(String.format("EMPLOYEE %s %s WAS REGISTERED", firstName, lastName));
                 PRINTLN.info(String.format("EMPLOYEE SALARY: %s BYN", accounting.calculateEmployeeSalary(employee)));
-                PRINTLN.info(String.format("EMPLOYEE WAS TAKEN FROM XML FILE: '%s'", xmlFileWithEmployee.getName()));
+                PRINTLN.info(String.format("EMPLOYEE WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithEmployee.getName()));
             }
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (XsdValidateException e) {
+        } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
             PRINT2LN.info("EMPLOYEE WAS NOT REGISTERED");
         }
@@ -116,13 +96,9 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
         CompanyService companyService = new CompanyServiceImpl();
         DepartmentService departmentService = new DepartmentServiceImpl();
         EmployeeService employeeService = new EmployeeServiceImpl();
-        File xmlFileWithCompany = new File("src/main/resources/xml_data/new_company.xml");
-        File xsdFileWithCompany = new File("src/main/resources/xml_data/new_company.xsd");
+        File jsonFileWithCompany = new File("src/main/resources/json_data/new_company.json");
         try {
-            XmlSchemaValidator.validate(xmlFileWithCompany, xsdFileWithCompany);
-            JAXBContext context = JAXBContext.newInstance(Company.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            Company company = (Company) unmarshaller.unmarshal(xmlFileWithCompany);
+            Company company = JsonReader.validateAndReadValue(jsonFileWithCompany, Company.class);
             if (!isCompanyExist(company)) {
                 company = companyService.create(company);
                 for (int i = 0; i < company.getDepartments().size(); i++) {
@@ -134,16 +110,14 @@ public class JaxbXmlParserActions extends UserActions implements IParserActions 
                     }
                 }
                 PRINT2LN.info(String.format("COMPANY %s WAS REGISTERED", company.getName()));
-                PRINTLN.info(String.format("DATE FROM XML FILE: %s", new XmlDateAdapter().marshal(company.getDate())));
-                PRINTLN.info(String.format("COMPANY WAS TAKEN FROM XML FILE: '%s'", xmlFileWithCompany.getName()));
+                PRINTLN.info(String.format("DATE FROM JSON FILE: %s", new JsonDateAdapter().serialize(company.getDate())));
+                PRINTLN.info(String.format("COMPANY WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCompany.getName()));
             } else {
                 PRINT2LN.info("EXISTING COMPANY WAS NOT RE-REGISTERED");
             }
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (XsdValidateException e) {
+        } catch (JsonValidateException e) {
             LOGGER.error(e.getMessage());
-            PRINTLN.info("COMPANY WAS NOT REGISTERED");
+            PRINT2LN.info("COMPANY WAS NOT REGISTERED");
         }
     }
 }

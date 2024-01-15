@@ -1,5 +1,6 @@
-package com.solvd.delivery_service.domain.actions;
+package com.solvd.delivery_service.domain.actions.parser;
 
+import com.solvd.delivery_service.domain.actions.Actions;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
@@ -30,7 +31,7 @@ import java.io.IOException;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
-public class StaxXmlParserActions extends UserActions implements IParserActions {
+public class StaxXmlParserActions extends Actions implements IParserActions {
     @Override
     public void createPackageWithRegistrationNewCustomerFromFile() {
         File xmlFileWithCustomer = new File("src/main/resources/xml_data/new_customer.xml");

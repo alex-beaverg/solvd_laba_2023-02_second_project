@@ -1,12 +1,12 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.*;
+import com.solvd.delivery_service.domain.actions.parser.*;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ParserActionsService {
     private static ParserActionsService instance;
-    private int numberOfActionsService;
+    private int numberOfParserActionsService;
 
     private ParserActionsService() {}
 
@@ -18,20 +18,17 @@ public class ParserActionsService {
     }
 
     protected void assignParser(String title) {
-        numberOfActionsService = Parser.valueOf(title).getNumber();
+        numberOfParserActionsService = Parser.valueOf(title).getNumber();
         PRINT2LN.info(String.format("RUNNING USING '%s' SERVICE", Parser.valueOf(title).getDescription()));
     }
 
     public IParserActions getParserActions() {
-        if (numberOfActionsService == 1) {
-            return new StaxXmlParserActions();
+        IParserActions parserActions = null;
+        switch (numberOfParserActionsService) {
+            case (1) -> parserActions = new StaxXmlParserActions();
+            case (2) -> parserActions = new JaxbXmlParserActions();
+            case (3) -> parserActions = new JacksonJsonParserActions();
         }
-        if (numberOfActionsService == 2) {
-            return new JaxbXmlParserActions();
-        }
-        if (numberOfActionsService == 3) {
-            return new JacksonJsonParserActions();
-        }
-        return null;
+        return parserActions;
     }
 }

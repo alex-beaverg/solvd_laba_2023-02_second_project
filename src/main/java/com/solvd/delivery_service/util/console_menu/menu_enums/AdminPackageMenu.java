@@ -2,6 +2,7 @@ package com.solvd.delivery_service.util.console_menu.menu_enums;
 
 public enum AdminPackageMenu implements IMenu {
     SHOW_PACKAGES("Show all packages"),
+    REGISTER_PACKAGE("Register new package"),
     UPDATE_PACKAGE_FIELD("Update existing package field"),
     REMOVE_PACKAGE("Remove existing package"),
     ADMIN_MAIN_MENU("<-- ADMIN MAIN MENU"),

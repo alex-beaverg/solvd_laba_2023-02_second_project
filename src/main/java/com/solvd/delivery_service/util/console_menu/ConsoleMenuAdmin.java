@@ -1,6 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.AdminActions;
+import com.solvd.delivery_service.domain.actions.Actions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.*;
 
 public class ConsoleMenuAdmin extends ConsoleMenu {
@@ -9,7 +9,7 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN MAIN MENU:", AdminMainMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showNumberOfDatabaseEntries();
+                Actions.showNumberOfDatabaseEntries();
                 return runAdminMainMenu();
             }
             case (2) -> {
@@ -37,21 +37,26 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminPackageMenu() {
+        ENTITY_ACTIONS_SERVICE.assignEntry("PACKAGE");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN PACKAGE MENU", AdminPackageMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showPackages();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().showEntityEntries();
                 return runAdminPackageMenu();
             }
             case (2) -> {
-                AdminActions.updatePackageField();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
                 return runAdminPackageMenu();
             }
             case (3) -> {
-                AdminActions.removePackage();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().updateEntityEntryField();
                 return runAdminPackageMenu();
             }
             case (4) -> {
+                ENTITY_ACTIONS_SERVICE.getEntityActions().removeEntityEntry();
+                return runAdminPackageMenu();
+            }
+            case (5) -> {
                 return runAdminMainMenu();
             }
             default -> {
@@ -61,14 +66,15 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminEmployeeMenu() {
+        ENTITY_ACTIONS_SERVICE.assignEntry("EMPLOYEE");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN EMPLOYEE MENU", AdminEmployeeMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showEmployees();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().showEntityEntries();
                 return runAdminEmployeeMenu();
             }
             case (2) -> {
-                AdminActions.registerEmployee();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
                 return runAdminEmployeeMenu();
             }
             case (3) -> {
@@ -76,11 +82,11 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminEmployeeMenu();
             }
             case (4) -> {
-                AdminActions.updateEmployeeField();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().updateEntityEntryField();
                 return runAdminEmployeeMenu();
             }
             case (5) -> {
-                AdminActions.removeEmployee();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().removeEntityEntry();
                 return runAdminEmployeeMenu();
             }
             case (6) -> {
@@ -93,22 +99,23 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminDepartmentMenu() {
+        ENTITY_ACTIONS_SERVICE.assignEntry("DEPARTMENT");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN DEPARTMENT MENU", AdminDepartmentMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showDepartments();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().showEntityEntries();
                 return runAdminDepartmentMenu();
             }
             case (2) -> {
-                AdminActions.registerDepartment();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
                 return runAdminDepartmentMenu();
             }
             case (3) -> {
-                AdminActions.updateDepartmentField();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().updateEntityEntryField();
                 return runAdminDepartmentMenu();
             }
             case (4) -> {
-                AdminActions.removeDepartment();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().removeEntityEntry();
                 return runAdminDepartmentMenu();
             }
             case (5) -> {
@@ -121,14 +128,15 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminCompanyMenu() {
+        ENTITY_ACTIONS_SERVICE.assignEntry("COMPANY");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN COMPANY MENU", AdminCompanyMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showCompanies();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().showEntityEntries();
                 return runAdminCompanyMenu();
             }
             case (2) -> {
-                AdminActions.registerCompany();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
                 return runAdminCompanyMenu();
             }
             case (3) -> {
@@ -136,11 +144,11 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminCompanyMenu();
             }
             case (4) -> {
-                AdminActions.renameCompany();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().updateEntityEntryField();
                 return runAdminCompanyMenu();
             }
             case (5) -> {
-                AdminActions.removeCompany();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().removeEntityEntry();
                 return runAdminCompanyMenu();
             }
             case (6) -> {
@@ -153,21 +161,26 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminCustomerMenu() {
+        ENTITY_ACTIONS_SERVICE.assignEntry("CUSTOMER");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN CUSTOMER MENU", AdminCustomerMenu.values());
         switch (answer) {
             case (1) -> {
-                AdminActions.showCustomers();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().showEntityEntries();
                 return runAdminCustomerMenu();
             }
             case (2) -> {
-                AdminActions.updateCustomerField();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
                 return runAdminCustomerMenu();
             }
             case (3) -> {
-                AdminActions.removeCustomer();
+                ENTITY_ACTIONS_SERVICE.getEntityActions().updateEntityEntryField();
                 return runAdminCustomerMenu();
             }
             case (4) -> {
+                ENTITY_ACTIONS_SERVICE.getEntityActions().removeEntityEntry();
+                return runAdminCustomerMenu();
+            }
+            case (5) -> {
                 return runAdminMainMenu();
             }
             default -> {
