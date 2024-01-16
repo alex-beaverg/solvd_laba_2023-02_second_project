@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.domain.actions.parser;
+package com.solvd.delivery_service.domain.actions.parser_actions;
 
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.customer.Customer;

@@ -1,6 +1,8 @@
-package com.solvd.delivery_service.domain.actions.entity;
+package com.solvd.delivery_service.domain.actions.entity_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.console_actions.ClassInfoActions;
+import com.solvd.delivery_service.domain.actions.console_actions.DataInfoActions;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
@@ -18,6 +20,7 @@ import com.solvd.delivery_service.util.custom_exceptions.YearsOfExperienceExcept
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
@@ -39,11 +42,11 @@ public class EmployeeActions extends Actions implements IEntityActions {
     public void registerEntityEntry() {
         PRINT2LN.info("REGISTERING EMPLOYEE");
         Passport employeePassport = new Passport(RequestMethods.getStringValueFromConsole("passport number"));
-        Address employeeAddress = getAddressFromConsole();
-        PersonInfo employeePersonInfo = getPersonInfoFromConsole(employeePassport, employeeAddress);
-        Position employeePosition = (Position) getEnumValueFromConsole(Position.values(), "position");
+        Address employeeAddress = DataInfoActions.getAddressFromConsole();
+        PersonInfo employeePersonInfo = DataInfoActions.getPersonInfoFromConsole(employeePassport, employeeAddress);
+        Position employeePosition = (Position) DataInfoActions.chooseEnumValueFromConsole(Position.values(), "position");
         Experience employeeExperience = getExperienceDependingOnYears();
-        Department employeeDepartment = getExistingDepartment();
+        Department employeeDepartment = DepartmentActions.getExistingDepartment();
         Employee employee = new Employee(employeePosition, employeeExperience, employeeDepartment, employeePersonInfo);
         EmployeeService employeeService = new EmployeeServiceImpl();
         employeeService.create(employee, employeeDepartment.getId());
@@ -70,9 +73,9 @@ public class EmployeeActions extends Actions implements IEntityActions {
         PRINT2LN.info("UPDATING EMPLOYEE");
         EmployeeService employeeService = new EmployeeServiceImpl();
         Employee employee = getExistingEmployee();
-        Field employeeField = getEmployeeClassFieldFromConsole();
+        Field employeeField = ClassInfoActions.getEmployeeClassFieldFromConsole();
         String oldValue = "", newValue = "";
-        Map<String, String> values = switchEmployeeField(employeeField, employee);
+        Map<String, String> values = PackageActions.switchEmployeeField(employeeField, employee);
         oldValue = values.get("old");
         newValue = values.get("new");
         if (employeeField.getName().equals("position") || employeeField.getName().equals("experience")) {
@@ -82,6 +85,13 @@ public class EmployeeActions extends Actions implements IEntityActions {
         String lastName = employee.getPersonInfo().getLastName();
         PRINT2LN.info(String.format("EMPLOYEE %s %s FIELD %s WAS UPDATED FROM %s TO %s",
                 firstName, lastName, employeeField.getName(), oldValue, newValue));
+    }
+
+    public static Employee getRandomEmployeeFromDataBase(Department department) {
+        EmployeeService employeeService = new EmployeeServiceImpl();
+        Random random = new Random();
+        int index = random.nextInt(employeeService.retrieveDepartmentEmployees(department).size());
+        return employeeService.retrieveDepartmentEmployees(department).get(index);
     }
 
     private static Experience getExperienceDependingOnYears() {

@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.domain.actions.entity;
+package com.solvd.delivery_service.domain.actions.entity_actions;
 
 public enum Entity {
     COMPANY("COMPANY", 1),

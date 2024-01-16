@@ -1,6 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.parser.*;
+import com.solvd.delivery_service.domain.actions.parser_actions.*;
 
 import static com.solvd.delivery_service.util.Printers.*;
 

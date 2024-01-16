@@ -1,6 +1,8 @@
-package com.solvd.delivery_service.domain.actions.parser;
+package com.solvd.delivery_service.domain.actions.parser_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.entity_actions.EmployeeActions;
+import com.solvd.delivery_service.domain.actions.entity_actions.PackageActions;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
@@ -40,8 +42,8 @@ public class StaxXmlParserActions extends Actions implements IParserActions {
             XmlSchemaValidator.validate(xmlFileWithCustomer, xsdFileWithCustomer);
             Customer customer = parseCustomerFromXmlUsingStax(xmlFileWithCustomer);
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
-            Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
-            Package pack = registerPackage(customer, employee);
+            Employee employee = EmployeeActions.getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
+            Package pack = PackageActions.registerPackage(customer, employee);
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
             PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(pack)));
             PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM XML FILE: '%s'", xmlFileWithCustomer.getName()));

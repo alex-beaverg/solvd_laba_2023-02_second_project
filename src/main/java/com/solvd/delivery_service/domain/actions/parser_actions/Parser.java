@@ -1,4 +1,4 @@
-package com.solvd.delivery_service.domain.actions.parser;
+package com.solvd.delivery_service.domain.actions.parser_actions;
 
 public enum Parser {
     STAX("STAX", 1, "STAX (XML) PARSER"),

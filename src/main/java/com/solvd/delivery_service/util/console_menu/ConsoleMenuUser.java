@@ -1,6 +1,7 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.entity_actions.CustomerActions;
+import com.solvd.delivery_service.domain.actions.entity_actions.PackageActions;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserGetCustomerMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.UserMainMenu;
 
@@ -17,7 +18,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
                 return runUserMainMenu();
             }
             case (3) -> {
-                Actions.showCustomerPackages();
+                CustomerActions.showCustomerPackages();
                 return runUserMainMenu();
             }
             case (4) -> {
@@ -34,7 +35,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("USER PACKAGE (GET CUSTOMER) SUB-MENU:", UserGetCustomerMenu.values());
         switch (answer) {
             case (1) -> {
-                Actions.createPackageWithExistingCustomer();
+                PackageActions.createPackageWithExistingCustomer();
                 return runUserMainMenu();
             }
             case (2) -> {

@@ -1,6 +1,6 @@
 package com.solvd.delivery_service.util.console_menu;
 
-import com.solvd.delivery_service.domain.actions.entity.*;
+import com.solvd.delivery_service.domain.actions.entity_actions.*;
 
 public class EntityActionsService {
     private static EntityActionsService instance;

@@ -1,6 +1,8 @@
-package com.solvd.delivery_service.domain.actions.parser;
+package com.solvd.delivery_service.domain.actions.parser_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.entity_actions.EmployeeActions;
+import com.solvd.delivery_service.domain.actions.entity_actions.PackageActions;
 import com.solvd.delivery_service.domain.human.customer.Customer;
 import com.solvd.delivery_service.domain.human.employee.Employee;
 import com.solvd.delivery_service.domain.pack.Package;
@@ -29,8 +31,8 @@ public class JacksonJsonParserActions extends Actions implements IParserActions 
         try {
             Customer customer = JsonReader.validateAndReadValue(jsonFileWithCustomer, Customer.class);
             customer.setId(getCustomerIdByPassport(customer.getPersonInfo().getPassport()));
-            Employee employee = getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
-            Package pack = registerPackage(customer, employee);
+            Employee employee = EmployeeActions.getRandomEmployeeFromDataBase(new DepartmentServiceImpl().retrieveById(1L));
+            Package pack = PackageActions.registerPackage(customer, employee);
             PRINT2LN.info(String.format("PACKAGE N%d WAS CREATED", pack.getNumber()));
             PRINTLN.info(String.format("PACKAGE COST: %s BYN", accounting.calculatePackageCost(pack)));
             PRINTLN.info(String.format("CUSTOMER WAS TAKEN FROM JSON FILE: '%s'", jsonFileWithCustomer.getName()));

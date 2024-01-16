@@ -1,10 +1,12 @@
-package com.solvd.delivery_service.domain.actions.entity;
+package com.solvd.delivery_service.domain.actions.entity_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
 import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.service.CompanyService;
 import com.solvd.delivery_service.service.impl.CompanyServiceImpl;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
+
+import java.util.List;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
@@ -48,5 +50,17 @@ public class CompanyActions extends Actions implements IEntityActions {
         company.setName(newCompanyName);
         companyService.updateField(company);
         PRINT2LN.info(String.format("COMPANY %s WAS RENAMED TO %s", oldCompanyName, newCompanyName));
+    }
+
+    protected static Company getExistingCompany() {
+        CompanyService companyService = new CompanyServiceImpl();
+        List<Company> companies = companyService.retrieveAll();
+        int index = 1;
+        PRINTLN.info("Choose the company:");
+        for (Company item : companies) {
+            printAsMenu.print(index, item.getName());
+            index++;
+        }
+        return companies.get(RequestMethods.getNumberFromChoice("company number", index - 1) - 1);
     }
 }

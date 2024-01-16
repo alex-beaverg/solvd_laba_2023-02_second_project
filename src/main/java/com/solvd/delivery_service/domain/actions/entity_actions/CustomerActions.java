@@ -1,13 +1,18 @@
-package com.solvd.delivery_service.domain.actions.entity;
+package com.solvd.delivery_service.domain.actions.entity_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.console_actions.ClassInfoActions;
+import com.solvd.delivery_service.domain.actions.console_actions.DataInfoActions;
 import com.solvd.delivery_service.domain.area.Address;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.human.customer.Customer;
+import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.service.CustomerService;
+import com.solvd.delivery_service.service.PackageService;
 import com.solvd.delivery_service.service.PersonInfoService;
 import com.solvd.delivery_service.service.impl.CustomerServiceImpl;
+import com.solvd.delivery_service.service.impl.PackageServiceImpl;
 import com.solvd.delivery_service.service.impl.PersonInfoServiceImpl;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 
@@ -34,8 +39,8 @@ public class CustomerActions extends Actions implements IEntityActions {
     public void registerEntityEntry() {
         PRINT2LN.info("REGISTERING CUSTOMER");
         Passport customerPassport = new Passport(RequestMethods.getStringValueFromConsole("passport number"));
-        Address customerAddress = getAddressFromConsole();
-        PersonInfo customerPersonInfo = getPersonInfoFromConsole(customerPassport, customerAddress);
+        Address customerAddress = DataInfoActions.getAddressFromConsole();
+        PersonInfo customerPersonInfo = DataInfoActions.getPersonInfoFromConsole(customerPassport, customerAddress);
         Customer customer = new Customer(customerPersonInfo);
         CustomerService customerService = new CustomerServiceImpl();
         customerService.create(customer);
@@ -63,8 +68,8 @@ public class CustomerActions extends Actions implements IEntityActions {
         Customer customer = getExistingCustomer();
         String oldValue = "", newValue = "";
         PersonInfo personInfo = customer.getPersonInfo();
-        Field personInfoField = getAnyClassFieldFromConsole(PersonInfo.class);
-        Map<String, String> values = switchPersonInfoField(personInfoField, personInfo);
+        Field personInfoField = ClassInfoActions.getAnyClassFieldFromConsole(PersonInfo.class);
+        Map<String, String> values = PackageActions.switchPersonInfoField(personInfoField, personInfo);
         oldValue = values.get("old");
         newValue = values.get("new");
         if (!personInfoField.getName().equals("passport") && !personInfoField.getName().equals("address")) {
@@ -74,6 +79,37 @@ public class CustomerActions extends Actions implements IEntityActions {
         String lastName = customer.getPersonInfo().getLastName();
         PRINT2LN.info(String.format("CUSTOMER %s %s FIELD %s WAS UPDATED FROM %s TO %s",
                 firstName, lastName, personInfoField.getName(), oldValue, newValue));
+    }
+
+    public static void showCustomerPackages() {
+        PRINT2LN.info("CUSTOMER SEARCH");
+        Customer customer = getCustomerByLastName();
+        String firstName = customer.getPersonInfo().getFirstName();
+        String lastName = customer.getPersonInfo().getLastName();
+        PRINT2LN.info(String.format("CUSTOMER %s %s PACKAGES:", firstName, lastName));
+        PackageService packageService = new PackageServiceImpl();
+        for (Package pack : packageService.retrieveCustomerPackages(customer)) {
+            PRINTLN.info(String.format("\t- %s, Cost:[%s BYN]", pack, accounting.calculatePackageCost(pack)));
+        }
+    }
+
+    protected static Customer getCustomerByLastName() {
+        List<Customer> customers;
+        String customerLastName;
+        do {
+            customerLastName = RequestMethods.getStringValueFromConsole("customer last name");
+            customers = new CustomerServiceImpl().retrieveEntriesByLastName(customerLastName);
+            if (customers.size() == 0) {
+                PRINTLN.info(String.format("[Info]: Customer with last name %s doesn't exist!", customerLastName));
+            }
+        } while (customers.size() == 0);
+        int index = 1;
+        PRINTLN.info("Choose the customer:");
+        for (Customer item : customers) {
+            printAsMenu.print(index, item.getPersonInfo().getFirstName() + " " + item.getPersonInfo().getLastName());
+            index++;
+        }
+        return customers.get(RequestMethods.getNumberFromChoice("customer number", index - 1) - 1);
     }
 
     private static Customer getExistingCustomer() {

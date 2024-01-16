@@ -1,6 +1,7 @@
-package com.solvd.delivery_service.domain.actions.entity;
+package com.solvd.delivery_service.domain.actions.entity_actions;
 
 import com.solvd.delivery_service.domain.actions.Actions;
+import com.solvd.delivery_service.domain.actions.console_actions.ClassInfoActions;
 import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.service.CompanyService;
@@ -10,6 +11,7 @@ import com.solvd.delivery_service.service.impl.DepartmentServiceImpl;
 import com.solvd.delivery_service.util.console_menu.RequestMethods;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static com.solvd.delivery_service.util.Printers.*;
 
@@ -29,7 +31,7 @@ public class DepartmentActions extends Actions implements IEntityActions {
     @Override
     public void registerEntityEntry() {
         PRINT2LN.info("REGISTERING DEPARTMENT");
-        Company company = getExistingCompany();
+        Company company = CompanyActions.getExistingCompany();
         Department department = new Department(RequestMethods.getStringValueFromConsole("department title"), company);
         DepartmentService departmentService = new DepartmentServiceImpl();
         departmentService.create(department);
@@ -52,7 +54,7 @@ public class DepartmentActions extends Actions implements IEntityActions {
         DepartmentService departmentService = new DepartmentServiceImpl();
         CompanyService companyService = new CompanyServiceImpl();
         Department department = getExistingDepartment();
-        Field departmentField = getDepartmentClassFieldFromConsole();
+        Field departmentField = ClassInfoActions.getDepartmentClassFieldFromConsole();
         String oldValue = "", newValue = "";
         switch (departmentField.getName()) {
             case ("title") -> {
@@ -73,5 +75,17 @@ public class DepartmentActions extends Actions implements IEntityActions {
         }
         PRINT2LN.info(String.format("DEPARTMENT %s FIELD %s WAS UPDATED FROM %s TO %s",
                 department.getTitle(), departmentField.getName(), oldValue, newValue));
+    }
+
+    protected static Department getExistingDepartment() {
+        DepartmentService departmentService = new DepartmentServiceImpl();
+        List<Department> departments = departmentService.retrieveAll();
+        int index = 1;
+        PRINTLN.info("Choose the department:");
+        for (Department item : departments) {
+            printAsMenu.print(index, item.getTitle());
+            index++;
+        }
+        return departments.get(RequestMethods.getNumberFromChoice("department number", index - 1) - 1);
     }
 }
