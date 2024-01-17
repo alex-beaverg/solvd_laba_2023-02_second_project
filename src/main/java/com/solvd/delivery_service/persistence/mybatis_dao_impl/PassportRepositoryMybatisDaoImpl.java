@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class PassportRepositoryMybatisImpl implements PassportRepository {
+public class PassportRepositoryMybatisDaoImpl implements PassportRepository {
     @Override
     public void create(Passport passport) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

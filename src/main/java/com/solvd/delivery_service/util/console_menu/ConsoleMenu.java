@@ -85,7 +85,7 @@ public class ConsoleMenu {
             PRINTLN.info(String.format("[%d]: %s", index, item.getTitle()));
             index++;
         }
-        return RequestMethods.getNumberFromChoice("the menu item number", index - 1);
+        return RequestMethods.getNumberFromChoice("menu item number", index - 1);
     }
 
     protected ConsoleMenu tearDown() {

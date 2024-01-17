@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerRepositoryMybatisImpl implements CustomerRepository {
+public class CustomerRepositoryMybatisDaoImpl implements CustomerRepository {
     @Override
     public void create(Customer customer) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

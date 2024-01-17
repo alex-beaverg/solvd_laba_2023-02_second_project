@@ -45,12 +45,12 @@ public class DataInfoActions extends Actions {
 
     public static IMenu chooseEnumValueFromConsole(IMenu[] enumArray, String name) {
         int index = 1;
-        PRINTLN.info("Choose the " + name + ":");
+        PRINTLN.info(String.format("Choose the %s:", name));
         for (IMenu item : enumArray) {
             printAsMenu.print(index, item.getTitle());
             index++;
         }
-        return enumArray[RequestMethods.getNumberFromChoice(name + " number", index - 1) - 1];
+        return enumArray[RequestMethods.getNumberFromChoice(String.format("%s number", name), index - 1) - 1];
     }
 
     private static int getAgeFromConsole() throws AgeException {

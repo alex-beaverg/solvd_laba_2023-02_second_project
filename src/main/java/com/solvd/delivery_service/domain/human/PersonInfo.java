@@ -116,6 +116,6 @@ public class PersonInfo {
 
     @Override
     public String toString() {
-        return "Name:[" + firstName + ", " + lastName + "], Age:[" + age + "], " + passport + ", " + address;
+        return String.format("Name:[%s %s], Age:[%d], %s, %s", firstName, lastName, age, passport, address);
     }
 }

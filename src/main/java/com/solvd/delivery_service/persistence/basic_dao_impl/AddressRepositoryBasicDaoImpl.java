@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AddressRepositoryDaoImpl implements AddressRepository {
+public class AddressRepositoryBasicDaoImpl implements AddressRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_ADDRESS_QUERY =
             "INSERT INTO addresses(city, street, house, flat, zip_code, country) values(?, ?, ?, ?, ?, ?);";

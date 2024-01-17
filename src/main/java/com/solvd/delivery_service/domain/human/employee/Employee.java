@@ -115,7 +115,6 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "id:[" + id + "], Pos:[" + position.getTitle() + "], Exp:[" + experience.getTitle() + "], " +
-                department + ", " + personInfo;
+        return String.format("%s, %s, Pos:[%s], Exp:[%s]", personInfo, department, position.getTitle(), experience.getTitle());
     }
 }

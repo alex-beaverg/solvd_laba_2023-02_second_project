@@ -17,7 +17,11 @@ public class CompanyActions extends Actions implements IEntityActions {
         PRINT2LN.info("ALL COMPANIES:");
         for (Company company : new CompanyServiceImpl().retrieveAll()) {
             PRINTLN.info(String.format("%s\n\tDEPARTMENTS:", company));
-            company.getDepartments().forEach(department -> PRINTLN.info(String.format("\t- %s", department)));
+            if (company.getDepartments().size() > 0) {
+                company.getDepartments().forEach(department -> PRINTLN.info(String.format("\t- %s", department)));
+            } else {
+                PRINTLN.info("\t(no departments)");
+            }
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ConnectionPool {
     private static volatile ConnectionPool instance;
     private final Queue<Connection> connections = new ConcurrentLinkedQueue<>();
-    private final int poolSize = 2;
+    private final int poolSize = 1;
 
     private ConnectionPool() {
         Properties property = new Properties();

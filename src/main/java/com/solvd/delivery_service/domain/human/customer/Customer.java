@@ -72,6 +72,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "id:[" + id + "], " + personInfo;
+        return personInfo.toString();
     }
 }

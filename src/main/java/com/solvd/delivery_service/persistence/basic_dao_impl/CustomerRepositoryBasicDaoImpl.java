@@ -13,30 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerRepositoryDaoImpl implements CustomerRepository {
+public class CustomerRepositoryBasicDaoImpl implements CustomerRepository {
     private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_CUSTOMER_QUERY = "INSERT INTO customers(person_id) values(?);";
-    private static final String FIND_CUSTOMER_QUERY = "SELECT * FROM customers WHERE id = ?;";
     private static final String DELETE_CUSTOMER_QUERY = "DELETE FROM customers WHERE id = ?;";
-    private static final String FIND_ALL_QUERY =
-            "SELECT cu.id AS customer_id, p.id AS person_id, p.first_name, p.last_name, p.age, " +
-                    "ps.id AS passport_id, a.id AS address_id, ps.number AS passport, a.city, a.street, a.house, " +
-                    "a.flat, a.zip_code, a.country " +
-            "FROM customers cu " +
-            "JOIN persons p ON cu.person_id = p.id " +
-            "JOIN passports ps ON p.passport_id = ps.id " +
-            "JOIN addresses a ON p.address_id = a.id " +
-            "ORDER BY cu.id;";
-    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS customers_count FROM customers;";
-    private static final String FIND_CUSTOMERS_BY_LAST_NAME_QUERY =
+    private static final String MAIN_QUERY =
             "SELECT c.id AS customer_id, p.id AS person_id, p.first_name, p.last_name, p.age, ps.id AS passport_id, " +
                     "a.id AS address_id, ps.number AS passport, a.city, a.street, a.house, a.flat, a.zip_code, a.country " +
             "FROM customers c " +
             "JOIN persons p ON c.person_id = p.id " +
-            "JOIN addresses a ON p.address_id = a.id " +
             "JOIN passports ps ON p.passport_id = ps.id " +
-            "WHERE p.last_name = ?;";
+            "JOIN addresses a ON p.address_id = a.id ";
+    private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY c.id;";
+    private static final String FIND_CUSTOMER_QUERY = MAIN_QUERY + "WHERE c.id = ?;";
+    private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS customers_count FROM customers;";
+    private static final String FIND_CUSTOMERS_BY_LAST_NAME_QUERY = MAIN_QUERY + "WHERE p.last_name = ?;";
 
     @Override
     public void create(Customer customer) {
@@ -66,7 +58,19 @@ public class CustomerRepositoryDaoImpl implements CustomerRepository {
             resultSet.next();
             customerOptional = Optional.of(
                     new Customer(resultSet.getLong(1),
-                            DAO_SERVICE.getRepository(PersonInfoRepository.class).findById(resultSet.getLong(2)).get()));
+                            new PersonInfo(resultSet.getLong(2),
+                                    resultSet.getString(3),
+                                    resultSet.getString(4),
+                                    resultSet.getInt(5),
+                                    new Passport(resultSet.getLong(6),
+                                            resultSet.getString(8)),
+                                    new Address(resultSet.getLong(7),
+                                            resultSet.getString(9),
+                                            resultSet.getString(10),
+                                            resultSet.getInt(11),
+                                            resultSet.getInt(12),
+                                            resultSet.getInt(13),
+                                            Country.valueOf(resultSet.getString(14))))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find customer by id!", e);
         } finally {

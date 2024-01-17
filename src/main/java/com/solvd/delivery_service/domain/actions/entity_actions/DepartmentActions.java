@@ -22,9 +22,13 @@ public class DepartmentActions extends Actions implements IEntityActions {
         PRINT2LN.info("ALL DEPARTMENTS:");
         for (Department department : new DepartmentServiceImpl().retrieveAll()) {
             PRINTLN.info(String.format("DEPARTMENT: %s\n\tEMPLOYEES:", department));
-            department.getEmployees()
-                    .forEach(employee -> PRINTLN.info(String.format("\t- %s, Salary:[%s BYN]",
-                            employee, accounting.calculateEmployeeSalary(employee))));
+            if (department.getEmployees().size() > 0) {
+                department.getEmployees()
+                        .forEach(employee -> PRINTLN.info(String.format("\t- %s, Salary:[%s BYN]",
+                                employee, accounting.calculateEmployeeSalary(employee))));
+            } else {
+                PRINTLN.info("\t(no employees)");
+            }
         }
     }
 

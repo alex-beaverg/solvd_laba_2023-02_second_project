@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class PackageRepositoryMybatisImpl implements PackageRepository {
+public class PackageRepositoryMybatisDaoImpl implements PackageRepository {
     @Override
     public void create(Package pack) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

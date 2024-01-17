@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
+public class EmployeeRepositoryBasicDaoImpl implements EmployeeRepository {
     private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_EMPLOYEE_QUERY =
             "INSERT INTO employees(position, experience, department_id, person_id) values(?, ?, ?, ?);";
-    private static final String FIND_EMPLOYEE_QUERY = "SELECT * FROM employees WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_POSITION_QUERY = "UPDATE employees SET position = ? WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE_EXPERIENCE_QUERY = "UPDATE employees SET experience = ? WHERE id = ?;";
     private static final String DELETE_EMPLOYEE_QUERY = "DELETE FROM employees WHERE id = ?;";
@@ -38,6 +37,7 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
             "JOIN passports ps ON p.passport_id = ps.id " +
             "JOIN addresses a ON p.address_id = a.id ";
     private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY e.id;";
+    private static final String FIND_EMPLOYEE_QUERY = MAIN_QUERY + "WHERE e.id = ?;";
     private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS employees_count FROM employees;";
     private static final String FIND_DEPARTMENT_EMPLOYEES_QUERY = MAIN_QUERY + "WHERE department_id = ?;";
 
@@ -71,11 +71,26 @@ public class EmployeeRepositoryDaoImpl implements EmployeeRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             employeeOptional = Optional.of(
-                    new Employee(
-                            Position.valueOf(resultSet.getString(1)),
-                            Experience.valueOf(resultSet.getString(2)),
-                            DAO_SERVICE.getRepository(DepartmentRepository.class).findById(resultSet.getLong(3)).get(),
-                            DAO_SERVICE.getRepository(PersonInfoRepository.class).findById(resultSet.getLong(4)).get()));
+                    new Employee(resultSet.getLong(1),
+                            Position.valueOf(resultSet.getString(2)),
+                            Experience.valueOf(resultSet.getString(3)),
+                            new Department(resultSet.getLong(4),
+                                    resultSet.getString(6),
+                                    new Company(resultSet.getLong(19),
+                                            resultSet.getString(20))),
+                            new PersonInfo(resultSet.getLong(5),
+                                    resultSet.getString(7),
+                                    resultSet.getString(8),
+                                    resultSet.getInt(9),
+                                    new Passport(resultSet.getLong(10),
+                                            resultSet.getString(12)),
+                                    new Address(resultSet.getLong(11),
+                                            resultSet.getString(13),
+                                            resultSet.getString(14),
+                                            resultSet.getInt(15),
+                                            resultSet.getInt(16),
+                                            resultSet.getInt(17),
+                                            Country.valueOf(resultSet.getString(18))))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find employee by id!", e);
         } finally {

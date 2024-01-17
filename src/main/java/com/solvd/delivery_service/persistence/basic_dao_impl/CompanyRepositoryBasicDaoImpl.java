@@ -1,7 +1,6 @@
 package com.solvd.delivery_service.persistence.basic_dao_impl;
 
 import com.solvd.delivery_service.domain.structure.Company;
-import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.CompanyRepository;
 import com.solvd.delivery_service.persistence.ConnectionPool;
 import com.solvd.delivery_service.persistence.DepartmentRepository;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyRepositoryDaoImpl implements CompanyRepository {
+public class CompanyRepositoryBasicDaoImpl implements CompanyRepository {
     private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_COMPANY_QUERY = "INSERT INTO companies(name) values(?);";

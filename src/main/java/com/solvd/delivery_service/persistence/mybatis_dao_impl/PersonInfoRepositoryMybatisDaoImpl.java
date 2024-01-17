@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class PersonInfoRepositoryMybatisImpl implements PersonInfoRepository {
+public class PersonInfoRepositoryMybatisDaoImpl implements PersonInfoRepository {
     @Override
     public void create(PersonInfo personInfo) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

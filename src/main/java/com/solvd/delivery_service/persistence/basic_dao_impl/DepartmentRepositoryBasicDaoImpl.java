@@ -10,26 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
+public class DepartmentRepositoryBasicDaoImpl implements DepartmentRepository {
     private static final DaoService DAO_SERVICE = DaoService.getInstance();
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_DEPARTMENT_QUERY = "INSERT INTO departments(title, company_id) values(?, ?);";
-    private static final String FIND_DEPARTMENT_QUERY = "SELECT * FROM departments WHERE id = ?;";
     private static final String UPDATE_DEPARTMENT_QUERY = "UPDATE departments SET title = ? WHERE id = ?;";
     private static final String DELETE_DEPARTMENT_QUERY = "DELETE FROM departments WHERE id = ?;";
-    private static final String FIND_ALL_QUERY =
-            "SELECT " +
-                    "d.id, d.title, c.id AS company_id, c.name " +
+    private static final String MAIN_QUERY =
+            "SELECT d.id, d.title, c.id AS company_id, c.name " +
             "FROM departments d " +
-            "JOIN companies c ON d.company_id = c.id " +
-            "ORDER BY id;";
+            "JOIN companies c ON d.company_id = c.id ";
+    private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY d.id;";
+    private static final String FIND_DEPARTMENT_QUERY = MAIN_QUERY + "WHERE d.id = ?;";
     private static final String GET_COUNT_OF_ENTRIES_QUERY = "SELECT COUNT(*) AS departments_count FROM departments;";
-    private static final String FIND_COMPANY_DEPARTMENTS_QUERY =
-            "SELECT " +
-                "d.id, d.title, c.id AS company_id, c.name " +
-            "FROM departments d " +
-            "JOIN companies c ON d.company_id = c.id " +
-            "WHERE c.id = ?;";
+    private static final String FIND_COMPANY_DEPARTMENTS_QUERY = MAIN_QUERY + "WHERE c.id = ?;";
 
     @Override
     public void create(Department department) {
@@ -61,7 +55,8 @@ public class DepartmentRepositoryDaoImpl implements DepartmentRepository {
             departmentOptional = Optional.of(new Department(
                     resultSet.getLong(1),
                     resultSet.getString(2),
-                    DAO_SERVICE.getRepository(CompanyRepository.class).findById(resultSet.getLong(3)).get()));
+                    new Company(resultSet.getLong(3),
+                            resultSet.getString(4))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find department by id!", e);
         } finally {

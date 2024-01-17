@@ -177,11 +177,11 @@ public class Package {
 
     @Override
     public String toString() {
-        return "id:[" + id + "], N:[" + number + "], Pack type:[" + packageType + "], Del type:[" +
-                deliveryType + "], Status:[" + status + "], Cond:[" + condition + "], From:[" +
-                addressFrom.getCountry().getTitle() + "/" + addressFrom.getCity() + "], To:[" +
-                addressTo.getCountry().getTitle() + "/" + addressTo.getCity() + "], Cust:[" +
-                customer.getPersonInfo().getFirstName() + " " + customer.getPersonInfo().getLastName() + "], Empl:[" +
-                employee.getPersonInfo().getFirstName() + " " + employee.getPersonInfo().getLastName() + "]";
+        String from = String.format("%s/%s", addressFrom.getCountry().getTitle(), addressFrom.getCity());
+        String to = String.format("%s/%s", addressTo.getCountry().getTitle(), addressTo.getCity());
+        String customerName = String.format("%s %s", customer.getPersonInfo().getFirstName(), customer.getPersonInfo().getLastName());
+        String employeeName = String.format("%s %s", employee.getPersonInfo().getFirstName(), employee.getPersonInfo().getLastName());
+        return String.format("N:[%d], P.type:[%s], D.type:[%s], Status:[%s], Cond:[%s], From:[%s], To:[%s], Cust:[%s], Empl:[%s]",
+                number, packageType, deliveryType, status, condition, from, to, customerName, employeeName);
     }
 }

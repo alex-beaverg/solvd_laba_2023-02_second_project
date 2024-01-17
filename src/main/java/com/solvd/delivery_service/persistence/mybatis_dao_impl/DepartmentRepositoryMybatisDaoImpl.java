@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class DepartmentRepositoryMybatisImpl implements DepartmentRepository {
+public class DepartmentRepositoryMybatisDaoImpl implements DepartmentRepository {
 
     @Override
     public void create(Department department) {

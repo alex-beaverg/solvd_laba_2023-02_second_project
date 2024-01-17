@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepositoryMybatisImpl implements EmployeeRepository {
+public class EmployeeRepositoryMybatisDaoImpl implements EmployeeRepository {
     @Override
     public void create(Employee employee, Long departmentId) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

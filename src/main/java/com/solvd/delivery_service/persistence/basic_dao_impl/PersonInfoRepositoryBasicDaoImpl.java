@@ -5,30 +5,28 @@ import com.solvd.delivery_service.domain.area.Country;
 import com.solvd.delivery_service.domain.human.Passport;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.persistence.*;
-import com.solvd.delivery_service.util.console_menu.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
-    private static final DaoService DAO_SERVICE = DaoService.getInstance();
+public class PersonInfoRepositoryBasicDaoImpl implements PersonInfoRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PERSON_QUERY =
             "INSERT INTO persons(first_name, last_name, age, passport_id, address_id) values(?, ?, ?, ?, ?);";
-    private static final String FIND_PERSON_QUERY = "SELECT * FROM persons WHERE id = ?;";
     private static final String UPDATE_PERSON_FIRST_NAME_QUERY = "UPDATE persons SET first_name = ? WHERE id = ?;";
     private static final String UPDATE_PERSON_LAST_NAME_QUERY = "UPDATE persons SET last_name = ? WHERE id = ?;";
     private static final String UPDATE_PERSON_AGE_QUERY = "UPDATE persons SET age = ? WHERE id = ?;";
     private static final String DELETE_PERSON_QUERY = "DELETE FROM persons WHERE id = ?;";
-    private static final String FIND_ALL_QUERY =
+    private static final String MAIN_QUERY =
             "SELECT p.id AS person_id, p.first_name, p.last_name, p.age, ps.id AS passport_id, a.id AS address_id, " +
                     "ps.number AS passport, a.city, a.street, a.house, a.flat, a.zip_code, a.country " +
             "FROM persons p " +
             "JOIN passports ps ON p.passport_id = ps.id " +
-            "JOIN addresses a ON p.address_id = a.id " +
-            "ORDER BY p.id;";
+            "JOIN addresses a ON p.address_id = a.id ";
+    private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY p.id;";
+    private static final String FIND_PERSON_QUERY = MAIN_QUERY + "WHERE p.id = ?;";
     private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS persons_count FROM persons;";
 
     @Override
@@ -62,11 +60,19 @@ public class PersonInfoRepositoryDaoImpl implements PersonInfoRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             personInfoOptional = Optional.of(
-                    new PersonInfo(resultSet.getString(1),
+                    new PersonInfo(resultSet.getLong(1),
                             resultSet.getString(2),
-                            resultSet.getInt(3),
-                            DAO_SERVICE.getRepository(PassportRepository.class).findById(resultSet.getLong(4)).get(),
-                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(5)).get()));
+                            resultSet.getString(3),
+                            resultSet.getInt(4),
+                            new Passport(resultSet.getLong(5),
+                                    resultSet.getString(7)),
+                            new Address(resultSet.getLong(6),
+                                    resultSet.getString(8),
+                                    resultSet.getString(9),
+                                    resultSet.getInt(10),
+                                    resultSet.getInt(11),
+                                    resultSet.getInt(12),
+                                    Country.valueOf(resultSet.getString(13)))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find person by id!", e);
         } finally {

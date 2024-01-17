@@ -82,6 +82,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Dep:[" + title + "], " + company;
+        return String.format("Dep:[%s], %s", title, company);
     }
 }

@@ -29,9 +29,13 @@ public class CustomerActions extends Actions implements IEntityActions {
         PRINT2LN.info("ALL CUSTOMERS:");
         for (Customer customer : new CustomerServiceImpl().retrieveAll()) {
             PRINTLN.info(String.format("CUSTOMER: %s\n\tPACKAGES:", customer));
-            customer.getPackages()
-                    .forEach(pack -> PRINTLN.info(String.format("\t- %s, Cost:[%s BYN]",
-                            pack, accounting.calculatePackageCost(pack))));
+            if (customer.getPackages().size() > 0) {
+                customer.getPackages()
+                        .forEach(pack -> PRINTLN.info(String.format("\t- %s, Cost:[%s BYN]",
+                                pack, accounting.calculatePackageCost(pack))));
+            } else {
+                PRINTLN.info("\t(no packages)");
+            }
         }
     }
 

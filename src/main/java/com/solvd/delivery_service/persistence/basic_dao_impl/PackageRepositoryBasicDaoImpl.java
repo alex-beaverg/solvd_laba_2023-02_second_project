@@ -13,20 +13,17 @@ import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Company;
 import com.solvd.delivery_service.domain.structure.Department;
 import com.solvd.delivery_service.persistence.*;
-import com.solvd.delivery_service.util.console_menu.DaoService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PackageRepositoryDaoImpl implements PackageRepository {
-    private static final DaoService DAO_SERVICE = DaoService.getInstance();
+public class PackageRepositoryBasicDaoImpl implements PackageRepository {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String INSERT_PACKAGE_QUERY =
             "INSERT INTO packages(number, package_type, delivery_type, status, package_condition, address_from_id, " +
                     "address_to_id, customer_id, employee_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String FIND_PACKAGE_QUERY = "SELECT * FROM packages WHERE id = ?;";
     private static final String UPDATE_PACKAGE_NUMBER_QUERY = "UPDATE packages SET number = ? WHERE id = ?;";
     private static final String UPDATE_PACKAGE_TYPE_QUERY = "UPDATE packages SET package_type = ? WHERE id = ?;";
     private static final String UPDATE_PACKAGE_DELIVERY_TYPE_QUERY = "UPDATE packages SET delivery_type = ? WHERE id = ?;";
@@ -64,6 +61,7 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             "JOIN addresses a3 ON pg.address_from_id = a3.id " +
             "JOIN addresses a4 ON pg.address_to_id = a4.id ";
     private static final String FIND_ALL_QUERY = MAIN_QUERY + "ORDER BY pg.id;";
+    private static final String FIND_PACKAGE_QUERY = MAIN_QUERY + "WHERE pg.id = ?;";
     private static final String FIND_MAX_PACKAGE_NUMBER = "SELECT MAX(number) FROM packages;";
     private static final String GET_COUNT_OF_ENTRIES = "SELECT COUNT(*) AS packages_count FROM packages;";
     private static final String FIND_CUSTOMER_PACKAGES_QUERY = MAIN_QUERY + "WHERE customer_id = ? ORDER BY pg.id;";
@@ -104,16 +102,60 @@ public class PackageRepositoryDaoImpl implements PackageRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             packageOptional = Optional.of(
-                    new Package(
-                            resultSet.getLong(1),
-                            PackageType.valueOf(resultSet.getString(2)),
-                            DeliveryType.valueOf(resultSet.getString(3)),
-                            Status.valueOf(resultSet.getString(4)),
-                            Condition.valueOf(resultSet.getString(5)),
-                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(6)).get(),
-                            DAO_SERVICE.getRepository(AddressRepository.class).findById(resultSet.getLong(7)).get(),
-                            DAO_SERVICE.getRepository(CustomerRepository.class).findById(resultSet.getLong(8)).get(),
-                            DAO_SERVICE.getRepository(EmployeeRepository.class).findById(resultSet.getLong(9)).get()));
+                    new Package(resultSet.getLong(1),
+                            resultSet.getLong(2),
+                            PackageType.valueOf(resultSet.getString(3)),
+                            DeliveryType.valueOf(resultSet.getString(4)),
+                            Status.valueOf(resultSet.getString(5)),
+                            Condition.valueOf(resultSet.getString(6)),
+                            new Address(resultSet.getLong(7),
+                                    resultSet.getString(8),
+                                    resultSet.getString(9),
+                                    resultSet.getInt(10),
+                                    resultSet.getInt(11),
+                                    resultSet.getInt(12),
+                                    Country.valueOf(resultSet.getString(13))),
+                            new Address(resultSet.getLong(14),
+                                    resultSet.getString(15),
+                                    resultSet.getString(16),
+                                    resultSet.getInt(17),
+                                    resultSet.getInt(18),
+                                    resultSet.getInt(19),
+                                    Country.valueOf(resultSet.getString(20))),
+                            new Customer(resultSet.getLong(21),
+                                    new PersonInfo(resultSet.getLong(22),
+                                            resultSet.getString(23),
+                                            resultSet.getString(24),
+                                            resultSet.getInt(25),
+                                            new Passport(resultSet.getLong(26),
+                                                    resultSet.getString(27)),
+                                            new Address(resultSet.getLong(28),
+                                                    resultSet.getString(29),
+                                                    resultSet.getString(30),
+                                                    resultSet.getInt(31),
+                                                    resultSet.getInt(32),
+                                                    resultSet.getInt(33),
+                                                    Country.valueOf(resultSet.getString(34))))),
+                            new Employee(resultSet.getLong(35),
+                                    Position.valueOf(resultSet.getString(36)),
+                                    Experience.valueOf(resultSet.getString(37)),
+                                    new Department(resultSet.getLong(51),
+                                            resultSet.getString(52),
+                                            new Company(resultSet.getLong(53),
+                                                    resultSet.getString(54))),
+                                    new PersonInfo(resultSet.getLong(38),
+                                            resultSet.getString(39),
+                                            resultSet.getString(40),
+                                            resultSet.getInt(41),
+                                            new Passport(resultSet.getLong(42),
+                                                    resultSet.getString(43)),
+                                            new Address(resultSet.getLong(44),
+                                                    resultSet.getString(45),
+                                                    resultSet.getString(46),
+                                                    resultSet.getInt(47),
+                                                    resultSet.getInt(48),
+                                                    resultSet.getInt(49),
+                                                    Country.valueOf(resultSet.getString(50)))))));
         } catch (SQLException e) {
             throw new RuntimeException("Unable to find package by id!", e);
         } finally {

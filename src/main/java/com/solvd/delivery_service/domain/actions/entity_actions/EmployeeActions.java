@@ -32,9 +32,13 @@ public class EmployeeActions extends Actions implements IEntityActions {
         for (Employee employee : new EmployeeServiceImpl().retrieveAll()) {
             PRINTLN.info(String.format("EMPLOYEE: %s, Salary:[%s BYN]\n\tPACKAGES:",
                     employee, accounting.calculateEmployeeSalary(employee)));
-            employee.getPackages()
-                    .forEach(pack -> PRINTLN.info(String.format("\t- %s, Cost:[%s BYN]",
-                            pack, accounting.calculatePackageCost(pack))));
+            if (employee.getPackages().size() > 0) {
+                employee.getPackages()
+                        .forEach(pack -> PRINTLN.info(String.format("\t- %s, Cost:[%s BYN]",
+                                pack, accounting.calculatePackageCost(pack))));
+            } else {
+                PRINTLN.info("\t(no packages)");
+            }
         }
     }
 

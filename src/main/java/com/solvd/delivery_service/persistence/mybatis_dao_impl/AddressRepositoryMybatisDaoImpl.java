@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.List;
 import java.util.Optional;
 
-public class AddressRepositoryMybatisImpl implements AddressRepository {
+public class AddressRepositoryMybatisDaoImpl implements AddressRepository {
     @Override
     public void create(Address address) {
         try (SqlSession sqlSession = MybatisConfig.getSessionFactory().openSession(true)) {

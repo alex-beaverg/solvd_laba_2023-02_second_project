@@ -127,6 +127,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address:[" + zipCode + ", " + country.getTitle() + ", " + city + ", " + street + ", " + house + "-" + flat + "]";
+        return String.format("Address:[%d, %s, %s, %s, %d-%d]", zipCode, country.getTitle(), city, street, house, flat);
     }
 }

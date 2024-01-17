@@ -36,7 +36,7 @@ public class PackageActions extends Actions implements IEntityActions {
     public void showEntityEntries() {
         PRINT2LN.info("ALL PACKAGES:");
         for (Package pack : new PackageServiceImpl().retrieveAll()) {
-            PRINTLN.info(String.format("%s, Cost:[%s BYN]", pack, accounting.calculatePackageCost(pack)));
+            PRINTLN.info(String.format("- %s, Cost:[%s BYN]", pack, accounting.calculatePackageCost(pack)));
         }
     }
 

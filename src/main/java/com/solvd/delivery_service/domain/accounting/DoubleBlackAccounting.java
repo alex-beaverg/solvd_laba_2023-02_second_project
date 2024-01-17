@@ -1,8 +1,8 @@
 package com.solvd.delivery_service.domain.accounting;
 
-public class BlackAccounting extends AccountingDecorator {
+public class DoubleBlackAccounting extends AccountingDecorator {
 
-    public BlackAccounting(IAccounting accounting) {
+    public DoubleBlackAccounting(IAccounting accounting) {
         super(accounting);
     }
 
