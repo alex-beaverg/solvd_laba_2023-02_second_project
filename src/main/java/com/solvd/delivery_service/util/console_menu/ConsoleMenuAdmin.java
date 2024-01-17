@@ -13,18 +13,23 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
                 return runAdminMainMenu();
             }
             case (2) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("COMPANY");
                 return runAdminCompanyMenu();
             }
             case (3) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("DEPARTMENT");
                 return runAdminDepartmentMenu();
             }
             case (4) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("EMPLOYEE");
                 return runAdminEmployeeMenu();
             }
             case (5) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("CUSTOMER");
                 return runAdminCustomerMenu();
             }
             case (6) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("PACKAGE");
                 return runAdminPackageMenu();
             }
             case (7) -> {
@@ -37,7 +42,6 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminPackageMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("PACKAGE");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN PACKAGE MENU", AdminPackageMenu.values());
         switch (answer) {
             case (1) -> {
@@ -66,7 +70,6 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminEmployeeMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("EMPLOYEE");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN EMPLOYEE MENU", AdminEmployeeMenu.values());
         switch (answer) {
             case (1) -> {
@@ -99,7 +102,6 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminDepartmentMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("DEPARTMENT");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN DEPARTMENT MENU", AdminDepartmentMenu.values());
         switch (answer) {
             case (1) -> {
@@ -128,7 +130,6 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminCompanyMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("COMPANY");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN COMPANY MENU", AdminCompanyMenu.values());
         switch (answer) {
             case (1) -> {
@@ -161,7 +162,6 @@ public class ConsoleMenuAdmin extends ConsoleMenu {
     }
 
     private ConsoleMenuAdmin runAdminCustomerMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("CUSTOMER");
         int answer = drawAnyMenuAndChooseMenuItem("ADMIN CUSTOMER MENU", AdminCustomerMenu.values());
         switch (answer) {
             case (1) -> {

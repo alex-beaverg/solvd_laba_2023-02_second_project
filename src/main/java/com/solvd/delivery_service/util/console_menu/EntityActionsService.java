@@ -2,6 +2,8 @@ package com.solvd.delivery_service.util.console_menu;
 
 import com.solvd.delivery_service.domain.actions.entity_actions.*;
 
+import static com.solvd.delivery_service.util.Printers.*;
+
 public class EntityActionsService {
     private static EntityActionsService instance;
     private int numberOfEntityActionsService;
@@ -17,6 +19,7 @@ public class EntityActionsService {
 
     protected void assignEntry(String title) {
         numberOfEntityActionsService = Entity.valueOf(title).getNumber();
+        PRINT2LN.info(String.format("RUNNING USING '%s' SERVICE", Entity.valueOf(title).getDescription()));
     }
 
     public IEntityActions getEntityActions() {

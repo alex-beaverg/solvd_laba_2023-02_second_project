@@ -11,6 +11,7 @@ public class ConsoleMenuUser extends ConsoleMenu {
         int answer = drawAnyMenuAndChooseMenuItem("USER MAIN MENU:", UserMainMenu.values());
         switch (answer) {
             case (1) -> {
+                ENTITY_ACTIONS_SERVICE.assignEntry("PACKAGE");
                 return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
@@ -31,20 +32,19 @@ public class ConsoleMenuUser extends ConsoleMenu {
     }
 
     public ConsoleMenuUser runPackageGetCustomerSubMenu() {
-        ENTITY_ACTIONS_SERVICE.assignEntry("PACKAGE");
         int answer = drawAnyMenuAndChooseMenuItem("USER PACKAGE (GET CUSTOMER) SUB-MENU:", UserGetCustomerMenu.values());
         switch (answer) {
             case (1) -> {
                 PackageActions.createPackageWithExistingCustomer();
-                return runUserMainMenu();
+                return runPackageGetCustomerSubMenu();
             }
             case (2) -> {
                 ENTITY_ACTIONS_SERVICE.getEntityActions().registerEntityEntry();
-                return runUserMainMenu();
+                return runPackageGetCustomerSubMenu();
             }
             case (3) -> {
                 PARSER_ACTIONS_SERVICE.getParserActions().createPackageWithRegistrationNewCustomerFromFile();
-                return runUserMainMenu();
+                return runPackageGetCustomerSubMenu();
             }
             case (4) -> {
                 return runUserMainMenu();
