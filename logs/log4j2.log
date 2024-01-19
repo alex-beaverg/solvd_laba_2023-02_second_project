@@ -1,3 +1,2 @@
-2024-01-17 12:26:48,580 ERROR c.s.d.u.c.RequestMethods [main] [MenuItemNumberOutOfBoundsException]: Entered data must be equal to some menu item!
-2024-01-17 12:57:44,568 ERROR c.s.d.u.c.RequestMethods [main] [MenuItemNumberOutOfBoundsException]: Entered data must be equal to some menu item!
-2024-01-17 13:06:19,416 ERROR c.s.d.u.c.RequestMethods [main] [MenuItemNumberOutOfBoundsException]: Entered data must be equal to some menu item!
+2024-01-19 18:01:03,437 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!
+2024-01-19 18:01:15,290 ERROR c.s.d.u.c.RequestMethods [main] [EmptyInputException]: Entered data can not be empty!

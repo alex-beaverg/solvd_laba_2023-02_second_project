@@ -51,10 +51,7 @@ public interface IParserActions {
     }
 
     void createPackageWithRegistrationNewCustomerFromFile();
-
     void createPackageFromFile();
-
     void registerEmployeeFromFile();
-
     void registerCompanyFromFile();
 }
