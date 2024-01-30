@@ -3,6 +3,9 @@ package com.solvd.delivery_service.util.console_menu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DeliveryCompanyMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.IMenu;
 import com.solvd.delivery_service.util.console_menu.menu_enums.DaoServiceMenu;
+import com.solvd.delivery_service.util.console_menu.menu_enums.ParserServiceMenu;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,20 +14,45 @@ import java.util.Properties;
 import static com.solvd.delivery_service.util.Printers.*;
 
 public class ConsoleMenu {
-    public static DaoService DAO_SERVICE = DaoService.getInstance();
+    protected static final Logger LOGGER = LogManager.getLogger(ConsoleMenu.class);
+    protected static DaoService DAO_SERVICE = DaoService.getInstance();
+    protected static ParserActionsService PARSER_ACTIONS_SERVICE = ParserActionsService.getInstance();
+    protected static EntityActionsService ENTITY_ACTIONS_SERVICE = EntityActionsService.getInstance();
 
     public ConsoleMenu runServiceMenu() {
         int answer = drawAnyMenuAndChooseMenuItem("DAO SERVICE MENU:", DaoServiceMenu.values());
         switch (answer) {
             case (1) -> {
-                PRINT2LN.info("RUNNING USING BASIC DAO SERVICE");
                 DAO_SERVICE.assignBasicDaoService();
+                return runParserMenu();
+            }
+            case (2) -> {
+                DAO_SERVICE.assignMybatisDaoService();
+                return runParserMenu();
+            }
+            default -> {
+                return tearDown();
+            }
+        }
+    }
+
+    protected ConsoleMenu runParserMenu() {
+        int answer = drawAnyMenuAndChooseMenuItem("PARSER SERVICE MENU:", ParserServiceMenu.values());
+        switch (answer) {
+            case (1) -> {
+                PARSER_ACTIONS_SERVICE.assignParser("STAX");
                 return runDeliveryCompanyMenu();
             }
             case (2) -> {
-                PRINT2LN.info("RUNNING USING MYBATIS DAO SERVICE");
-                DAO_SERVICE.assignMybatisDaoService();
+                PARSER_ACTIONS_SERVICE.assignParser("JAXB");
                 return runDeliveryCompanyMenu();
+            }
+            case (3) -> {
+                PARSER_ACTIONS_SERVICE.assignParser("JACKSON");
+                return runDeliveryCompanyMenu();
+            }
+            case (4) -> {
+                return runServiceMenu();
             }
             default -> {
                 return tearDown();
@@ -42,7 +70,7 @@ public class ConsoleMenu {
                 return authentication();
             }
             case (3) -> {
-                return runServiceMenu();
+                return runParserMenu();
             }
             default -> {
                 return tearDown();
@@ -54,10 +82,10 @@ public class ConsoleMenu {
         int index = 1;
         PRINT2LN.info(title);
         for (IMenu item : menuItems) {
-            PRINTLN.info("[" + index + "]: " + item.getTitle());
+            PRINTLN.info(String.format("[%d]: %s", index, item.getTitle()));
             index++;
         }
-        return RequestMethods.getNumberFromChoice("the menu item number", index - 1);
+        return RequestMethods.getNumberFromChoice("menu item number", index - 1);
     }
 
     protected ConsoleMenu tearDown() {
@@ -79,7 +107,7 @@ public class ConsoleMenu {
         } catch (IOException e) {
             throw new RuntimeException("You have been problem with reading from property file!", e);
         }
-        PRINTLN.info("[Warning]: Password is incorrect!");
+        LOGGER.error("[Warning]: Password is incorrect!");
         return runDeliveryCompanyMenu();
     }
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package id="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="new_package.xsd">
+    <packageNumber>1800</packageNumber>
+    <packageType>LARGE</packageType>
+    <deliveryType>EXPRESS</deliveryType>
+    <status>DELIVERED</status>
+    <condition>NOT_DAMAGED</condition>
+    <addressFrom id="2">
+        <city>Minsk</city>
+        <street>FFFF-STREET</street>
+        <house>12</house>
+        <flat>1</flat>
+        <zipCode>220241</zipCode>
+        <country>BELARUS</country>
+    </addressFrom>
+    <addressTo id="3">
+        <city>Berlin</city>
+        <street>TTTT-STREET</street>
+        <house>6</house>
+        <flat>4</flat>
+        <zipCode>5649</zipCode>
+        <country>GERMANY</country>
+    </addressTo>
+    <customer id="1">
+        <personInfo id="2">
+            <firstName>Elis</firstName>
+            <lastName>Customer</lastName>
+            <age>35</age>
+            <passport id="1">
+                <number>CUSTOMER88</number>
+            </passport>
+            <address id="2">
+                <city>Minsk</city>
+                <street>CCCC-STREET</street>
+                <house>16</house>
+                <flat>24</flat>
+                <zipCode>220229</zipCode>
+                <country>BELARUS</country>
+            </address>
+        </personInfo>
+        <packages> </packages>
+    </customer>
+    <employee id="1">
+        <position>ENGINEER_1CAT</position>
+        <experience>JUNIOR_PLUS</experience>
+        <department id="1">
+            <title>Order department</title>
+            <company>
+                <name>Delivery Service</name>
+            </company>
+        </department>
+        <personInfo id="1">
+            <firstName>Elis</firstName>
+            <lastName>Employee</lastName>
+            <age>26</age>
+            <passport id="2">
+                <number>EMPLOYEE88</number>
+            </passport>
+            <address id="1">
+                <city>Minsk</city>
+                <street>EEEE-STREET</street>
+                <house>2</house>
+                <flat>16</flat>
+                <zipCode>220223</zipCode>
+                <country>BELARUS</country>
+            </address>
+        </personInfo>
+        <packages> </packages>
+    </employee>
+</package>

@@ -71,7 +71,7 @@ public class RequestMethods {
         long value;
         do {
             try {
-                value = requestingInfoInt("Enter " + name + ": ");
+                value = requestingInfoInt(String.format("Enter %s: ", name));
                 break;
             } catch (EmptyInputException | NegativeNumberException e) {
                 LOGGER.error(e.getMessage());
@@ -86,7 +86,7 @@ public class RequestMethods {
         int value;
         do {
             try {
-                value = requestingInfoInt("Enter " + name + ": ");
+                value = requestingInfoInt(String.format("Enter %s: ", name));
                 break;
             } catch (EmptyInputException | NegativeNumberException e) {
                 LOGGER.error(e.getMessage());
@@ -101,7 +101,7 @@ public class RequestMethods {
         String value;
         do {
             try {
-                value = requestingInfoString("Enter " + name + ": ");
+                value = requestingInfoString(String.format("Enter %s: ", name));
                 break;
             } catch (EmptyInputException | StringFormatException e) {
                 LOGGER.error(e.getMessage());
@@ -114,7 +114,7 @@ public class RequestMethods {
         int answer;
         do {
             try {
-                answer = requestingInfoWithChoice("Enter " + name + ": ", size);
+                answer = requestingInfoWithChoice(String.format("Enter %s: ", name), size);
                 break;
             } catch (EmptyInputException | MenuItemOutOfBoundsException e) {
                 LOGGER.error(e.getMessage());

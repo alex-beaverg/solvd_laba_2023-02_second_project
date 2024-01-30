@@ -1,18 +1,26 @@
 package com.solvd.delivery_service.domain.human.employee;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.solvd.delivery_service.domain.human.PersonInfo;
 import com.solvd.delivery_service.domain.pack.Package;
 import com.solvd.delivery_service.domain.structure.Department;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee {
+    @XmlAttribute(name = "id")
     private Long id;
     private Position position;
     private Experience experience;
     private Department department;
+    @JsonAlias({"person_info"})
     private PersonInfo personInfo;
+    @XmlElementWrapper(name = "packages")
+    @XmlElement(name = "pack")
     private List<Package> packages;
 
     public Employee() {}
@@ -107,7 +115,6 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "id:[" + id + "], Pos:[" + position.getTitle() + "], Exp:[" + experience.getTitle() + "], " +
-                department + ", " + personInfo;
+        return String.format("%s, %s, Pos:[%s], Exp:[%s]", personInfo, department, position.getTitle(), experience.getTitle());
     }
 }

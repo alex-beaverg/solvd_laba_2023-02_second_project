@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "person_info": {
+    "id": 1,
+    "first_name": "Eddy",
+    "last_name": "Torn",
+    "age": 25,
+    "passport": {
+      "id": 1,
+      "number": "VV17733550"
+    },
+    "address": {
+      "city": "Minsk",
+      "street": "Yellow street",
+      "house": 21,
+      "flat": 4,
+      "zip_code": 221775,
+      "country": "BELARUS"
+    }
+  },
+  "packages": []
+}

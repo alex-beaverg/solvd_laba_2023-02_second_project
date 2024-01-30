@@ -12,7 +12,12 @@ public interface PackageService {
     Long retrieveNumberOfEntries();
     void updateField(Package pack, String field);
     void removeById(Long id);
-    Package createWithExistCustomer(Package pack);
+    Package createWithExistingCustomer(Package pack);
     Long retrieveMaxPackageNumber();
     List<Package> retrieveCustomerPackages(Customer customer);
+    Package createWithNewEmployeeAndNewCustomer(Package pack);
+    Package createWithExistingAddressTo(Package pack);
+    Package createWithExistingEmployeeAndNewCustomer(Package pack);
+    Package createWithExistingCustomerAndNewEmployee(Package pack);
+    Package createWithExistingCustomerAndEmployee(Package pack);
 }

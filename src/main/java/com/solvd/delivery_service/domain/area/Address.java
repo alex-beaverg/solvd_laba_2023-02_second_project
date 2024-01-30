@@ -1,12 +1,20 @@
 package com.solvd.delivery_service.domain.area;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
+    @XmlAttribute(name = "id")
     private Long id;
     private String city;
     private String street;
     private Integer house;
     private Integer flat;
+    @JsonAlias({"zip_code"})
     private Integer zipCode;
     private Country country;
 
@@ -119,6 +127,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address:[" + zipCode + ", " + country.getTitle() + ", " + city + ", " + street + ", " + house + "-" + flat + "]";
+        return String.format("Address:[%d, %s, %s, %s, %d-%d]", zipCode, country.getTitle(), city, street, house, flat);
     }
 }

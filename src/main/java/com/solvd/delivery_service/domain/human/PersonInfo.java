@@ -1,12 +1,20 @@
 package com.solvd.delivery_service.domain.human;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.solvd.delivery_service.domain.area.Address;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PersonInfo {
+    @XmlAttribute(name = "id")
     private Long id;
+    @JsonAlias({"first_name"})
     private String firstName;
+    @JsonAlias({"last_name"})
     private String lastName;
     private Integer age;
     private Passport passport;
@@ -108,6 +116,6 @@ public class PersonInfo {
 
     @Override
     public String toString() {
-        return "Name:[" + firstName + ", " + lastName + "], Age:[" + age + "], " + passport + ", " + address;
+        return String.format("Name:[%s %s], Age:[%d], %s, %s", firstName, lastName, age, passport, address);
     }
 }

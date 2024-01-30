@@ -1,12 +1,27 @@
 package com.solvd.delivery_service.domain.structure;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.solvd.delivery_service.util.JsonDateAdapter;
+import com.solvd.delivery_service.util.XmlDateAdapter;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+@XmlRootElement(name = "company")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Company {
+    @XmlAttribute(name = "id")
     private Long id;
     private String name;
+    @XmlElementWrapper(name = "departments")
+    @XmlElement(name = "department")
     private List<Department> departments;
+    @JsonDeserialize(using = JsonDateAdapter.class)
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    private LocalDate date;
 
     public Company() {}
 
@@ -17,6 +32,13 @@ public class Company {
     public Company(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Company(Long id, String name, List<Department> departments, LocalDate date) {
+        this.id = id;
+        this.name = name;
+        this.departments = departments;
+        this.date = date;
     }
 
     public Long getId() {
@@ -43,6 +65,14 @@ public class Company {
         this.departments = departments;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,6 +90,6 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Company:[" + name + "]";
+        return String.format("Co:[%s]", name);
     }
 }

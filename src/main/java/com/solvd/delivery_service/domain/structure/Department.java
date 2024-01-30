@@ -1,14 +1,19 @@
 package com.solvd.delivery_service.domain.structure;
 
 import com.solvd.delivery_service.domain.human.employee.Employee;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Department {
+    @XmlAttribute(name = "id")
     private Long id;
     private String title;
     private Company company;
+    @XmlElementWrapper(name = "employees")
+    @XmlElement(name = "employee")
     private List<Employee> employees;
 
     public Department() {}
@@ -77,6 +82,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Dep:[" + title + "], " + company;
+        return String.format("Dep:[%s], %s", title, company);
     }
 }
